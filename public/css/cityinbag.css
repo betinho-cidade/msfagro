@@ -1,0 +1,98 @@
+.cor-vermelho{color:#f53d3d;}
+.cor-azul{color: #5664d2;}
+.titulos-table-dash{background: #051b3a;padding: 10px;margin-bottom: 0px;color: #fff;font-size: 17px;}
+.titulos-previsao-dash{background: #051b3a; padding: 16px 10px; margin-bottom: 0px; color: #fff; font-size: 22px; text-align: center;}
+.titulos-previsao-dash span{font-size: 27px;font-weight: 600;}
+.titulos2-previsao-dash{background: #051b3a; padding: 6px 10px; margin-bottom: 0px; color: #fff; font-size: 15px; text-align: center;}
+.titulos2-previsao-dash span{font-weight: 600;    font-size: 16px;}
+.colunas-previsao-dash .card-body{text-align: center;}
+.bg-soft-secondary {    background-color: rgba(116,120,141,.25)!important;}
+.tag-carencia{background: #6c747c;color: #fff;padding: 10px;font-size: 20px;margin-bottom: 0;border-radius: 6px;margin-top: -10px !important;}
+.titulo-associado span{font-weight: 600;}
+.conteudo-associado{padding: 0px;background: #f9f9f9; margin: 0 0px;}
+.btn-primary { color: #fff;    background-color: #252b3b;    border-color: #252b3b;}
+.btn-primary:hover{background-color: #424b65;    border-color: #424b65;}
+.auth-form-group-custom .auti-custom-input-icon{color: #caa862;}
+.bg-soft-primary{background-color: #f5efe1!important;}
+.bg-soft-primary .text-primary {  color: #957c49!important;}
+
+/* Paginação */
+.chat-list li a { margin-right: 3px !important; display: block; padding: 7px 12px; color: #74788d; -webkit-transition: all .4s; transition: all .4s; border: 1px solid #cfd1d4; border-radius: 4px; }
+.page-item.active .page-link { background-color: #051b3a !important; border-color: #051b3a !important; }
+/* Paginação */
+
+
+/* IPCTBA */
+.tab-filter .espacamento {margin: 8px 0;}
+.espacamento select{margin-bottom: 10px;}
+/* IPCTBA */
+
+
+/* .vertical-menu, .navbar-brand-box{ width: 185px;}
+.main-content {    margin-left: 185px;} */
+.table-bordered td{ font-size: 14px;}
+.tabela-dash{padding: 10px;}
+.tabela-dash .table-bordered td {   padding: 5px;}
+#sidebar-menu ul li a {  padding: 0.625rem 10px 0.625rem 10px;}
+.menu-title {   padding: 12px 10px!important;}
+
+/* CSS ICONES LOGIN
+.sidebar-mini.layout-fixed .icone-login{display:none;}
+.sidebar-mini.layout-fixed.sidebar-collapse .icone-login{display:block}
+.brand-link{text-align: center !important;}
+.sidebar-mini.layout-fixed.sidebar-collapse .logo-normal-login{display:block;}*/
+.brand-link{    background: url(http://sistema.msfagro.com.br/images/logo-final.png) center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    min-height: 60px;
+}
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active{    background-color: #545454;}
+/* CSS ICONES LOGIN*/
+
+
+/* DASHBORAD */
+.tabela-dash-faturamento thead th {text-align: center;}
+.tabela-dash-faturamento td, .tabela-dash-faturamento th{text-align: center;}
+.linha-total-faturamento{font-size: 14px;font-weight: 600;}
+/* DASHBORAD */
+
+.img-lista-miniatura{    max-width: 50px !important;width: auto !important;height: auto !important;}
+.bt-check-cityinbag{color: #fff;}
+.input-check-cityinbag{margin-top: 3px !important;height: 26px;width: 15px;margin-left: 0px;}
+.label-check-cityinbag{    background: #454b4f;font-size: 19px;padding: 1px 20px 3px 34px;font-weight: 600;margin-left: -9px;border-radius: 4px;}
+.label-imagem-cityinbag{width: 24%;margin-right: 10px;text-align: center;padding: 2px 2px 3px 2px;font-size: 18px !important;border-radius: 6px !important;float: left;background: #454b50;color: #fff;}
+.img-capa-curso img{height: auto;width: 75%;}
+.img-thumb-curso img{width: 31%;height: auto;}
+.img-instrutor-curso img{width: 50%;height: auto;}
+.campo-link-vimeo{margin-bottom:40px;}
+
+
+.filtros::before{content:initial !important;}
+.filtros .card { box-shadow: none !important;}
+.select2-container--default .select2-selection--multiple .select2-selection__choice{background-color: #6c747d !important;}
+.pull-right{padding-top: 7px;margin-right: 10px;}
+.filtros label:not(.form-check-label):not(.custom-file-label) {font-weight: 500 !important;color: #000 !important;}
+.filtros [type=submit]{background: #6c757d;border: none;color: #fff;padding: 6px 25px;width: 100%;margin-top: 15px;}
+.filtros [type=submit]:hover, .filtros [type=submit]:active{border:none !important;}
+.filtros [type=reset]{background: #6c757d;border: none;color: #fff;padding: 6px 15px;width: 100%;margin-top: 15px;}
+.filtros [type=reset]:hover, .filtros [type=reset]:active{border:none !important;}
+
+
+
+.form-filiado .card-body {background: #efefef;}
+.form-filiado{margin-bottom: -30px;}
+.card-warning:not(.card-outline)>.card-header{background-color: #efdca2 !important;}
+.btn-warning{background-color: #ead182 !important;border-color: #ead182 !important;}
+.bg-warning {background-color: #ead182 !important;}
+.bg-warning .btn-outline-light {color: #000000;border-color: #000000;}
+.bg-warning .btn-outline-light:hover {color: #000000;border-color: #fff;}
+.fa.fa-edit{color:#e4c35c !important;}
+
+@media only screen and (max-width:767px){
+.card-body{overflow: scroll !important;}
+.card-body>.table>thead>tr>td, .card-body>.table>thead>tr>th {    min-width: 110px;}
+.img-capa-curso, .img-thumb-curso, .bt-check-cityinbag{width:100% !important;min-width: 100% !important;margin-bottom: 30px;}
+.label-imagem-cityinbag {   width: 100%;}
+.img-thumb-curso img, .img-capa-curso img{width: 100%;}
+
+}
