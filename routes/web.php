@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['namespace' => 'Painel'], function(){
 
         Route::get('/', 'PainelController@index')->name('painel');
-        // Route::post('/js_viacep', 'PainelController@js_viacep')->name('painel.js_viacep');
+        Route::post('/js_viacep', 'PainelController@js_viacep')->name('painel.js_viacep');
 
         Route::group(['namespace' => 'Gestao'], function(){
 
@@ -71,6 +71,15 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/aliquota/{aliquota}', 'AliquotaController@show')->name('aliquota.show');
                 Route::put('/aliquota/{aliquota}/update', 'AliquotaController@update')->name('aliquota.update');
                 Route::delete('/aliquota/{aliquota}/destroy', 'AliquotaController@destroy')->name('aliquota.destroy');
+            });
+
+            Route::group(['namespace' => 'Cliente'], function(){
+                Route::get('/cliente', 'ClienteController@index')->name('cliente.index');
+                Route::get('/cliente/create', 'ClienteController@create')->name('cliente.create');
+                Route::post('/cliente/store', 'ClienteController@store')->name('cliente.store');
+                Route::get('/cliente/{cliente}', 'ClienteController@show')->name('cliente.show');
+                Route::put('/cliente/{cliente}/update', 'ClienteController@update')->name('cliente.update');
+                Route::delete('/cliente/{cliente}/destroy', 'ClienteController@destroy')->name('cliente.destroy');
             });
         });
 

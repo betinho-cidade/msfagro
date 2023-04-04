@@ -13,4 +13,53 @@ class Cliente extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    public function getTipoClienteAttribute()
+    {
+        $tipo = '';
+
+        switch($this->tipo){
+            case 'AG' : {
+                $tipo = 'Agricultor';
+                break;
+            }
+            case 'PE' : {
+                $tipo = 'Pecuarista';
+                break;
+            }
+            case 'AB' : {
+                $tipo = 'Ambos';
+                break;
+            }
+            default : {
+                $tipo = '---';
+                break;
+            }
+        }
+
+        return $tipo;
+    }
+
+
+    public function getTipoPessoaTextoAttribute()
+    {
+        $tipo_pessoa = '';
+
+        switch($this->tipo_pessoa){
+            case 'PF' : {
+                $tipo_pessoa = 'Pessoa Física';
+                break;
+            }
+            case 'PJ' : {
+                $tipo_pessoa = 'Pessoa Jurídica';
+                break;
+            }
+            default : {
+                $tipo_pessoa = '---';
+                break;
+            }
+        }
+
+        return $tipo_pessoa;
+    }
+
 }

@@ -65,7 +65,9 @@ class UsuarioLogadoController extends Controller
 
             if($request->view_password){
                 if(Hash::check($request->view_password, $user->password)){
-                    $user->password = bcrypt($request->password_new);
+                    if($request->password_new){
+                        $user->password = bcrypt($request->password_new);
+                    }
                 }
                 else{
                     DB::rollBack();

@@ -11,10 +11,11 @@ class CreateClientesTable extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->enum('tipo', ['AG', 'PE', 'AB'])->default('PE');  //AG->Agricultor  PE->Pecuarista  AB->Ambos
             $table->string('nome', 200);
             $table->string('email', 255);
+            $table->enum('tipo_pessoa', ['PF', 'PJ']);
             $table->string('cpf_cnpj', 14)->unique();
             $table->string('telefone', 20)->nullable();
             $table->string('inscricao_estadual', 20)->nullable();

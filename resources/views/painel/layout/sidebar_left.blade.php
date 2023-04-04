@@ -34,6 +34,7 @@
                                     <li><a href="{{ route('usuario.index') }}">Usuários</a></li>
                                     <li><a href="{{ route('aliquota.index') }}">Alíquotas</a></li>
                                     <li><a href="{{ route('categoria.index') }}">Categorias</a></li>
+                                    <li><a href="{{ route('cliente.index') }}">Clientes</a></li>
                                 </ul>
                             </li>
                             <!-- Menus Relacioandos a administração - Acesso somente para GESTOR - FIM-->

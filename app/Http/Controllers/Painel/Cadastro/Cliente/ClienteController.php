@@ -1,0 +1,260 @@
+<?php
+
+namespace App\Http\Controllers\Painel\Cadastro\Cliente;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Cliente;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Exception;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Cadastro\Cliente\CreateRequest;
+use App\Http\Requests\Cadastro\Cliente\UpdateRequest;
+use Image;
+
+
+
+class ClienteController extends Controller
+{
+
+    public function __construct(Request $request)
+    {
+        $this->middleware('auth');
+    }
+
+
+    public function index()
+    {
+        if(Gate::denies('view_cliente')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $clientes_AT = Cliente::where('status','A')
+                            ->orderBy('nome', 'asc')
+                            ->get();
+
+
+        $clientes_IN = Cliente::where('status','I')
+                            ->orderBy('nome', 'asc')
+                            ->get();
+
+
+        return view('painel.cadastro.cliente.index', compact('user', 'clientes_AT', 'clientes_IN'));
+    }
+
+
+
+
+    public function create()
+    {
+        if(Gate::denies('create_cliente')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $usuarios = User::join('role_user', 'role_user.user_id', 'users.id')
+                            ->where('role_user.status','A')
+                            ->join('roles', 'roles.id', 'role_user.role_id')
+                            ->where('roles.name','Cliente')
+                            ->leftJoin('clientes', 'clientes.user_id', 'role_user.user_id')
+                            ->whereNull('clientes.user_id')
+                            ->orderBy('users.id', 'desc')
+                            ->select('users.*')
+                            ->get();
+
+        return view('painel.cadastro.cliente.create', compact('user', 'usuarios'));
+    }
+
+
+
+    public function store(CreateRequest $request)
+    {
+        if(Gate::denies('create_cliente')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+
+            DB::beginTransaction();
+
+            $cliente = new Cliente();
+
+            $cliente->user_id = $request->usuario;
+            $cliente->tipo = $request->tipo;
+            $cliente->nome = $request->nome;
+            $cliente->email = $request->email;
+            $cliente->tipo_pessoa = $request->tipo_pessoa;
+            $cliente->cpf_cnpj = $request->cpf_cnpj;
+            $cliente->telefone = $request->telefone;
+            $cliente->inscricao_estadual = $request->inscricao_estadual;
+            $cliente->inscricao_representante = $request->inscricao_representante;
+            $cliente->end_cep = $request->end_cep;
+            $cliente->end_cidade = $request->end_cidade;
+            $cliente->end_uf = $request->end_uf;
+            $cliente->end_bairro = $request->end_bairro;
+            $cliente->end_logradouro = $request->end_logradouro;
+            $cliente->end_numero = $request->end_numero;
+            $cliente->end_complemento = $request->end_complemento;
+            $cliente->status = $request->situacao;
+
+            $cliente->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Cliente <code class="highlighter-rouge">'. $cliente->nome .'</code> foi criado com sucesso');
+        }
+
+        return redirect()->route('cliente.index');
+    }
+
+
+
+    public function show(Cliente $cliente)
+    {
+
+        if(Gate::denies('edit_cliente')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $usuarios = User::join('role_user', 'role_user.user_id', 'users.id')
+                            ->where('role_user.status','A')
+                            ->join('roles', 'roles.id', 'role_user.role_id')
+                            ->where('roles.name','Cliente')
+                            ->leftJoin('clientes', 'clientes.user_id', 'role_user.user_id')
+                            ->where(function($query) use ($cliente){
+                                $query->OrWhere('clientes.id', $cliente->id);
+                                $query->OrwhereNull('clientes.user_id');
+                            })
+                            ->orderBy('users.id', 'desc')
+                            ->select('users.*')
+                            ->get();
+
+        return view('painel.cadastro.cliente.show', compact('user', 'cliente', 'usuarios'));
+    }
+
+
+
+    public function update(UpdateRequest $request, Cliente $cliente)
+    {
+        if(Gate::denies('edit_cliente')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+
+            DB::beginTransaction();
+
+            $cliente->user_id = $request->usuario;
+            $cliente->tipo = $request->tipo;
+            $cliente->nome = $request->nome;
+            $cliente->email = $request->email;
+            $cliente->tipo_pessoa = $request->tipo_pessoa;
+            $cliente->cpf_cnpj = $request->cpf_cnpj;
+            $cliente->telefone = $request->telefone;
+            $cliente->inscricao_estadual = $request->inscricao_estadual;
+            $cliente->inscricao_representante = $request->inscricao_representante;
+            $cliente->end_cep = $request->end_cep;
+            $cliente->end_cidade = $request->end_cidade;
+            $cliente->end_uf = $request->end_uf;
+            $cliente->end_bairro = $request->end_bairro;
+            $cliente->end_logradouro = $request->end_logradouro;
+            $cliente->end_numero = $request->end_numero;
+            $cliente->end_complemento = $request->end_complemento;
+            $cliente->status = $request->situacao;
+
+            $cliente->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A cliente <code class="highlighter-rouge">'. $cliente->nome .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('cliente.index');
+    }
+
+
+
+    public function destroy(Cliente $cliente, Request $request)
+    {
+        if(Gate::denies('delete_cliente')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+        $cliente_nome = $cliente->nome;
+
+        try {
+            DB::beginTransaction();
+
+            $cliente->delete();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
+                $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
+
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A cliente <code class="highlighter-rouge">'. $cliente_nome .'</code> foi excluída com sucesso');
+        }
+
+        return redirect()->route('cliente.index');
+    }
+
+}
