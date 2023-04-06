@@ -229,6 +229,34 @@ class PermissionSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'id' => 32,
+                    'name' => 'view_produtor',
+                    'description' => 'Visualizar as informações dos produtores',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 33,
+                    'name' => 'edit_produtor',
+                    'description' => 'Editar as informações dos produtores',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 34,
+                    'name' => 'create_produtor',
+                    'description' => 'Criar um novo produtor',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 35,
+                    'name' => 'delete_produtor',
+                    'description' => 'Excluir um produtor',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

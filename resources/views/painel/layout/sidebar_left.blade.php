@@ -54,6 +54,7 @@
                                     <li><a href="{{ route('forma_pagamento.index') }}">Formas de Pagamento</a></li>
                                     <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
                                     <li><a href="{{ route('empresa.index') }}">Empresas</a></li>
+                                    <li><a href="{{ route('produtor.index') }}">Produtores</a></li>
                                 </ul>
                             </li>
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->

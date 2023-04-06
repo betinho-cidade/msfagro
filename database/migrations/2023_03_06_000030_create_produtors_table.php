@@ -14,7 +14,8 @@ class CreateProdutorsTable extends Migration
             $table->unsignedBigInteger('cliente_id');
             $table->string('nome', 500);
             $table->string('email', 255);
-            $table->string('cpf_cnpj', 14)->unique();
+            $table->enum('tipo_pessoa', ['PF', 'PJ']);
+            $table->string('cpf_cnpj', 14);
             $table->string('telefone', 20)->nullable();
             $table->string('inscricao_estadual', 20)->nullable();
             $table->string('end_cep', 8)->nullable();

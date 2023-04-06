@@ -106,7 +106,7 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type="text" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
+                                <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>

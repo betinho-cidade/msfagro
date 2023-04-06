@@ -28,6 +28,11 @@ class Cliente extends Model
         return $this->hasMany('App\Models\Empresa');
     }
 
+    public function produtors(){
+
+        return $this->hasMany('App\Models\Produtor');
+    }
+
     public function getTipoClienteAttribute()
     {
         $tipo = '';

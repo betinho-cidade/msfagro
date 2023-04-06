@@ -14,7 +14,7 @@ class CreateEmpresasTable extends Migration
             $table->unsignedBigInteger('cliente_id');
             $table->string('nome', 500);
             $table->enum('tipo_pessoa', ['PF', 'PJ']);
-            $table->string('cpf_cnpj', 14)->unique();
+            $table->string('cpf_cnpj', 14);
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();
             $table->foreign('cliente_id')->references('id')->on('clientes');

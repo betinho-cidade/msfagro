@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Cadastro\Cliente;
+namespace App\Http\Requests\Cadastro\Produtor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
 
-class UpdateRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
 
     public function authorize()
@@ -14,30 +14,23 @@ class UpdateRequest extends FormRequest
         return true;
     }
 
-
     protected function prepareForValidation(): void
     {
-
         $this->merge([
             'cpf_cnpj' => Str::of($this->cpf_cnpj)->replaceMatches('/[^z0-9]++/', '')->__toString(),
             'telefone' => Str::of($this->telefone)->replaceMatches('/[^z0-9]++/', '')->__toString(),
             'end_cep' => Str::of($this->end_cep)->replaceMatches('/[^z0-9]++/', '')->__toString(),
         ]);
-
     }
 
     public function rules()
     {
 
         return [
-            'usuario' => 'required|unique:clientes,user_id,'.$this->cliente->id,
-            'tipo' => 'required',
-            'inscricao_representante' => 'required',
-            'situacao' => 'required',
-            'nome' => 'required|max:200',
+            'nome' => 'required|max:500',
             'email' => 'required|email|max:255',
             'tipo_pessoa' => 'required',
-            'cpf_cnpj' => 'required|digits_between:1,14|unique:clientes,cpf_cnpj,'.$this->cliente->id,
+            'cpf_cnpj' => 'required|digits_between:1,14',
             'telefone' => 'required',
             'inscricao_estadual' => 'required|max:20',
             'end_cep' => 'required|digits_between:1,8',
@@ -54,19 +47,13 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'usuario.required' => 'O Usuário de Acesso é requerido',
-            'usuario.unique' => 'O Usuário selecionado já está vinculado à um cliente. Por gentileza, informe outro',
-            'tipo.required' => 'O Tipo é requerido',
-            'inscricao_representante.required' => 'A Inscrição Representante é requerida',
-            'situacao.required' => 'A Situação é requerida',
             'nome.required' => 'O Nome é requerido',
             'nome.max' => 'O tamanho permitido para o Nome é de 200 caracteres',
             'email.required' => 'O E-mail é requerido',
             'email.max' => 'O tamanho permitido para o E-mail é de 255 caracteres',
             'email.email' => 'O E-mail não é valido',
-            'tipo_pessoa.required' => 'O tipo da pessoa é requerido',
+            'tipo_pessoa.required' => 'O Tipo da Pessoa é requerido',
             'cpf_cnpj.required' => 'O CPF/CNPJ é requerido',
-            'cpf_cnpj.unique' => 'Já existe o CPF/CNPJ informado. Por gentileza, informe outro',
             'cpf_cnpj.digits_between' => 'O tamanho permitido para o CPF/CNPJ é de até 11/14 digitos. Outros caracteres não são permitidos',
             'telefone.required' => 'O Telefone é requerido',
             'inscricao_estadual.required' => 'A Inscrição Estadual nome é requerida',
@@ -89,5 +76,4 @@ class UpdateRequest extends FormRequest
             'situacao.required' => 'A situação é requerida',
         ];
     }
-
 }

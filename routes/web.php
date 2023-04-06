@@ -109,6 +109,15 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('/empresa/{empresa}/destroy', 'EmpresaController@destroy')->name('empresa.destroy');
             });
 
+            Route::group(['namespace' => 'Produtor'], function(){
+                Route::get('/produtor', 'ProdutorController@index')->name('produtor.index');
+                Route::get('/produtor/create', 'ProdutorController@create')->name('produtor.create');
+                Route::post('/produtor/store', 'ProdutorController@store')->name('produtor.store');
+                Route::get('/produtor/{produtor}', 'ProdutorController@show')->name('produtor.show');
+                Route::put('/produtor/{produtor}/update', 'ProdutorController@update')->name('produtor.update');
+                Route::delete('/produtor/{produtor}/destroy', 'ProdutorController@destroy')->name('produtor.destroy');
+            });
+
         });
 
     });
