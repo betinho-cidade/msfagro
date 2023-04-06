@@ -30,6 +30,7 @@ class CreateRequest extends FormRequest
             'nome.max' => 'O tamanho permitido para o nome é de 300 caracteres',
             'nome.unique' => 'Já existe um nome/segmento com os valores informados',
             'segmento.required' => 'O Segmento é requerido',
+            'situacao.required' => 'A situação é requerida',
         ];
     }
 }

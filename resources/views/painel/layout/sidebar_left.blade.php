@@ -40,6 +40,25 @@
                             <!-- Menus Relacioandos a administração - Acesso somente para GESTOR - FIM-->
                             @endif
 
+                            @if($user->roles->contains('name', 'Cliente') && $user->cliente)
+                            <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - INICIO-->
+
+                            <li class="menu-title">GESTÃO DO CLIENTE</li>
+
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>Cadastros</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{ route('forma_pagamento.index') }}">Formas de Pagamento</a></li>
+                                    <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
+                                    <li><a href="{{ route('empresa.index') }}">Empresas</a></li>
+                                </ul>
+                            </li>
+                            <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
+                            @endif
+
                         </ul>
 
                     </div>

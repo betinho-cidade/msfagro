@@ -81,8 +81,35 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/cliente/{cliente}/update', 'ClienteController@update')->name('cliente.update');
                 Route::delete('/cliente/{cliente}/destroy', 'ClienteController@destroy')->name('cliente.destroy');
             });
-        });
 
+            Route::group(['namespace' => 'FormaPagamento'], function(){
+                Route::get('/forma_pagamento', 'FormaPagamentoController@index')->name('forma_pagamento.index');
+                Route::get('/forma_pagamento/create', 'FormaPagamentoController@create')->name('forma_pagamento.create');
+                Route::post('/forma_pagamento/store', 'FormaPagamentoController@store')->name('forma_pagamento.store');
+                Route::get('/forma_pagamento/{forma_pagamento}', 'FormaPagamentoController@show')->name('forma_pagamento.show');
+                Route::put('/forma_pagamento/{forma_pagamento}/update', 'FormaPagamentoController@update')->name('forma_pagamento.update');
+                Route::delete('/forma_pagamento/{forma_pagamento}/destroy', 'FormaPagamentoController@destroy')->name('forma_pagamento.destroy');
+            });
+
+            Route::group(['namespace' => 'Fazenda'], function(){
+                Route::get('/fazenda', 'FazendaController@index')->name('fazenda.index');
+                Route::get('/fazenda/create', 'FazendaController@create')->name('fazenda.create');
+                Route::post('/fazenda/store', 'FazendaController@store')->name('fazenda.store');
+                Route::get('/fazenda/{fazenda}', 'FazendaController@show')->name('fazenda.show');
+                Route::put('/fazenda/{fazenda}/update', 'FazendaController@update')->name('fazenda.update');
+                Route::delete('/fazenda/{fazenda}/destroy', 'FazendaController@destroy')->name('fazenda.destroy');
+            });
+
+            Route::group(['namespace' => 'Empresa'], function(){
+                Route::get('/empresa', 'EmpresaController@index')->name('empresa.index');
+                Route::get('/empresa/create', 'EmpresaController@create')->name('empresa.create');
+                Route::post('/empresa/store', 'EmpresaController@store')->name('empresa.store');
+                Route::get('/empresa/{empresa}', 'EmpresaController@show')->name('empresa.show');
+                Route::put('/empresa/{empresa}/update', 'EmpresaController@update')->name('empresa.update');
+                Route::delete('/empresa/{empresa}/destroy', 'EmpresaController@destroy')->name('empresa.destroy');
+            });
+
+        });
 
     });
 

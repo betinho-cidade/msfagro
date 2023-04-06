@@ -16,14 +16,14 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 [
                     'name' => 'Gestor',
-                    'email' => 'gestor@msfagro.com.br',
+                    'email' => 'gestor@mfsagro.com',
                     'password' => bcrypt('12345678'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
                 [
                     'name' => 'Cliente',
-                    'email' => 'cliente@msfagro.com.br',
+                    'email' => 'cliente@mfsagro.com',
                     'password' => bcrypt('12345678'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),

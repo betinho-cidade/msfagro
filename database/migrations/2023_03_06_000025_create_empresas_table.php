@@ -13,6 +13,7 @@ class CreateEmpresasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('cliente_id');
             $table->string('nome', 500);
+            $table->enum('tipo_pessoa', ['PF', 'PJ']);
             $table->string('cpf_cnpj', 14)->unique();
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();

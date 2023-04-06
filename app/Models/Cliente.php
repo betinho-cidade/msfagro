@@ -13,6 +13,21 @@ class Cliente extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    public function forma_pagamentos(){
+
+        return $this->hasMany('App\Models\FormaPagamento');
+    }
+
+    public function fazendas(){
+
+        return $this->hasMany('App\Models\Fazenda');
+    }
+
+    public function empresas(){
+
+        return $this->hasMany('App\Models\Empresa');
+    }
+
     public function getTipoClienteAttribute()
     {
         $tipo = '';

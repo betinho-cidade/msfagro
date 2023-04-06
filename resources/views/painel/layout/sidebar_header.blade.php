@@ -30,6 +30,10 @@
 
                     <div class="d-flex">
 
+                        @if($user->cliente)
+                        <span class="float-left">{{ $user->cliente->nome ?? '...'}}</span>
+                        @endif
+
                         {{-- <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
