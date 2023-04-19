@@ -56,16 +56,16 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{$user->name}}" placeholder="Nome" required>
+                                <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
+                                <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{$user->name}}" placeholder="Nome" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="email">Login Acesso</label>
-                                <input type="text" class="form-control" id="email" name="email" value="{{$user->email}}" placeholder="Login Acesso" required>
+                                <label for="email" class="{{($errors->first('email') ? 'form-error-label' : '')}}">Login Acesso</label>
+                                <input type="text" class="form-control {{($errors->first('email') ? 'form-error-field' : '')}}" id="email" name="email" value="{{$user->email}}" placeholder="Login Acesso" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -74,16 +74,16 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="view_password">Senha Atual</label>
-                                <input type="password" class="form-control" id="view_password" name="view_password" placeholder="Senha" required>
+                                <label for="view_password" class="{{($errors->first('view_password') ? 'form-error-label' : '')}}">Senha Atual</label>
+                                <input type="password" class="form-control {{($errors->first('view_password') ? 'form-error-field' : '')}}" id="view_password" name="view_password" placeholder="Senha" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="password_new">Nova Senha</label>
-                                <input type="password" class="form-control" id="password_new" name="password_new" placeholder="Senha">
+                                <label for="password_new" class="{{($errors->first('password_new') ? 'form-error-label' : '')}}">Nova Senha</label>
+                                <input type="password" class="form-control {{($errors->first('password_new') ? 'form-error-field' : '')}}" id="password_new" name="password_new" placeholder="Senha">
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -91,8 +91,8 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="password_confirm">Nova Senha Confirmação</label>
-                                <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Senha de Confirmação">
+                                <label for="password_confirm" class="{{($errors->first('password_confirm') ? 'form-error-label' : '')}}">Nova Senha Confirmação</label>
+                                <input type="password" class="form-control {{($errors->first('password_confirm') ? 'form-error-field' : '')}}" id="password_confirm" name="password_confirm" placeholder="Senha de Confirmação">
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>

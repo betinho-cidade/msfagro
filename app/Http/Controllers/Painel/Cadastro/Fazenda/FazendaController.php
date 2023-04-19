@@ -106,6 +106,7 @@ class FazendaController extends Controller
 
             $fazenda->cliente_id = $user->cliente->id;
             $fazenda->nome = $request->nome;
+            $fazenda->end_cep = $request->end_cep;
             $fazenda->end_cidade = $request->end_cidade;
             $fazenda->end_uf = $request->end_uf;
             $fazenda->geolocalizacao = $request->geolocalizacao;
@@ -180,6 +181,7 @@ class FazendaController extends Controller
             DB::beginTransaction();
 
             $fazenda->nome = $request->nome;
+            $fazenda->end_cep = $request->end_cep;
             $fazenda->end_cidade = $request->end_cidade;
             $fazenda->end_uf = $request->end_uf;
             $fazenda->geolocalizacao = $request->geolocalizacao;

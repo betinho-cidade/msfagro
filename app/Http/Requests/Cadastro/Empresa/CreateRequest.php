@@ -27,7 +27,7 @@ class CreateRequest extends FormRequest
         return [
             'nome' => 'required|max:500',
             'tipo_pessoa' => 'required',
-            'cpf_cnpj' => 'required|max:14',
+            'cpf_cnpj' => 'required|cpf_ou_cnpj|max:14',
             'situacao' => 'required',
         ];
     }
@@ -40,6 +40,7 @@ class CreateRequest extends FormRequest
             'tipo_pessoa.required' => 'O tipo da pessoa é requerido',
             'cpf_cnpj.required' => 'O CPF/CNPJ é requerido',
             'cpf_cnpj.max' => 'O tamanho permitido para o CPF/CNPJ é de 14 caracteres',
+            'cpf_cnpj.cpf_ou_cnpj' => 'O CPF/CNPJ não é válido',
             'situacao.required' => 'A situação é requerida',
         ];
     }

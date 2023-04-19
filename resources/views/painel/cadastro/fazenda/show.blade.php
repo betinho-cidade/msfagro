@@ -48,32 +48,39 @@
                 @csrf
                 @method('PUT')
 
+                <input type="hidden" id="tipo_cliente" name="tipo_cliente" value="{{$user->cliente->tipo}}">
+
                 <!-- Dados Pessoais - INI -->
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Fazenda</h5>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="{{$fazenda->nome}}" placeholder="Nome" required>
+                            <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
+                            <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{$fazenda->nome}}" placeholder="Nome" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="end_cep" class="{{($errors->first('end_cep') ? 'form-error-label' : '')}}">CEP</label>
+                        <img src="{{asset('images/loading.gif')}}" id="img-loading-cep" style="display:none;max-width: 17%; margin-left: 26px;">
+                        <input type="text" name="end_cep" id="end_cep" class="form-control {{($errors->first('end_cep') ? 'form-error-field' : '')}} dynamic_cep mask_cep" value="{{$fazenda->end_cep}}" placeholder="99.999-999">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="end_cidade" class="{{($errors->first('end_cidade') ? 'form-error-label' : '')}}">Cidade</label>
+                            <input type="text" class="form-control {{($errors->first('end_cidade') ? 'form-error-field' : '')}}" id="end_cidade" name="end_cidade" value="{{$fazenda->end_cidade}}" placeholder="Cidade">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="end_cidade">Cidade</label>
-                            <input type="text" class="form-control" id="end_cidade" name="end_cidade" value="{{$fazenda->end_cidade}}" placeholder="Cidade">
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="end_uf">Estado/UF</label>
-                            <select id="end_uf" name="end_uf" class="form-control">
+                            <label for="end_uf" class="{{($errors->first('end_uf') ? 'form-error-label' : '')}}">Estado/UF</label>
+                            <select id="end_uf" name="end_uf" class="form-control {{($errors->first('end_uf') ? 'form-error-field' : '')}}">
                                 <option value="">---</option>
                                 <option value="AC" {{($fazenda->end_uf == 'AC') ? 'selected' : '' }}>Acre</option>
                                 <option value="AL" {{($fazenda->end_uf == 'AL') ? 'selected' : '' }}>Alagoas</option>
@@ -112,32 +119,36 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="geolocalizacao">Geolocalização</label>
-                            <input type="text" class="form-control" id="geolocalizacao" name="geolocalizacao" value="{{$fazenda->geolocalizacao}}" placeholder="Geolocalização" required>
+                            <label for="geolocalizacao" class="{{($errors->first('geolocalizacao') ? 'form-error-label' : '')}}">Geolocalização</label>
+                            <input type="text" class="form-control {{($errors->first('geolocalizacao') ? 'form-error-field' : '')}}" id="geolocalizacao" name="geolocalizacao" value="{{$fazenda->geolocalizacao}}" placeholder="Geolocalização" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    @if($user->cliente && $user->cliente->tipo != 'AG')
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="qtd_macho" class="{{($errors->first('qtd_macho') ? 'form-error-label' : '')}}">Qtd. Machos</label>
+                            <input type="text" class="form-control {{($errors->first('qtd_macho') ? 'form-error-field' : '')}}" id="qtd_macho" name="qtd_macho" value="{{$fazenda->qtd_macho}}" placeholder="Qtd. Macho" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="qtd_macho">Qtd. Machos</label>
-                            <input type="text" class="form-control" id="qtd_macho" name="qtd_macho" value="{{$fazenda->qtd_macho}}" placeholder="Qtd. Macho" required>
+                            <label for="qtd_femea" class="{{($errors->first('qtd_femea') ? 'form-error-label' : '')}}">Qtd. Fêmeas</label>
+                            <input type="text" class="form-control {{($errors->first('qtd_femea') ? 'form-error-field' : '')}}" id="qtd_femea" name="qtd_femea" value="{{$fazenda->qtd_femea}}" placeholder="Qtd. Fêmea" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
+                    @endif
+
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="qtd_femea">Qtd. Fêmeas</label>
-                            <input type="text" class="form-control" id="qtd_femea" name="qtd_femea" value="{{$fazenda->qtd_femea}}" placeholder="Qtd. Fêmea" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="situacao">Situação</label>
-                            <select id="situacao" name="situacao" class="form-control" required>
+                            <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
+                            <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
                                 <option value="A" {{($fazenda->status == 'A') ? 'selected' : '' }}>Ativo</option>
                                 <option value="I" {{($fazenda->status == 'I') ? 'selected' : '' }}>Inativo</option>
@@ -166,20 +177,51 @@
     <script src="{{asset('nazox/assets/js/pages/form-validation.init.js')}}"></script>
     <script src="{{asset('nazox/assets/libs/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <script src="{{asset('nazox/assets/js/pages/form-element.init.js')}}"></script>
+
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
-
-    <script src="{{asset('nazox/assets/libs/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
-    <script src="{{asset('nazox/assets/js/pages/lightbox.init.js')}}"></script>
 
     <script>
 		$(document).ready(function(){
             $('.select2').select2();
+			$('.mask_cep').inputmask('99.999-999');
 		});
 	</script>
 
-@endsection
+    <script type='text/javascript'>
+        $(document).ready(function(){
+            $('.dynamic_cep').change(function(){
 
-@section('head-css')
-    <link href="{{asset('nazox/assets/libs/magnific-popup/magnific-popup.css')}}" rel="stylesheet" type="text/css" />
+                if ($(this).val() != ''){
+                    document.getElementById("img-loading-cep").style.display = '';
+
+                    var cep = $('#end_cep').val();
+                    var _token = $('input[name="_token"]').val();
+
+                    $('#end_cidade').val('');
+                    $('#end_uf').val('');
+
+                    $.ajax({
+                        url: "{{route('painel.js_viacep')}}",
+                        method: "POST",
+                        data: {_token:_token, cep:cep},
+                        success:function(result){
+                            dados = JSON.parse(result);
+                            if(dados==null || dados['error'] == 'true'){
+                                    console.log(dados);
+                            } else{
+                                    $('#end_cidade').val(dados['localidade']);
+                                    $('#end_uf').val(dados['uf']);
+                            }
+                            document.getElementById("img-loading-cep").style.display = 'none';
+                        },
+                        error:function(erro){
+                            document.getElementById("img-loading-cep").style.display = 'none';
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+
 @endsection

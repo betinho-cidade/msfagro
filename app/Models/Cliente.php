@@ -33,6 +33,11 @@ class Cliente extends Model
         return $this->hasMany('App\Models\Produtor');
     }
 
+    public function lancamentos(){
+
+        return $this->hasMany('App\Models\Lancamento');
+    }
+
     public function getTipoClienteAttribute()
     {
         $tipo = '';

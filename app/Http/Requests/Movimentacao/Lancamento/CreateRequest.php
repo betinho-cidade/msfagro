@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Cadastro\Produtor;
+namespace App\Http\Requests\Movimentacao\Lancamento;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
 
-class UpdateRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
 
     public function authorize()
@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
             'nome' => 'required|max:500',
             'email' => 'required|email|max:255',
             'tipo_pessoa' => 'required',
-            'cpf_cnpj' => 'required|cpf_ou_cnpj|digits_between:1,14',
+            'cpf_cnpj' => 'required|digits_between:1,14',
             'telefone' => 'required',
             'inscricao_estadual' => 'required|max:20',
             'end_cep' => 'required|digits_between:1,8',
@@ -55,7 +55,6 @@ class UpdateRequest extends FormRequest
             'tipo_pessoa.required' => 'O Tipo da Pessoa é requerido',
             'cpf_cnpj.required' => 'O CPF/CNPJ é requerido',
             'cpf_cnpj.digits_between' => 'O tamanho permitido para o CPF/CNPJ é de até 11/14 digitos. Outros caracteres não são permitidos',
-            'cpf_cnpj.cpf_ou_cnpj' => 'O CPF/CNPJ não é válido',
             'telefone.required' => 'O Telefone é requerido',
             'inscricao_estadual.required' => 'A Inscrição Estadual nome é requerida',
             'inscricao_estadual.max' => 'O tamanho permitido para a Inscrição Estadual é de 20 caracteres',
@@ -77,5 +76,4 @@ class UpdateRequest extends FormRequest
             'situacao.required' => 'A situação é requerida',
         ];
     }
-
 }

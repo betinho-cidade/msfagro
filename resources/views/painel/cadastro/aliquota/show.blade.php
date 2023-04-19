@@ -56,36 +56,36 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="base_inicio">Base Inicial</label>
+                            <label for="base_inicio" class="{{($errors->first('base_inicio') ? 'form-error-label' : '')}}">Base Inicial</label>
                             <input type="hidden" class="form-control" id="base_inicio" name="base_inicio" value="{{$aliquota->base_inicio}}">
-                            <input type="text" class="form-control updParcela mask_valor" id="base_inicio_view" name="base_inicio_view" value="{{$aliquota->base_inicio}}" placeholder="Base Início" required>
+                            <input type="text" class="form-control {{($errors->first('base_inicio') ? 'form-error-field' : '')}} updParcela mask_valor" id="base_inicio_view" name="base_inicio_view" value="{{$aliquota->base_inicio}}" placeholder="Base Início" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="base_fim">Base Fim</label>
+                            <label for="base_fim" class="{{($errors->first('base_fim') ? 'form-error-label' : '')}}">Base Fim</label>
                             <input type="hidden" class="form-control" id="base_fim" name="base_fim" value="{{$aliquota->base_fim}}">
-                            <input type="text" class="form-control updParcela mask_valor" id="base_fim_view" name="base_fim_view" value="{{$aliquota->base_fim}}" placeholder="Base Fim" required>
+                            <input type="text" class="form-control {{($errors->first('base_fim') ? 'form-error-field' : '')}} updParcela mask_valor" id="base_fim_view" name="base_fim_view" value="{{$aliquota->base_fim}}" placeholder="Base Fim" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="aliquota">Alíquota</label>
+                            <label for="aliquota" class="{{($errors->first('aliquota') ? 'form-error-label' : '')}}">Alíquota</label>
                             <input type="hidden" class="form-control" id="aliquota" name="aliquota" value="{{$aliquota->aliquota}}">
-                            <input type="text" class="form-control updParcela mask_aliquota" id="aliquota_view" name="aliquota_view" value="{{$aliquota->aliquota}}" placeholder="Alíquota" required>
+                            <input type="text" class="form-control {{($errors->first('aliquota') ? 'form-error-field' : '')}} updParcela mask_aliquota" id="aliquota_view" name="aliquota_view" value="{{$aliquota->aliquota}}" placeholder="Alíquota" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="parcela_deducao">Parcela Dedução</label>
+                            <label for="parcela_deducao" class="{{($errors->first('parcela_deducao') ? 'form-error-label' : '')}}">Parcela Dedução</label>
                             <input type="hidden" class="form-control" id="parcela_deducao" name="parcela_deducao" value="{{$aliquota->parcela_deducao}}">
-                            <input type="text" class="form-control updParcela mask_valor" id="parcela_deducao_view" name="parcela_deducao_view" value="{{$aliquota->parcela_deducao}}" placeholder="Parcela Dedução" required>
+                            <input type="text" class="form-control {{($errors->first('parcela_deducao') ? 'form-error-field' : '')}} updParcela mask_valor" id="parcela_deducao_view" name="parcela_deducao_view" value="{{$aliquota->parcela_deducao}}" placeholder="Parcela Dedução" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>

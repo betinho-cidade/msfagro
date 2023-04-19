@@ -257,6 +257,48 @@ class PermissionSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'id' => 36,
+                    'name' => 'view_lancamento',
+                    'description' => 'Visualizar as informações dos lançamentos',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 37,
+                    'name' => 'edit_lancamento',
+                    'description' => 'Editar as informações dos lançamentos',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 38,
+                    'name' => 'create_lancamento',
+                    'description' => 'Criar um novo lançamento',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 39,
+                    'name' => 'delete_lancamento',
+                    'description' => 'Excluir um lançamento',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 40,
+                    'name' => 'list_lancamento',
+                    'description' => 'Listar o resumo mensal dos lançamentos',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 41,
+                    'name' => 'delete_list_lancamento',
+                    'description' => 'Excluir a lista mensal dos lançamentos',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

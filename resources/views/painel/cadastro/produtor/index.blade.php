@@ -87,7 +87,7 @@
                                     data-target="#modal-delete-produtor"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Produtor"></i></a>
                                     <form action="" id="deleteForm" method="post">
                                     @csrf
-                                    @method('DELETE')
+                                    @method('POST')
                                     </form>
                                     @section('modal_target')"formSubmit();"@endsection
                                     @section('modal_type')@endsection

@@ -17,6 +17,9 @@
 .bg-soft-primary .text-primary {  color: #957c49!important;}
 .tag-cliente{text-transform: uppercase;background: #e2c68b; color: #c64930; font-weight: 900; font-size: 14px; padding: 6px 16px; border-radius: 13px;}
 
+/* mostrar campo com borda de erro ao retornar validação */
+.form-error-field {border: 1px solid #e74c3c;}
+.form-error-label {color: #e74c3c;}
 
 /* Paginação */
 .chat-list li a { margin-right: 3px !important; display: block; padding: 7px 12px; color: #74788d; -webkit-transition: all .4s; transition: all .4s; border: 1px solid #cfd1d4; border-radius: 4px; }

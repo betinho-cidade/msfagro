@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Novo Produtor para o Cliente</h4>
+            <h4 class="mb-0">Novo Lançamento de Movimentação Bovina para o Cliente</h4>
         </div>
     </div>
 </div>
@@ -41,13 +41,13 @@
             <div class="card-body">
             <!-- FORMULÁRIO - INICIO -->
 
-            <h4 class="card-title">Formulário de Cadastro - Produtor</h4>
-            <p class="card-title-desc">O Produtor cadastrado estará disponível para os lançamentos no sistema.</p>
-            <form name="create_produtor" method="POST" action="{{route('produtor.store')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
+            <h4 class="card-title">Formulário de Cadastro - Lançamento de Movimentação Bovina</h4>
+            <p class="card-title-desc">O Lançamento cadastrado estará disponível para os movimentos no sistema.</p>
+            <form name="create_lancamento" method="POST" action="{{route('lancamento.store_MG')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Produtor</h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento de Movimentação Bovina</h5>
                 </div>
 
                 <div class="row">
@@ -64,23 +64,21 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
-                        <div class="valid-feedback">ok!</div>
-                        <div class="invalid-feedback">Inválido!</div>
+                        <label for="cpf">CPF/CNPJ</label>
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
-                            <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
+                            <label for="nome">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
-                            <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
+                            <label for="situacao">Situação</label>
+                            <select id="situacao" name="situacao" class="form-control" required>
                                 <option value="">---</option>
                                 <option value="A" {{(old('situacao') == 'A') ? 'selected' : '' }}>Ativo</option>
                                 <option value="I" {{(old('situacao') == 'I') ? 'selected' : '' }}>Inativo</option>
@@ -93,24 +91,24 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="email" class="{{($errors->first('email') ? 'form-error-label' : '')}}">E-mail</label>
-                            <input type="email" class="form-control {{($errors->first('email') ? 'form-error-field' : '')}}" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
+                            <label for="email">E-mail</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="telefone" class="{{($errors->first('telefone') ? 'form-error-label' : '')}}">Telefone</label>
-                            <input type="text" class="form-control {{($errors->first('telefone') ? 'form-error-field' : '')}} mask_telefone" id="telefone" name="telefone" value="{{old('telefone')}}" placeholder="Telefone">
+                            <label for="telefone">Telefone</label>
+                            <input type="text" class="form-control mask_telefone" id="telefone" name="telefone" value="{{old('telefone')}}" placeholder="Telefone">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="inscricao_estadual" class="{{($errors->first('inscricao_estadual') ? 'form-error-label' : '')}}">Inscrição Estadual</label>
-                            <input type="text" class="form-control {{($errors->first('inscricao_estadual') ? 'form-error-field' : '')}}" id="inscricao_estadual" name="inscricao_estadual" value="{{old('inscricao_estadual')}}" placeholder="Inscrição Estadual">
+                            <label for="inscricao_estadual">Inscrição Estadual</label>
+                            <input type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual" value="{{old('inscricao_estadual')}}" placeholder="Inscrição Estadual">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -124,46 +122,45 @@
             </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="end_cep" class="{{($errors->first('end_cep') ? 'form-error-label' : '')}}">CEP</label>
+                        <label for="end_cep">CEP</label>
                         <img src="{{asset('images/loading.gif')}}" id="img-loading-cep" style="display:none;max-width: 17%; margin-left: 26px;">
-                        <input type="text" name="end_cep" id="end_cep" class="form-control {{($errors->first('end_cep') ? 'form-error-field' : '')}} dynamic_cep mask_cep" value="{{old('end_cep')}}" placeholder="99.999-999" required>
+                        <input type="text" name="end_cep" id="end_cep" class="form-control dynamic_cep mask_cep" value="{{old('end_cep')}}" placeholder="99.999-999">
                     </div>
 
                     <div class="col-md-4">
-                        <label for="end_cidade" class="{{($errors->first('end_cidade') ? 'form-error-label' : '')}}">Cidade</label>
-                        <input type="text" name="end_cidade" id="end_cidade" class="form-control {{($errors->first('end_cidade') ? 'form-error-field' : '')}}" value="{{old('end_cidade')}}" required>
+                        <label for="end_cidade">Cidade</label>
+                        <input type="text" name="end_cidade" id="end_cidade" class="form-control" value="{{old('end_cidade')}}">
                     </div>
 
                     <div class="col-md-2">
-                        <label for="end_uf" class="{{($errors->first('end_uf') ? 'form-error-label' : '')}}">Estado</label>
-                        <input type="text" name="end_uf" id="end_uf" class="form-control {{($errors->first('end_uf') ? 'form-error-field' : '')}}" value="{{old('end_uf')}}" required>
+                        <label for="end_uf">Estado</label>
+                        <input type="text" name="end_uf" id="end_uf" class="form-control" value="{{old('end_uf')}}">
                     </div>
 
                     <div class="col-md-4">
-                        <label for="end_bairro" class="{{($errors->first('end_bairro') ? 'form-error-label' : '')}}">Bairro</label>
-                        <input type="text" name="end_bairro" id="end_bairro" class="form-control {{($errors->first('end_bairro') ? 'form-error-field' : '')}}" value="{{old('end_bairro')}}" required>
+                        <label for="end_bairro">Bairro</label>
+                        <input type="text" name="end_bairro" id="end_bairro" class="form-control" value="{{old('end_bairro')}}">
                     </div>
                 </div>
                 <p></p>
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="end_endereco" class="{{($errors->first('end_bairro') ? 'form-error-label' : '')}}">Endereço</label>
-                        <input type="text" name="end_logradouro" id="end_logradouro" class="form-control {{($errors->first('end_bairro') ? 'form-error-field' : '')}}" value="{{old('end_logradouro')}}" required>
+                        <label for="end_endereco">Endereço</label>
+                        <input type="text" name="end_logradouro" id="end_logradouro" class="form-control" value="{{old('end_logradouro')}}">
                     </div>
 
                     <div class="col-md-2">
-                        <label for="end_numero" class="{{($errors->first('end_numero') ? 'form-error-label' : '')}}">Número</label>
-                        <input type="text" name="end_numero" id="end_numero" value="{{old('end_numero')}}" class="form-control {{($errors->first('end_numero') ? 'form-error-field' : '')}}" required>
+                        <label for="end_numero">Número</label>
+                        <input type="text" name="end_numero" id="end_numero" value="{{old('end_numero')}}" class="form-control">
                     </div>
 
                     <div class="col-md-4">
-                        <label for="end_complemento" class="{{($errors->first('end_complemento') ? 'form-error-label' : '')}}">Complemento </label>
-                        <input type="text" name="end_complemento" id="end_complemento" class="form-control {{($errors->first('end_complemento') ? 'form-error-field' : '')}}" value="{{old('end_complemento')}}">
+                        <label for="end_complemento">Complemento </label>
+                        <input type="text" name="end_complemento" id="end_complemento" class="form-control" value="{{old('end_complemento')}}">
                     </div>
                 </div>
                 <p></p>
             <!-- Dados Endereço - FIM -->
-
 
                 <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
             </form>

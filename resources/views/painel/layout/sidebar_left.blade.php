@@ -57,6 +57,17 @@
                                     <li><a href="{{ route('produtor.index') }}">Produtores</a></li>
                                 </ul>
                             </li>
+
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>Movimentações</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{ route('lancamento.index') }}">Lançamentos</a></li>
+                                </ul>
+                            </li>
+
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
                             @endif
 

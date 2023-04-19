@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Painel\Cadastro\FormaPagamento;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Produtor;
 use App\Models\FormaPagamento;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
@@ -76,7 +77,12 @@ class FormaPagamentoController extends Controller
             return redirect()->route('painel');
         }
 
-        return view('painel.cadastro.forma_pagamento.create', compact('user'));
+        $produtors = Produtor::where('status','A')
+                            ->where('cliente_id', $user->cliente->id)
+                            ->orderBy('nome', 'asc')
+                            ->get();
+
+        return view('painel.cadastro.forma_pagamento.create', compact('user', 'produtors'));
     }
 
 
@@ -105,9 +111,8 @@ class FormaPagamentoController extends Controller
             $forma_pagamento = new FormaPagamento();
 
             $forma_pagamento->cliente_id = $user->cliente->id;
+            $forma_pagamento->produtor_id = $request->produtor;
             $forma_pagamento->tipo_conta = $request->tipo_conta;
-            $forma_pagamento->titular = $request->titular;
-            $forma_pagamento->doc_titular = $request->doc_titular;
             $forma_pagamento->banco = $request->banco;
             $forma_pagamento->agencia = $request->agencia;
             $forma_pagamento->conta = $request->conta;
@@ -154,7 +159,12 @@ class FormaPagamentoController extends Controller
             return redirect()->route('forma_pagamento.index');
         }
 
-        return view('painel.cadastro.forma_pagamento.show', compact('user', 'forma_pagamento'));
+        $produtors = Produtor::where('status','A')
+                            ->where('cliente_id', $user->cliente->id)
+                            ->orderBy('nome', 'asc')
+                            ->get();
+
+        return view('painel.cadastro.forma_pagamento.show', compact('user', 'forma_pagamento', 'produtors'));
     }
 
 
@@ -181,8 +191,7 @@ class FormaPagamentoController extends Controller
             DB::beginTransaction();
 
             $forma_pagamento->tipo_conta = $request->tipo_conta;
-            $forma_pagamento->titular = $request->titular;
-            $forma_pagamento->doc_titular = $request->doc_titular;
+            $forma_pagamento->produtor_id = $request->produtor;
             $forma_pagamento->banco = $request->banco;
             $forma_pagamento->agencia = $request->agencia;
             $forma_pagamento->conta = $request->conta;

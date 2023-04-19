@@ -54,16 +54,16 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
+                                <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
+                                <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="email">Login Acesso</label>
-                                <input type="text" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="Login Acesso" required>
+                                <label for="email" class="{{($errors->first('email') ? 'form-error-label' : '')}}">Login Acesso</label>
+                                <input type="text" class="form-control {{($errors->first('email') ? 'form-error-field' : '')}}" id="email" name="email" value="{{old('email')}}" placeholder="Login Acesso" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -72,8 +72,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="situacao">Situação</label>
-                                <select id="situacao" name="situacao" class="form-control" required>
+                                <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
+                                <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
                                     <option value="">---</option>
                                     <option value="A" {{(old('situacao') == 'A') ? 'selected' : '' }}>Ativo</option>
                                     <option value="I" {{(old('situacao') == 'I') ? 'selected' : '' }}>Inativo</option>
@@ -84,8 +84,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="perfil">Perfil Acesso</label>
-                                <select id="perfil" name="perfil" class="form-control dynamic_perfil" required>
+                                <label for="perfil" class="{{($errors->first('perfil') ? 'form-error-label' : '')}}">Perfil Acesso</label>
+                                <select id="perfil" name="perfil" class="form-control {{($errors->first('perfil') ? 'form-error-field' : '')}} dynamic_perfil" required>
                                     <option value="">---</option>
                                     @foreach($perfis as $perfil)
                                         <option value="{{$perfil->id}}" {{($perfil->id == old('perfil')) ? 'selected' : '' }}>{{$perfil->name}}</option>
@@ -98,8 +98,8 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="password">Senha</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required>
+                                <label for="password" class="{{($errors->first('password') ? 'form-error-label' : '')}}">Senha</label>
+                                <input type="password" class="form-control {{($errors->first('password') ? 'form-error-field' : '')}}" id="password" name="password" placeholder="Senha" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -107,8 +107,8 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="password_confirm">Senha Confirmação</label>
-                                <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Senha de Confirmação" required>
+                                <label for="password_confirm" class="{{($errors->first('password_confirm') ? 'form-error-label' : '')}}">Senha Confirmação</label>
+                                <input type="password" class="form-control {{($errors->first('password_confirm') ? 'form-error-field' : '')}}" id="password_confirm" name="password_confirm" placeholder="Senha de Confirmação" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>

@@ -28,7 +28,7 @@
 
                     </div>
 
-                    @if($user->cliente)
+                    @if($user->roles->contains('name', 'Cliente') && $user->cliente)
                     <div>
                         <span class="tag-cliente">{{ $user->cliente->nome ?? '...'}}</span>
                     </div>

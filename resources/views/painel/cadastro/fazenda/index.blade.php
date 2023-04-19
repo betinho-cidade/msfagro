@@ -61,8 +61,12 @@
                             <th>Nome</th>
                             <th>Cidade/UF</th>
                             <th>Geolocalização</th>
+
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
                             <th>Qtd. Fêmeas</th>
+                            @endif
+
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -74,8 +78,12 @@
                             <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{Str::limit($fazenda->nome, 150, '...')}}</td>
                             <td>{{$fazenda->endereco}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
+
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
                             <td>{{$fazenda->qtd_femea}}</td>
+                            @endif
+
                             <td style="text-align:center;">
 
                             @can('edit_fazenda')
@@ -101,7 +109,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '7' : '5' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -119,8 +127,12 @@
                             <th>Nome</th>
                             <th>Cidade/UF</th>
                             <th>Geolocalização</th>
+
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
                             <th>Qtd. Fêmeas</th>
+                            @endif
+
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -132,8 +144,12 @@
                             <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{Str::limit($fazenda->nome, 150, '...')}}</td>
                             <td>{{$fazenda->endereco}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
+
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
                             <td>{{$fazenda->qtd_femea}}</td>
+                            @endif
+
                             <td style="text-align:center;">
 
                             @can('edit_fazenda')
@@ -159,7 +175,7 @@
                           </tr>
                         @empty
                         <tr>
-                            <td colspan="7">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '7' : '5' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>

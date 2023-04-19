@@ -56,8 +56,8 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="tipo_pessoa">Tipo Pessoa</label>
-                            <select id="tipo_pessoa" name="tipo_pessoa" class="form-control dynamic_tipo" required>
+                            <label for="tipo_pessoa" class="{{($errors->first('tipo_pessoa') ? 'form-error-label' : '')}}">Tipo Pessoa</label>
+                            <select id="tipo_pessoa" name="tipo_pessoa" class="form-control {{($errors->first('tipo_pessoa') ? 'form-error-field' : '')}} dynamic_tipo" required>
                                 <option value="">---</option>
                                 <option value="PF" {{($empresa->tipo_pessoa == 'PF') ? 'selected' : '' }}>Pessoa Física</option>
                                 <option value="PJ" {{($empresa->tipo_pessoa == 'PJ') ? 'selected' : '' }}>Pessoa Jurídica</option>
@@ -67,21 +67,23 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="cpf">CPF/CNPJ</label>
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control mask_cpf_cnpj" value="{{$empresa->cpf_cnpj}}" placeholder="---" required>
+                        <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} mask_cpf_cnpj" value="{{$empresa->cpf_cnpj}}" placeholder="---" required>
+                        <div class="valid-feedback">ok!</div>
+                        <div class="invalid-feedback">Inválido!</div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="{{$empresa->nome}}" placeholder="Nome" required>
+                            <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
+                            <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{$empresa->nome}}" placeholder="Nome" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="situacao">Situação</label>
-                            <select id="situacao" name="situacao" class="form-control" required>
+                            <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
+                            <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
                                 <option value="A" {{($empresa->status == 'A') ? 'selected' : '' }}>Ativo</option>
                                 <option value="I" {{($empresa->status == 'I') ? 'selected' : '' }}>Inativo</option>

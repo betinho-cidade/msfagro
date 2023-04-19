@@ -22,12 +22,26 @@ class UserSeeder extends Seeder
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
                 [
-                    'name' => 'Cliente',
-                    'email' => 'cliente@mfsagro.com',
+                    'name' => 'Cliente Agro',
+                    'email' => 'agro@mfsagro.com',
                     'password' => bcrypt('12345678'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ]
+                ],
+                [
+                    'name' => 'Cliente Pec',
+                    'email' => 'pec@mfsagro.com',
+                    'password' => bcrypt('12345678'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'name' => 'Cliente Ambos',
+                    'email' => 'ambos@mfsagro.com',
+                    'password' => bcrypt('12345678'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
 
         } else { echo "\e[31mTabela Users não está vazia. "; }

@@ -59,7 +59,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Tipo Conta</th>
-                            <th>Titular</th>
+                            <th>Produtor/Documento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -69,7 +69,7 @@
                         <tr>
                             <td>{{$forma_pagamento->id}}</td>
                             <td>{{$forma_pagamento->tipo_conta_texto}}</td>
-                            <td>{{$forma_pagamento->titular}}</td>
+                            <td data-toggle="tooltip" title="{{ $forma_pagamento->nome_produtor_full }}">{{$forma_pagamento->nome_produtor}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
@@ -111,7 +111,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Tipo Conta</th>
-                            <th>Titular</th>
+                            <th>Produtor/Documento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -121,7 +121,7 @@
                         <tr>
                             <td>{{$forma_pagamento->id}}</td>
                             <td>{{$forma_pagamento->tipo_conta_texto}}</td>
-                            <td>{{$forma_pagamento->titular}}</td>
+                            <td>{{$forma_pagamento->nome_produtor}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')

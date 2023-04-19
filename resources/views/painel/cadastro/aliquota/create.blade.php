@@ -54,8 +54,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="base_inicio">Base Inicial</label>
-                                <input type="hidden" class="form-control" id="base_inicio" name="base_inicio" value="">
+                                <label for="base_inicio" class="{{($errors->first('base_inicio') ? 'form-error-label' : '')}}">Base Inicial</label>
+                                <input type="hidden" class="form-control {{($errors->first('base_inicio') ? 'form-error-field' : '')}}" id="base_inicio" name="base_inicio" value="">
                                 <input type="text" class="form-control updParcela mask_valor" id="base_inicio_view" name="base_inicio_view" value="{{old('base_inicio_view')}}" placeholder="Base Início" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
@@ -63,8 +63,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="base_fim">Base Fim</label>
-                                <input type="hidden" class="form-control" id="base_fim" name="base_fim" value="">
+                                <label for="base_fim" class="{{($errors->first('base_fim') ? 'form-error-label' : '')}}">Base Fim</label>
+                                <input type="hidden" class="form-control {{($errors->first('base_fim') ? 'form-error-field' : '')}}" id="base_fim" name="base_fim" value="">
                                 <input type="text" class="form-control updParcela mask_valor" id="base_fim_view" name="base_fim_view" value="{{old('base_fim_view')}}" placeholder="Base Fim" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
@@ -72,8 +72,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="aliquota">Alíquota</label>
-                                <input type="hidden" class="form-control" id="aliquota" name="aliquota" value="">
+                                <label for="aliquota" class="{{($errors->first('aliquota') ? 'form-error-label' : '')}}">Alíquota</label>
+                                <input type="hidden" class="form-control {{($errors->first('aliquota') ? 'form-error-field' : '')}}" id="aliquota" name="aliquota" value="">
                                 <input type="text" class="form-control updParcela mask_aliquota" id="aliquota_view" name="aliquota_view" value="{{old('aliquota_view')}}" placeholder="Alíquota" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
@@ -81,8 +81,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="parcela_deducao">Parcela Dedução</label>
-                                <input type="hidden" class="form-control" id="parcela_deducao" name="parcela_deducao" value="">
+                                <label for="parcela_deducao" class="{{($errors->first('parcela_deducao') ? 'form-error-label' : '')}}">Parcela Dedução</label>
+                                <input type="hidden" class="form-control {{($errors->first('parcela_deducao') ? 'form-error-field' : '')}}" id="parcela_deducao" name="parcela_deducao" value="">
                                 <input type="text" class="form-control updParcela mask_valor" id="parcela_deducao_view" name="parcela_deducao_view" value="{{old('parcela_deducao_view')}}" placeholder="Parcela Dedução" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>

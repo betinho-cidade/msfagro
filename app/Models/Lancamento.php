@@ -6,17 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 
-class Produtor extends Model
+class Lancamento extends Model
 {
 
     public function cliente()
     {
         return $this->belongsTo('App\Models\Cliente');
-    }
-
-    public function forma_pagamentos(){
-
-        return $this->hasMany('App\Models\FormaPagamento');
     }
 
     public function getTipoPessoaTextoAttribute()

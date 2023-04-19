@@ -56,12 +56,12 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="tipo_conta">Tipo Conta</label>
-                            <select id="tipo_conta" name="tipo_conta" class="form-control" required>
+                            <label for="tipo_conta" class="{{($errors->first('tipo_conta') ? 'form-error-label' : '')}}">Tipo Conta</label>
+                            <select id="tipo_conta" name="tipo_conta" class="form-control {{($errors->first('tipo_conta') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
                                 <option value="CC" {{($forma_pagamento->tipo_conta == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
                                 <option value="CP" {{($forma_pagamento->tipo_conta == 'CP') ? 'selected' : '' }}>Conta Poupança</option>
-                                <option value="PX" {{($forma_pagamento->tipo_conta == 'PX') ? 'selected' : '' }}>Pix</option>
+                                <option value="NT" {{($forma_pagamento->tipo_conta == 'NT') ? 'selected' : '' }}>Numerário em Trânsito</option>
                                 <option value="BL" {{($forma_pagamento->tipo_conta == 'BL') ? 'selected' : '' }}>Boleto</option>
                                 <option value="ES" {{($forma_pagamento->tipo_conta == 'ES') ? 'selected' : '' }}>Espécie</option>
                             </select>
@@ -69,26 +69,23 @@
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-7">
                         <div class="form-group">
-                            <label for="titular">Titular</label>
-                            <input type="text" class="form-control" id="titular" name="titular" value="{{$forma_pagamento->titular}}" placeholder="Titular" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="doc_titular">Documento do Titular</label>
-                            <input type="text" class="form-control" id="doc_titular" name="doc_titular" value="{{$forma_pagamento->doc_titular}}" placeholder="Documento do Titular" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
+                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor</label>
+                            <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} select2">
+                                <option value="">---</option>
+                                @foreach($produtors as $produtor)
+                                    <option value="{{ $produtor->id }}" {{($forma_pagamento->produtor_id == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome }} / {{ $produtor->cpf_cnpj }}</option>
+                                @endforeach
+                                <div class="valid-feedback">ok!</div>
+                                <div class="invalid-feedback">Inválido!</div>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="situacao">Situação</label>
-                            <select id="situacao" name="situacao" class="form-control" required>
+                            <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
+                            <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
                                 <option value="A" {{($forma_pagamento->status == 'A') ? 'selected' : '' }}>Ativo</option>
                                 <option value="I" {{($forma_pagamento->status == 'I') ? 'selected' : '' }}>Inativo</option>
@@ -102,32 +99,32 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="banco">Banco</label>
-                            <input type="text" class="form-control" id="banco" name="banco" value="{{$forma_pagamento->banco}}" placeholder="Banco">
+                            <label for="banco" class="{{($errors->first('banco') ? 'form-error-label' : '')}}">Banco</label>
+                            <input type="text" class="form-control {{($errors->first('banco') ? 'form-error-field' : '')}}" id="banco" name="banco" value="{{$forma_pagamento->banco}}" placeholder="Banco">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="agencia">Agência</label>
-                            <input type="text" class="form-control" id="agencia" name="agencia" value="{{$forma_pagamento->agencia}}" placeholder="Agência">
+                            <label for="agencia" class="{{($errors->first('agencia') ? 'form-error-label' : '')}}">Agência</label>
+                            <input type="text" class="form-control {{($errors->first('agencia') ? 'form-error-field' : '')}}" id="agencia" name="agencia" value="{{$forma_pagamento->agencia}}" placeholder="Agência">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="conta">Conta</label>
-                            <input type="text" class="form-control" id="conta" name="conta" value="{{$forma_pagamento->conta}}" placeholder="Conta">
+                            <label for="conta" class="{{($errors->first('conta') ? 'form-error-label' : '')}}">Conta</label>
+                            <input type="text" class="form-control {{($errors->first('conta') ? 'form-error-field' : '')}}" id="conta" name="conta" value="{{$forma_pagamento->conta}}" placeholder="Conta">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="pix">Pix</label>
-                            <input type="text" class="form-control" id="pix" name="pix" value="{{$forma_pagamento->pix}}" placeholder="Pix">
+                            <label for="pix" class="{{($errors->first('pix') ? 'form-error-label' : '')}}">Pix</label>
+                            <input type="text" class="form-control {{($errors->first('pix') ? 'form-error-field' : '')}}" id="pix" name="pix" value="{{$forma_pagamento->pix}}" placeholder="Pix">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -153,11 +150,9 @@
     <script src="{{asset('nazox/assets/js/pages/form-validation.init.js')}}"></script>
     <script src="{{asset('nazox/assets/libs/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <script src="{{asset('nazox/assets/js/pages/form-element.init.js')}}"></script>
+    <script src="{{asset('nazox/assets/libs/select2/js/select2.min.js')}}"></script>
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
-
-    <script src="{{asset('nazox/assets/libs/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
-    <script src="{{asset('nazox/assets/js/pages/lightbox.init.js')}}"></script>
 
     <script>
 		$(document).ready(function(){
@@ -168,5 +163,5 @@
 @endsection
 
 @section('head-css')
-    <link href="{{asset('nazox/assets/libs/magnific-popup/magnific-popup.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('nazox/assets/libs/select2/css/select2.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
 @endsection

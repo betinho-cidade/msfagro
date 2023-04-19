@@ -28,6 +28,20 @@ class RoleUserSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'role_id' => 2,
+                    'user_id' => 3,
+                    'status' => 'A',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'role_id' => 2,
+                    'user_id' => 4,
+                    'status' => 'A',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
         } else { echo "\e[31mTabela Role_User não está vazia. "; }
     }

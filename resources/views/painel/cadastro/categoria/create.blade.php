@@ -54,16 +54,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
+                                <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
+                                <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="segmento">Segmento</label>
-                                <select id="segmento" name="segmento" class="form-control" required>
+                                <label for="segmento" class="{{($errors->first('segmento') ? 'form-error-label' : '')}}">Segmento</label>
+                                <select id="segmento" name="segmento" class="form-control {{($errors->first('segmento') ? 'form-error-field' : '')}}" required>
                                     <option value="">---</option>
                                     <option value="MG" {{(old('segmento') == 'MG') ? 'selected' : '' }}>Movimentação Bovina</option>
                                     <option value="MF" {{(old('segmento') == 'MF') ? 'selected' : '' }}>Movimentação Fiscal</option>
@@ -74,8 +74,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="situacao">Situação</label>
-                                <select id="situacao" name="situacao" class="form-control" required>
+                                <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
+                                <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
                                     <option value="">---</option>
                                     <option value="A" {{(old('situacao') == 'A') ? 'selected' : '' }}>Ativo</option>
                                     <option value="I" {{(old('situacao') == 'I') ? 'selected' : '' }}>Inativo</option>

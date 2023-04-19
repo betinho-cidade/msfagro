@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class FormaPagamento extends Model
@@ -12,6 +13,11 @@ class FormaPagamento extends Model
     public function cliente()
     {
         return $this->belongsTo('App\Models\Cliente');
+    }
+
+    public function produtor()
+    {
+        return $this->belongsTo('App\Models\Produtor');
     }
 
     public function getTipoContaTextoAttribute()
@@ -27,8 +33,8 @@ class FormaPagamento extends Model
                 $tipo_conta = 'Conta Poupança';
                 break;
             }
-            case 'PX' : {
-                $tipo_conta = 'Pix';
+            case 'NT' : {
+                $tipo_conta = 'Numerário em Trânsito';
                 break;
             }
             case 'BL' : {
@@ -48,5 +54,19 @@ class FormaPagamento extends Model
         return $tipo_conta;
     }
 
+    public function getNomeProdutorAttribute()
+    {
+        $nome = $this->produtor ? ($this->produtor->nome . ' / ' . $this->produtor->cpf_cnpj) : '... / ...';
+        $nome = Str::limit($nome, 100, '...');
+
+        return $nome;
+    }
+
+    public function getNomeProdutorFullAttribute()
+    {
+        $nome = $this->produtor ? ($this->produtor->nome . ' / ' . $this->produtor->cpf_cnpj) : '... / ...';
+
+        return $nome;
+    }
 
 }
