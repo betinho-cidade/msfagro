@@ -97,8 +97,6 @@ class ClienteController extends Controller
             $cliente->tipo_pessoa = $request->tipo_pessoa;
             $cliente->cpf_cnpj = $request->cpf_cnpj;
             $cliente->telefone = $request->telefone;
-            $cliente->inscricao_estadual = $request->inscricao_estadual;
-            $cliente->inscricao_representante = $request->inscricao_representante;
             $cliente->end_cep = $request->end_cep;
             $cliente->end_cidade = $request->end_cidade;
             $cliente->end_uf = $request->end_uf;
@@ -181,8 +179,6 @@ class ClienteController extends Controller
             $cliente->tipo_pessoa = $request->tipo_pessoa;
             $cliente->cpf_cnpj = $request->cpf_cnpj;
             $cliente->telefone = $request->telefone;
-            $cliente->inscricao_estadual = $request->inscricao_estadual;
-            $cliente->inscricao_representante = $request->inscricao_representante;
             $cliente->end_cep = $request->end_cep;
             $cliente->end_cidade = $request->end_cidade;
             $cliente->end_uf = $request->end_uf;

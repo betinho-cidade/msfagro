@@ -111,6 +111,7 @@ class ProdutorController extends Controller
             $produtor->cpf_cnpj = $request->cpf_cnpj;
             $produtor->telefone = $request->telefone;
             $produtor->inscricao_estadual = $request->inscricao_estadual;
+            $produtor->inscricao_representante = $request->inscricao_representante;
             $produtor->end_cep = $request->end_cep;
             $produtor->end_cidade = $request->end_cidade;
             $produtor->end_uf = $request->end_uf;
@@ -192,6 +193,7 @@ class ProdutorController extends Controller
             $produtor->cpf_cnpj = $request->cpf_cnpj;
             $produtor->telefone = $request->telefone;
             $produtor->inscricao_estadual = $request->inscricao_estadual;
+            $produtor->inscricao_representante = $request->inscricao_representante;
             $produtor->end_cep = $request->end_cep;
             $produtor->end_cidade = $request->end_cidade;
             $produtor->end_uf = $request->end_uf;

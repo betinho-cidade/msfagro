@@ -68,22 +68,10 @@
                             <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
                             <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
                                 <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
-                                <div class="valid-feedback">ok!</div>
-                                <div class="invalid-feedback">Inválido!</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inscricao_representante" class="{{($errors->first('inscricao_representante') ? 'form-error-label' : '')}}">É o representante ?</label>
-                                <select id="inscricao_representante" name="inscricao_representante" class="form-control {{($errors->first('inscricao_representante') ? 'form-error-field' : '')}}" required>
-                                    <option value="">---</option>
-                                    <option value="S" {{(old('inscricao_representante') == 'S') ? 'selected' : '' }}>Sim</option>
-                                    <option value="N" {{(old('inscricao_representante') == 'N') ? 'selected' : '' }}>Não</option>
-                                </select>
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -103,7 +91,7 @@
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="email" class="{{($errors->first('email') ? 'form-error-label' : '')}}">E-mail</label>
                                 <input type="email" class="form-control {{($errors->first('email') ? 'form-error-field' : '')}}" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
@@ -111,18 +99,10 @@
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="telefone" class="{{($errors->first('telefone') ? 'form-error-label' : '')}}">Telefone</label>
                                 <input type="text" class="form-control {{($errors->first('telefone') ? 'form-error-field' : '')}} mask_telefone" id="telefone" name="telefone" value="{{old('telefone')}}" placeholder="Telefone">
-                                <div class="valid-feedback">ok!</div>
-                                <div class="invalid-feedback">Inválido!</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inscricao_estadual" class="{{($errors->first('inscricao_estadual') ? 'form-error-label' : '')}}">Inscrição Estadual</label>
-                                <input type="text" class="form-control {{($errors->first('inscricao_estadual') ? 'form-error-field' : '')}}" id="inscricao_estadual" name="inscricao_estadual" value="{{old('inscricao_estadual')}}" placeholder="Inscrição Estadual">
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>

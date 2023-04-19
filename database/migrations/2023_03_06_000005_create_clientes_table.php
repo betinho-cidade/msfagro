@@ -18,8 +18,6 @@ class CreateClientesTable extends Migration
             $table->enum('tipo_pessoa', ['PF', 'PJ']);
             $table->string('cpf_cnpj', 14)->unique();
             $table->string('telefone', 20)->nullable();
-            $table->string('inscricao_estadual', 20)->nullable();
-            $table->enum('inscricao_representante', ['S', 'N'])->default('N');  //S->Inscrição pertence ao representante informado  N->Inscrição não pertence ao representante informado
             $table->string('end_cep', 8)->nullable();
             $table->string('end_cidade', 60)->nullable();
             $table->string('end_uf', 2)->nullable();
