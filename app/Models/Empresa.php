@@ -36,4 +36,12 @@ class Empresa extends Model
         return $tipo_pessoa;
     }
 
+    public function getNomeEmpresaAttribute()
+    {
+        $nome = $this->nome . ' - ' . $this->tipo_pessoa. ':' . $this->cpf_cnpj;
+
+        return $nome;
+    }
+
+
 }

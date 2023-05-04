@@ -56,17 +56,28 @@ class FormaPagamento extends Model
 
     public function getNomeProdutorAttribute()
     {
-        $nome = $this->produtor ? ($this->produtor->nome . ' / ' . $this->produtor->cpf_cnpj) : '... / ...';
-        $nome = Str::limit($nome, 100, '...');
+        $nome = $this->produtor ? $this->produtor->nome_produtor : '... / ...';
 
         return $nome;
     }
 
     public function getNomeProdutorFullAttribute()
     {
-        $nome = $this->produtor ? ($this->produtor->nome . ' / ' . $this->produtor->cpf_cnpj) : '... / ...';
+        $nome = $this->produtor ? $this->produtor->nome_produtor_full : '... / ...';
 
         return $nome;
+    }
+
+    public function getFormaAttribute()
+    {
+        $forma = (($this->produtor) ? Str::limit($this->produtor->nome, 20, '...') : 'Sem Produtor') . ' [' . $this->tipo_conta_texto . '] ';
+
+        $forma = $forma . (($this->banco) ? ' [' . Str::limit($this->banco, 20, '...'). ']' : '');
+        $forma = $forma . (($this->agencia) ? ' [age: ' . $this->agencia . ']' : '');
+        $forma = $forma . (($this->conta) ? ' [cta: ' . $this->conta . ']' : '');
+        $forma = $forma . (($this->pix) ? ' [pix: ' . $this->pix . ']' : '');
+
+        return $forma;
     }
 
 }

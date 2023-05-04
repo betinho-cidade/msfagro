@@ -53,114 +53,239 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="tipo_pessoa" class="{{($errors->first('tipo_pessoa') ? 'form-error-label' : '')}}">Tipo Pessoa</label>
-                            <select id="tipo_pessoa" name="tipo_pessoa" class="form-control {{($errors->first('tipo_pessoa') ? 'form-error-field' : '')}} dynamic_tipo" required>
+                            <label for="tipo" class="{{($errors->first('tipo') ? 'form-error-label' : '')}}">Tipo Movimentação</label>
+                            <select id="tipo" name="tipo" class="form-control {{($errors->first('tipo') ? 'form-error-field' : '')}} dynamic_tipo" required>
                                 <option value="">---</option>
-                                <option value="PF" {{(old('tipo_pessoa') == 'PF') ? 'selected' : '' }}>Pessoa Física</option>
-                                <option value="PJ" {{(old('tipo_pessoa') == 'PJ') ? 'selected' : '' }}>Pessoa Jurídica</option>
+                                <option value="CP" {{(old('tipo') == 'CP') ? 'selected' : '' }}>Compra</option>
+                                <option value="VD" {{(old('tipo') == 'VD') ? 'selected' : '' }}>Venda</option>
+                                <option value="EG" {{(old('tipo') == 'EG') ? 'selected' : '' }}>Engorda</option>
                             </select>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label for="cpf">CPF/CNPJ</label>
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
-                    </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="{{old('nome')}}" placeholder="Nome" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="situacao">Situação</label>
-                            <select id="situacao" name="situacao" class="form-control" required>
+                            <label for="categoria" class="{{($errors->first('categoria') ? 'form-error-label' : '')}}">Categoria</label>
+                            <select id="categoria" name="categoria" class="form-control {{($errors->first('categoria') ? 'form-error-field' : '')}} select2 dynamic_categoria" required>
                                 <option value="">---</option>
-                                <option value="A" {{(old('situacao') == 'A') ? 'selected' : '' }}>Ativo</option>
-                                <option value="I" {{(old('situacao') == 'I') ? 'selected' : '' }}>Inativo</option>
+                                @foreach($categorias as $categoria)
+                                    <option value="{{ $categoria->id }}" {{(old('categoria') == $categoria->id) ? 'selected' : '' }}>{{ $categoria->nome }}</option>
+                                @endforeach
                             </select>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="email">E-mail</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="E-mail" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="text" class="form-control mask_telefone" id="telefone" name="telefone" value="{{old('telefone')}}" placeholder="Telefone">
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="inscricao_estadual">Inscrição Estadual</label>
-                            <input type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual" value="{{old('inscricao_estadual')}}" placeholder="Inscrição Estadual">
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                </div>
-            <!-- Dados Pessoais -- FIM -->
-
-            <!-- Dados Endereço - INI -->
-            <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados Endereço</h5>
-            </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="end_cep">CEP</label>
-                        <img src="{{asset('images/loading.gif')}}" id="img-loading-cep" style="display:none;max-width: 17%; margin-left: 26px;">
-                        <input type="text" name="end_cep" id="end_cep" class="form-control dynamic_cep mask_cep" value="{{old('end_cep')}}" placeholder="99.999-999">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="end_cidade">Cidade</label>
-                        <input type="text" name="end_cidade" id="end_cidade" class="form-control" value="{{old('end_cidade')}}">
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="end_uf">Estado</label>
-                        <input type="text" name="end_uf" id="end_uf" class="form-control" value="{{old('end_uf')}}">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="end_bairro">Bairro</label>
-                        <input type="text" name="end_bairro" id="end_bairro" class="form-control" value="{{old('end_bairro')}}">
-                    </div>
-                </div>
-                <p></p>
-                <div class="row">
                     <div class="col-md-6">
-                        <label for="end_endereco">Endereço</label>
-                        <input type="text" name="end_logradouro" id="end_logradouro" class="form-control" value="{{old('end_logradouro')}}">
+                        <div class="form-group">
+                            <label for="empresa" class="{{($errors->first('empresa') ? 'form-error-label' : '')}}">Empresa</label>
+                            <select id="empresa" name="empresa" class="form-control {{($errors->first('empresa') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                @foreach($empresas as $empresa)
+                                    <option value="{{ $empresa->id }}" {{(old('empresa') == $empresa->id) ? 'selected' : '' }}>{{ $empresa->nome_empresa }}</option>
+                                @endforeach
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
                     </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="item_macho" class="{{($errors->first('item_macho') ? 'form-error-label' : '')}}">Classificação Machos</label>
+                            <select id="item_macho" name="item_macho" class="form-control {{($errors->first('item_macho') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                <option value="M1" {{(old('item_macho') == 'M1') ? 'selected' : '' }}>Macho de 0 à 12 meses</option>
+                                <option value="M2" {{(old('item_macho') == 'M2') ? 'selected' : '' }}>Macho de 12 à 24 meses</option>
+                                <option value="M3" {{(old('item_macho') == 'M3') ? 'selected' : '' }}>Macho de 25 à 36 meses</option>
+                                <option value="M4" {{(old('item_macho') == 'M4') ? 'selected' : '' }}>Macho acima de 36 meses</option>
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
                     <div class="col-md-2">
-                        <label for="end_numero">Número</label>
-                        <input type="text" name="end_numero" id="end_numero" value="{{old('end_numero')}}" class="form-control">
+                        <div class="form-group">
+                            <label for="qtd_macho">Qtd. Machos</label>
+                            <input type="text" class="form-control" id="qtd_macho" name="qtd_macho" value="{{old('qtd_macho')}}" placeholder="Qtd. Machos" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="item_femea" class="{{($errors->first('item_femea') ? 'form-error-label' : '')}}">Classificação Fêmeas</label>
+                            <select id="item_femea" name="item_femea" class="form-control {{($errors->first('item_femea') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                <option value="F1" {{(old('item_femea') == 'F1') ? 'selected' : '' }}>Fêmea de 0 à 2 meses</option>
+                                <option value="F2" {{(old('item_femea') == 'F2') ? 'selected' : '' }}>Fêmea de 12 à 24 meses</option>
+                                <option value="F3" {{(old('item_femea') == 'F3') ? 'selected' : '' }}>Fêmea de 25 à 36 meses</option>
+                                <option value="F4" {{(old('item_femea') == 'F4') ? 'selected' : '' }}>Fêmea acima de 36 meses</option>
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="qtd_femea">Qtd. Fêmeas</label>
+                            <input type="text" class="form-control" id="qtd_femea" name="qtd_femea" value="{{old('qtd_femea')}}" placeholder="Qtd. Fêmeas" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="gta">Número GTA</label>
+                            <input type="text" class="form-control" id="gta" name="gta" value="{{old('gta')}}" placeholder="Número GTA">
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="end_complemento">Complemento </label>
-                        <input type="text" name="end_complemento" id="end_complemento" class="form-control" value="{{old('end_complemento')}}">
+                        <label for="path_gta" class="{{($errors->first('path_gta') ? 'form-error-label' : '')}}">GTA (imagem/pdf)</label>
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input {{($errors->first('path_gta') ? 'form-error-field' : '')}}" id="path_gta" name="path_gta" accept="image/*, application/pdf">
+                            <label class="custom-file-label" for="path_gta">Selecionar GTA</label>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label id="origem_lbl" for="origem" class="{{($errors->first('origem') ? 'form-error-label' : '')}}">Origem</label>
+                            <select id="origem" name="origem" class="form-control {{($errors->first('origem') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                @foreach($produtors as $produtor)
+                                    <option value="{{ $produtor->id }}" {{(old('produtor') == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @endforeach
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label id="destino_lbl" for="destino" class="{{($errors->first('destino') ? 'form-error-label' : '')}}">Destino</label>
+                            <select id="destino" name="destino" class="form-control {{($errors->first('destino') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                @foreach($produtors as $produtor)
+                                    <option value="{{ $produtor->id }}" {{(old('produtor') == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @endforeach
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
                     </div>
                 </div>
-                <p></p>
-            <!-- Dados Endereço - FIM -->
+
+                <br>
+
+                <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Pagamento</h5>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="data_programada">Data Programada</label>
+                        <input type="date" class="form-control" id="data_programada" name="data_programada" value="{{old('data_programada')}}" placeholder="Data Programada" required>
+                        <div class="valid-feedback">ok!</div>
+                        <div class="invalid-feedback">Inválido!</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor</label>
+                            <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                @foreach($produtors as $produtor)
+                                    <option value="{{ $produtor->id }}" {{(old('produtor') == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @endforeach
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento</label>
+                            <select id="forma_pagamento" name="forma_pagamento" class="form-control {{($errors->first('forma_pagamento') ? 'form-error-field' : '')}} select2" required>
+                                <option value="">---</option>
+                                @foreach($forma_pagamentos as $forma_pagamento)
+                                    <option value="{{ $forma_pagamento->id }}" {{(old('forma_pagamento') == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
+                                @endforeach
+                            </select>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
+                            <input type="hidden" class="form-control" id="valor" name="valor" value="">
+                            <input type="text" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{old('valor_view')}}" placeholder="Valor" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="path_comprovante" class="{{($errors->first('path_comprovante') ? 'form-error-label' : '')}}">Comprovante Pagamento (imagem/pdf)</label>
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input {{($errors->first('path_comprovante') ? 'form-error-field' : '')}}" id="path_comprovante" name="path_comprovante" accept="image/*, application/pdf">
+                            <label id="path_comprovante_lbl" class="custom-file-label" for="path_comprovante">Selecionar Comprovante</label>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="documento">Número Nota</label>
+                            <input type="text" class="form-control" id="documento" name="documento" value="{{old('documento')}}" placeholder="Número Nota">
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="path_documento" class="{{($errors->first('path_documento') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)</label>
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input {{($errors->first('path_documento') ? 'form-error-field' : '')}}" id="path_documento" name="path_documento" accept="image/*, application/pdf">
+                            <label class="custom-file-label" for="path_documento">Selecionar Nota</label>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="observacao">Observações</label>
+                            <textarea rows="3" class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Dados Pessoais -- FIM -->
 
                 <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
             </form>
@@ -173,88 +298,201 @@
 
 @endsection
 
+@section('head-css')
+    <link href="{{asset('nazox/assets/libs/select2/css/select2.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+@endsection
 
 @section('script-js')
     <script src="{{asset('nazox/assets/js/pages/form-validation.init.js')}}"></script>
     <script src="{{asset('nazox/assets/libs/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <script src="{{asset('nazox/assets/js/pages/form-element.init.js')}}"></script>
+    <script src="{{asset('nazox/assets/libs/select2/js/select2.min.js')}}"></script>
 
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
+    <script src="{{asset('js/jquery.maskMoney.min.js')}}"></script>
 
     <script>
-		$(document).ready(function(){
-			$('.mask_cep').inputmask('99.999-999');
-            $('.mask_telefone').inputmask('(99) 99999-9999');
-            $('.select2').select2();
-		});
-	</script>
 
-    <script type='text/javascript'>
-        $(document).ready(function(){
-            $('.dynamic_cep').change(function(){
+    $(document).ready(function(){
 
-                if ($(this).val() != ''){
-                    document.getElementById("img-loading-cep").style.display = '';
+        $('.select2').select2();
 
-                    var cep = $('#end_cep').val();
-                    var _token = $('input[name="_token"]').val();
+        $('.dynamic_tipo').change(function(){
 
-                    $('#end_logradouro').val('');
-                    $('#end_complemento').val('');
-                    $('#end_numero').val('');
-                    $('#end_bairro').val('');
-                    $('#end_cidade').val('');
-                    $('#end_uf').val('');
+            let tipo = document.getElementById('tipo').value;
+            let origem = document.getElementById('origem');
+            let origem_lbl = document.getElementById('origem_lbl');
+            let destino = document.getElementById('destino');
+            let destino_lbl = document.getElementById('destino_lbl');
+            let empresa = document.getElementById('empresa');
+            let forma_pagamento = document.getElementById('forma_pagamento');
+            let valor = document.getElementById('valor');
+            let valor_view = document.getElementById('valor_view');
+            let path_comprovante = document.getElementById('path_comprovante');
+            let path_comprovante_lbl = document.getElementById('path_comprovante_lbl');
 
-                    $.ajax({
-                        url: "{{route('painel.js_viacep')}}",
-                        method: "POST",
-                        data: {_token:_token, cep:cep},
-                        success:function(result){
-                            dados = JSON.parse(result);
-                            if(dados==null || dados['error'] == 'true'){
-                                    console.log(dados);
-                            } else{
-                                    $('#end_logradouro').val(dados['logradouro']);
-                                    $('#end_complemento').val(dados['complemento']);
-                                    $('#end_bairro').val(dados['bairro']);
-                                    $('#end_cidade').val(dados['localidade']);
-                                    $('#end_uf').val(dados['uf']);
-                            }
-                            document.getElementById("img-loading-cep").style.display = 'none';
-                        },
-                        error:function(erro){
-                            document.getElementById("img-loading-cep").style.display = 'none';
-                        }
-                    })
-                }
-            });
+            switch(tipo){
+                case 'CP':
+                    origem.options.selectedIndex = 0;
+                    $('#origem').val(null).trigger('change');
+                    origem.disabled = true;
+                    origem_lbl.innerHTML = 'Origem - Empresa';
+
+                    destino.disabled = false;
+                    destino_lbl.innerHTML = 'Destino - Fazenda';
+
+                    empresa.disabled = false;
+                    forma_pagamento.disabled = false;
+                    valor.disabled = false;
+                    valor_view.disabled = false;
+                    valor_view.style.backgroundColor = 'white';
+                    path_comprovante_lbl.style.backgroundColor = 'white';
+                    path_comprovante.disabled = false;
+                    break;
+
+                case 'VD':
+                    origem.disabled = false;
+                    origem_lbl.innerHTML = 'Origem - Fazenda';
+
+                    destino.options.selectedIndex = 0;
+                    $('#destino').val(null).trigger('change');
+                    destino.disabled = true;
+                    destino_lbl.innerHTML = 'Destino - Empresa';
+
+                    empresa.disabled = false;
+                    forma_pagamento.disabled = false;
+                    valor.disabled = false;
+                    valor_view.disabled = false;
+                    valor_view.style.backgroundColor = 'white';
+                    path_comprovante_lbl.style.backgroundColor = 'white';
+                    path_comprovante.disabled = false;
+                    break;
+
+                case 'EG':
+                    origem.disabled = false;
+                    origem_lbl.innerHTML = 'Origem - Fazenda';
+
+                    destino.disabled = false;
+                    destino_lbl.innerHTML = 'Destino - Fazenda';
+
+                    empresa.options.selectedIndex = 0;
+                    $('#empresa').val(null).trigger('change');
+                    empresa.disabled = true;
+
+                    forma_pagamento.options.selectedIndex = 0;
+                    $('#forma_pagamento').val(null).trigger('change');
+                    forma_pagamento.disabled = true;
+
+                    valor.value = '';
+                    valor.disabled = true;
+                    valor_view.value = '';
+                    valor_view.disabled = true;
+                    valor_view.style.backgroundColor = '#D3D3D3';
+
+                    path_comprovante_lbl.innerHTML = 'Selecionar Comprovante';
+                    path_comprovante_lbl.style.backgroundColor = '#D3D3D3';
+
+                    path_comprovante.value = '';
+                    path_comprovante.disabled = true;
+                    path_comprovante.style.color = '#D3D3D3';
+                    break;
+            }
+
         });
-    </script>
 
-    <script type='text/javascript'>
-        $(document).ready(function(){
-            $('.dynamic_tipo').change(function(){
+        $('.dynamic_categoria').change(function(){
 
-                $('.mask_cpf_cnpj').attr('placeholder', '---');
-                $('.mask_cpf_cnpj').val('');
+            let categoria = document.getElementById('categoria');
+            let categoria_text = categoria.options[categoria.selectedIndex].text;
 
-                if ($(this).val() != ''){
-                    var tipo = $(this).val();
+            let item_macho = document.getElementById('item_macho');
+            let qtd_macho = document.getElementById('qtd_macho');
+            let item_femea = document.getElementById('item_femea');
+            let qtd_femea = document.getElementById('qtd_femea');
 
-                    if(tipo == 'PF'){
-                        $('.mask_cpf_cnpj').inputmask('999.999.999-99');
-                        $('.mask_cpf_cnpj').attr('placeholder', 'Informe o CPF');
-                    }
-                    if (tipo == 'PJ'){
-                        $('.mask_cpf_cnpj').inputmask('99.999.999/9999-99');
-                        $('.mask_cpf_cnpj').attr('placeholder', 'Informe o CNPJ');
-                    }
-                }
-            });
+            switch(categoria_text){
+                case 'Macho':
+                    item_macho.disabled = false;
+                    qtd_macho.disabled = false;
+                    qtd_macho.style.backgroundColor = 'white';
+
+                    item_femea.options.selectedIndex = 0;
+                    $('#item_femea').val(null).trigger('change');
+                    item_femea.disabled = true;
+
+                    qtd_femea.value = '';
+                    qtd_femea.disabled = true;
+                    qtd_femea.style.backgroundColor = '#D3D3D3';
+                    break;
+
+                case 'Fêmea':
+                    item_macho.options.selectedIndex = 0;
+                    $('#item_macho').val(null).trigger('change');
+                    item_macho.disabled = true;
+
+                    qtd_macho.value = '';
+                    qtd_macho.disabled = true;
+                    qtd_macho.style.backgroundColor = '#D3D3D3';
+
+                    item_femea.disabled = false;
+                    qtd_femea.disabled = false;
+                    qtd_femea.style.backgroundColor = 'white';
+                    break;
+
+                default :
+                    item_macho.disabled = false;
+                    qtd_macho.disabled = false;
+                    qtd_macho.style.backgroundColor = 'white';
+
+                    item_femea.disabled = false;
+                    qtd_femea.disabled = false;
+                    qtd_femea.style.backgroundColor = 'white';
+                    break;
+            }
+
         });
-    </script>
 
+        $('.mask_valor').maskMoney({
+            prefix:'R$ ',
+            allowNegative: false,
+            thousands:'.',
+            decimal:',',
+            precision: 2,
+            affixesStay: true
+        });
+
+        formatValorMoeda('valor');
+        formatValorMoeda('valor_view');
+
+        $('.updValor').change(function(){
+            let valor_view = document.getElementById('valor_view');
+            let valor = document.getElementById('valor');
+
+            if(valor_view && valor_view.value){
+                valor_new = valor_view.value;
+                valor_new = valor_new.replace('R$ ', '').replace('.', '');
+                valor_new = valor_new.replace('R$ ', '').replace('.', '');
+                valor.value = valor_new;
+            }
+        });
+
+        $('.dynamic_tipo').trigger('change');
+        $('.dynamic_categoria').trigger('change');
+    });
+
+    function formatValorMoeda(field){
+        let element =  document.getElementById(field);
+
+        if(element && element.value){
+            valueFormatted = parseFloat(element.value.replace('R$ ', '').replace(',', '.')).toFixed(2).replace('.', ',');
+            document.getElementById(field).value = valueFormatted;
+
+            $('#'+field).trigger('select');
+        }
+    }
+
+    </script>
 
 @endsection
+

@@ -124,14 +124,14 @@ Route::middleware(['auth'])->group(function () {
 
             Route::group(['namespace' => 'Lancamento'], function(){
                 Route::get('/lancamento', 'LancamentoController@index')->name('lancamento.index');
-                Route::post('/lancamento/create', 'LancamentoController@create')->name('lancamento.create');
+                Route::get('/lancamento/create', 'LancamentoController@create')->name('lancamento.create');
                 Route::post('/lancamento/store_MG', 'LancamentoController@store_MG')->name('lancamento.store_MG');
                 Route::post('/lancamento/store_MF', 'LancamentoController@store_MF')->name('lancamento.store_MF');
                 Route::get('/lancamento/list', 'LancamentoController@list')->name('lancamento.list');
-                Route::post('/lancamento/list_destroy', 'LancamentoController@list_destroy')->name('lancamento.list_destroy');
-                Route::get('/lancamento/{lancamento}', 'LancamentoController@show')->name('lancamento.show');
-                Route::put('/lancamento/{lancamento}/update', 'LancamentoController@update')->name('lancamento.update');
-                Route::delete('/lancamento/{lancamento}/destroy', 'LancamentoController@destroy')->name('lancamento.destroy');
+                //Route::post('/lancamento/list_destroy', 'LancamentoController@list_destroy')->name('lancamento.list_destroy');
+                //Route::get('/lancamento/{lancamento}', 'LancamentoController@show')->name('lancamento.show');
+                //Route::put('/lancamento/{lancamento}/update', 'LancamentoController@update')->name('lancamento.update');
+                //Route::delete('/lancamento/{lancamento}/destroy', 'LancamentoController@destroy')->name('lancamento.destroy');
             });
 
         });

@@ -48,14 +48,16 @@
                         <thead>
                         <tr>
                             <th style="text-align:center;">Mês / Ano</th>
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação de bovinos" style="text-align:center;">Movimentação Bovina*
                                 @can('create_lancamento')
-                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos do mês - Movimentação Fiscal"></i>
+                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Movimentação Bovina"></i>
                                 @endcan
                             </th>
+                            @endif
                             <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação fiscal" style="text-align:center;">Movimentação Fiscal*
                                 @can('create_lancamento')
-                                    <i onClick="createLancamento('MF');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos do mês - Movimentação Fiscal"></i>
+                                    <i onClick="createLancamento('MF');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Movimentação Fiscal"></i>
                                 @endcan
                             </th>
                             <th style="text-align:center;">Total de Lançamentos</th>
@@ -63,9 +65,8 @@
                         </tr>
                         </thead>
 
-                        <form action="" id="novoLancamento" method="post">
+                        <form action="" id="novoLancamento" method="get">
                             @csrf
-                            @method('POST')
                             <input type="hidden" id="segmento" name="segmento">
                         </form>
 
@@ -73,7 +74,9 @@
                         @forelse($lancamentos as $lancamento)
                         <tr>
                             <td style="text-align:center;vertical-align: middle">{{$lancamento->mes_referencia}}</td>
+                            @if($user->cliente && $user->cliente->tipo != 'AG')
                             <td style="text-align:center;vertical-align: middle" class="valor_remessa">{{$lancamento->movimentacao_bovina}}</td>
+                            @endif
                             <td style="text-align:center;vertical-align: middle" class="valor_remessa">{{$lancamento->movimentacao_fiscal}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$lancamento->total}}</td>
                             <td style="text-align:center;vertical-align: middle">
@@ -86,7 +89,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '5' : '4' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>

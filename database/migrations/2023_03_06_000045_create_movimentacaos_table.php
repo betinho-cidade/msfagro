@@ -14,7 +14,6 @@ class CreateMovimentacaosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('lancamento_id');
             $table->unsignedBigInteger('forma_pagamento_id');
-            $table->datetime('data_criacao');
             $table->datetime('data_programada');
             $table->datetime('data_pagamento')->nullable();
             $table->enum('tipo', ['R' ,'D']); //R->Receita  D->Despesa

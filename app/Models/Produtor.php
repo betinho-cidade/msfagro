@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class Produtor extends Model
@@ -39,6 +40,21 @@ class Produtor extends Model
         }
 
         return $tipo_pessoa;
+    }
+
+    public function getNomeProdutorAttribute()
+    {
+        $nome = $this->nome . ' / ' . $this->cpf_cnpj;
+        $nome = Str::limit($nome, 100, '...');
+
+        return $nome;
+    }
+
+    public function getNomeProdutorFullAttribute()
+    {
+        $nome = $this->nome . ' / ' . $this->cpf_cnpj;
+
+        return $nome;
     }
 
 }
