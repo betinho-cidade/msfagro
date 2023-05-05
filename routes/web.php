@@ -128,6 +128,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/lancamento/store_MG', 'LancamentoController@store_MG')->name('lancamento.store_MG');
                 Route::post('/lancamento/store_MF', 'LancamentoController@store_MF')->name('lancamento.store_MF');
                 Route::get('/lancamento/list', 'LancamentoController@list')->name('lancamento.list');
+                Route::post('/lancamento/refreshList', 'LancamentoController@refreshList')->name('lancamento.refreshList');
                 //Route::post('/lancamento/list_destroy', 'LancamentoController@list_destroy')->name('lancamento.list_destroy');
                 //Route::get('/lancamento/{lancamento}', 'LancamentoController@show')->name('lancamento.show');
                 //Route::put('/lancamento/{lancamento}/update', 'LancamentoController@update')->name('lancamento.update');

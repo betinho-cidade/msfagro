@@ -9,6 +9,7 @@ use App\Models\Produtor;
 use App\Models\Categoria;
 use App\Models\Lancamento;
 use App\Models\FormaPagamento;
+use App\Models\Fazenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Exception;
@@ -159,6 +160,11 @@ class LancamentoController extends Controller
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
+        $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                                            ->where('status', 'A')
+                                            ->orderBy('nome', 'asc')
+                                            ->get();
+
         if($segmento == 'MG' && $user->cliente->tipo != 'AG'){
 
             $categorias = Categoria::where('segmento', 'MG')
@@ -166,7 +172,7 @@ class LancamentoController extends Controller
                                     ->orderBy('nome', 'asc')
                                     ->get();
 
-            return view('painel.movimentacao.lancamento.create_MG', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias'));
+            return view('painel.movimentacao.lancamento.create_MG', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias', 'fazendas'));
         }
         if($segmento == 'MF'){
 
@@ -175,7 +181,7 @@ class LancamentoController extends Controller
                                     ->orderBy('nome', 'asc')
                                     ->get();
 
-            return view('painel.movimentacao.lancamento.create_MF', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias'));
+            return view('painel.movimentacao.lancamento.create_MF', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias', 'fazendas'));
         }
 
         return redirect()->route('lancamento.index');
@@ -459,5 +465,101 @@ class LancamentoController extends Controller
 
     //     return redirect()->route('lancamento.list', compact('mes_referencia'));
     // }
+
+    public function refreshList(Request $request)
+    {
+
+        if(Gate::denies('view_lancamento')){
+            return redirect()->route('logout');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if(!$request->has('tipo') || $request->tipo == null){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Processo para atualização não identificado.');
+
+            return redirect()->route('painel');
+        }
+
+        $mensagem = [];
+        $tipo = $request->tipo;
+
+        switch($tipo) {
+            case 'EP': {
+                $empresas = Empresa::where('cliente_id', $user->cliente->id)
+                                    ->where('status', 'A')
+                                    ->orderBy('nome', 'asc')
+                                    ->get();
+
+                foreach($empresas as $empresa)
+                {
+                    $list['id'] = $empresa->id;
+                    $list['nome'] = $empresa->nome_empresa;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }
+
+            case 'FP': {
+                $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+                                                    ->where('status', 'A')
+                                                    ->orderBy('produtor_id', 'desc')
+                                                    ->orderBy('tipo_conta', 'asc')
+                                                    ->get();
+
+                foreach($forma_pagamentos as $forma_pagamento)
+                {
+                    $list['id'] = $forma_pagamento->id;
+                    $list['nome'] = $forma_pagamento->forma;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }
+
+            case 'PT': {
+                $produtors = Produtor::where('cliente_id', $user->cliente->id)
+                                        ->where('status', 'A')
+                                        ->orderBy('nome', 'asc')
+                                        ->get();
+
+                foreach($produtors as $produtor)
+                {
+                    $list['id'] = $produtor->id;
+                    $list['nome'] = $produtor->nome_produtor;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }
+
+            case 'OR' || 'DT': {
+                $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                                    ->where('status', 'A')
+                                    ->orderBy('nome', 'asc')
+                                    ->get();
+
+                foreach($fazendas as $fazenda)
+                {
+                    $list['id'] = $fazenda->id;
+                    $list['nome'] = $fazenda->nome_fazenda;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }
+        }
+
+        return response()->json(['mensagem' => $mensagem]);
+    }
 
 }

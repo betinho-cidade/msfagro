@@ -79,7 +79,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="empresa" class="{{($errors->first('empresa') ? 'form-error-label' : '')}}">Empresa</label>
+                            <label for="empresa" class="{{($errors->first('empresa') ? 'form-error-label' : '')}}">Empresa <a href="{{ route('empresa.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Empresa"></i></a> <i onclick="refreshList('EP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Empresas"></i></label>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-empresa" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="empresa" name="empresa" class="form-control {{($errors->first('empresa') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
                                 @foreach($empresas as $empresa)
@@ -161,11 +162,12 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label id="origem_lbl" for="origem" class="{{($errors->first('origem') ? 'form-error-label' : '')}}">Origem</label>
+                            <label id="origem_lbl" for="origem" class="{{($errors->first('origem') ? 'form-error-label' : '')}}">Origem</label> <a href="{{ route('fazenda.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Fazenda"></i></a> <i onclick="refreshList('OG');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Fazendas"></i>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-origem" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="origem" name="origem" class="form-control {{($errors->first('origem') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
-                                @foreach($produtors as $produtor)
-                                    <option value="{{ $produtor->id }}" {{(old('produtor') == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @foreach($fazendas as $fazenda)
+                                    <option value="{{ $fazenda->id }}" {{(old('fazenda') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
                                 @endforeach
                             </select>
                             <div class="valid-feedback">ok!</div>
@@ -175,11 +177,12 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label id="destino_lbl" for="destino" class="{{($errors->first('destino') ? 'form-error-label' : '')}}">Destino</label>
+                            <label id="destino_lbl" for="destino" class="{{($errors->first('destino') ? 'form-error-label' : '')}}">Destino</label>  <a href="{{ route('fazenda.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Fazenda"></i></a> <i onclick="refreshList('DT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Fazendas"></i>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-destino" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="destino" name="destino" class="form-control {{($errors->first('destino') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
-                                @foreach($produtors as $produtor)
-                                    <option value="{{ $produtor->id }}" {{(old('produtor') == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @foreach($fazendas as $fazenda)
+                                    <option value="{{ $fazenda->id }}" {{(old('fazenda') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
                                 @endforeach
                             </select>
                             <div class="valid-feedback">ok!</div>
@@ -203,7 +206,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor</label>
+                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor <a href="{{ route('produtor.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Produtor"></i></a> <i onclick="refreshList('PT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Produtores"></i></label>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-produtor" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
                                 @foreach($produtors as $produtor)
@@ -216,7 +220,8 @@
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento</label>
+                            <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento<a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-forma_pagamento" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="forma_pagamento" name="forma_pagamento" class="form-control {{($errors->first('forma_pagamento') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
                                 @foreach($forma_pagamentos as $forma_pagamento)
@@ -254,8 +259,8 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="documento">Número Nota</label>
-                            <input type="text" class="form-control" id="documento" name="documento" value="{{old('documento')}}" placeholder="Número Nota">
+                            <label for="documento" class="{{($errors->first('documento') ? 'form-error-label' : '')}}">Número Nota</label>
+                            <input type="text" class="form-control {{($errors->first('documento') ? 'form-error-field' : '')}}" id="documento" name="documento" value="{{old('documento')}}" placeholder="Número Nota">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -492,6 +497,69 @@
         }
     }
 
+
+    function refreshList(tipo) {
+
+        var _token = $('input[name="_token"]').val();
+        var _tipo = tipo;
+        var objectList;
+        var objectName;
+
+        if(tipo == 'EP'){
+            objectList = $('#empresa');
+            objectName = 'empresa';
+        }
+
+        if(tipo == 'FP'){
+            objectList = $('#forma_pagamento');
+            objectName = 'forma_pagamento';
+        }
+
+        if(tipo == 'PT'){
+            objectList = $('#produtor');
+            objectName = 'produtor';
+        }
+
+        if(tipo == 'OG'){
+            objectList = $('#origem');
+            objectName = 'origem';
+        }
+
+        if(tipo == 'DT'){
+            objectList = $('#destino');
+            objectName = 'destino';
+        }
+
+        document.getElementById("img-loading-"+objectName).style.display = '';
+
+        $.ajax({
+            url: "{{route('lancamento.refreshList')}}",
+            method: "POST",
+            dataType: "json",
+            data: {_token:_token, tipo:_tipo},
+            success:function(response){
+
+                var len = 0;
+                if (response.mensagem != null) {
+                    len = response.mensagem.length;
+                }
+
+                if (len>0) {
+                    objectList.find('option').not(':first').remove();
+                    for (var i = 0; i<len; i++) {
+                        var id = response.mensagem[i].id;
+                        var nome = response.mensagem[i].nome;
+                        var option = "<option value='"+id+"'>"+nome+"</option>";
+                        objectList.append(option);
+                    }
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                }
+            },
+            error:function(erro){
+                document.getElementById("img-loading-"+objectName).style.display = 'none';
+            }
+        })
+    }
     </script>
 
 @endsection

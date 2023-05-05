@@ -32,5 +32,9 @@ class Fazenda extends Model
         return $endereco;
     }
 
+    public function getNomeFazendaAttribute()
+    {
+        return $this->nome . ' - ' . $this->endereco;
+    }
 
 }
