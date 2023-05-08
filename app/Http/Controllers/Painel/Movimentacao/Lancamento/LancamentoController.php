@@ -8,6 +8,7 @@ use App\Models\Empresa;
 use App\Models\Produtor;
 use App\Models\Categoria;
 use App\Models\Lancamento;
+use App\Models\Movimentacao;
 use App\Models\FormaPagamento;
 use App\Models\Fazenda;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Gate;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Movimentacao\Lancamento\CreateRequest;
 //use App\Http\Requests\Movimentacao\Lancamento\UpdateRequest;
 use Carbon\Carbon;
@@ -47,76 +49,78 @@ class LancamentoController extends Controller
         }
 
         if($user->cliente->tipo != 'AG'){
-            $lancamentos = Lancamento::where('cliente_id', $user->cliente->id)
-            ->groupBy(DB::raw('concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada))'))
-            ->groupBy(DB::raw('concat(YEAR(lancamentos.data_programada), LPAD(MONTH(lancamentos.data_programada), 2, 0))'))
-            ->select(DB::raw('concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada)) AS mes_referencia,
-                              SUM(CASE WHEN lancamentos.segmento = (\'MG\') THEN 1 ELSE 0 END) as movimentacao_bovina,
-                              SUM(CASE WHEN lancamentos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
-                              count( lancamentos.id ) AS total'))
-            ->get();
+            $lancamentos = Lancamento::where('lancamentos.cliente_id', $user->cliente->id)
+                                        ->join('movimentacaos', 'movimentacaos.lancamento_id', '=', 'lancamentos.id')
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
+                                        ->groupBy(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0))'))
+                                        ->select(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
+                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MG\') THEN 1 ELSE 0 END) as movimentacao_bovina,
+                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
+                                                        count( lancamentos.id ) AS total'))
+                                        ->get();
         } else {
-            $lancamentos = Lancamento::where('cliente_id', $user->cliente->id)
-            ->groupBy(DB::raw('concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada))'))
-            ->groupBy(DB::raw('concat(YEAR(lancamentos.data_programada), LPAD(MONTH(lancamentos.data_programada), 2, 0))'))
-            ->select(DB::raw('concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada)) AS mes_referencia,
-                              SUM(CASE WHEN lancamentos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
-                              count( lancamentos.id ) AS total'))
-            ->get();
+            $lancamentos = Lancamento::where('lancamentos.cliente_id', $user->cliente->id)
+                                        ->join('movimentacaos', 'movimentacaos.lancamento_id', '=', 'lancamentos.id')
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
+                                        ->groupBy(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0))'))
+                                        ->select(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
+                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
+                                                        count( lancamentos.id ) AS total'))
+                                        ->get();
         }
 
         return view('painel.movimentacao.lancamento.index', compact('user', 'lancamentos'));
     }
 
 
-    public function list(Request $request)
-    {
+    // public function list(Request $request)
+    // {
 
-        if(Gate::denies('list_lancamento')){
-            abort('403', 'Página não disponível');
-        }
+    //     if(Gate::denies('list_lancamento')){
+    //         abort('403', 'Página não disponível');
+    //     }
 
-        $user = Auth()->User();
+    //     $user = Auth()->User();
 
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+    //     if(!$user->cliente){
+    //         $request->session()->flash('message.level', 'warning');
+    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-            return redirect()->route('lancamento.index');
-        }
+    //         return redirect()->route('lancamento.index');
+    //     }
 
-        $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
+    //     $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
 
-        if(!$mes_referencia){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
+    //     if(!$mes_referencia){
+    //         $request->session()->flash('message.level', 'warning');
+    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-            return redirect()->route('lancamento.index');
-        }
+    //         return redirect()->route('lancamento.index');
+    //     }
 
-        $data_programada_vetor = explode('-', $mes_referencia);
+    //     $data_programada_vetor = explode('-', $mes_referencia);
 
-        setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
-        $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
+    //     setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
+    //     $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
-        $lancamentos_MG = ($user->cliente->tipo != 'AG') ?
-                            Lancamento::where('cliente_id', $user->cliente->id)
-                            ->where('segmento', 'MG')
-                            ->whereYear('data_programada', $data_programada_vetor[1])
-                            ->whereMonth('data_programada', $data_programada_vetor[0])
-                            ->orderBy('data_programada', 'asc')
-                            ->get() : [];
+    //     $lancamentos_MG = ($user->cliente->tipo != 'AG') ?
+    //                         Lancamento::where('cliente_id', $user->cliente->id)
+    //                         ->where('segmento', 'MG')
+    //                         ->whereYear('data_programada', $data_programada_vetor[1])
+    //                         ->whereMonth('data_programada', $data_programada_vetor[0])
+    //                         ->orderBy('data_programada', 'asc')
+    //                         ->get() : [];
 
 
-        $lancamentos_MF = Lancamento::where('cliente_id', $user->cliente->id)
-                            ->where('segmento', 'MF')
-                            ->whereYear('data_programada', $data_programada_vetor[1])
-                            ->whereMonth('data_programada', $data_programada_vetor[0])
-                            ->orderBy('data_programada', 'asc')
-                            ->get();
+    //     $lancamentos_MF = Lancamento::where('cliente_id', $user->cliente->id)
+    //                         ->where('segmento', 'MF')
+    //                         ->whereYear('data_programada', $data_programada_vetor[1])
+    //                         ->whereMonth('data_programada', $data_programada_vetor[0])
+    //                         ->orderBy('data_programada', 'asc')
+    //                         ->get();
 
-        return view('painel.movimentacao.lancamento.index_list', compact('user', 'mes_referencia', 'data_programada', 'lancamentos_MG', 'lancamentos_MF'));
-    }
+    //     return view('painel.movimentacao.lancamento.index_list', compact('user', 'mes_referencia', 'data_programada', 'lancamentos_MG', 'lancamentos_MF'));
+    // }
 
 
 
@@ -160,14 +164,15 @@ class LancamentoController extends Controller
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
-        $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
-                                            ->where('status', 'A')
-                                            ->orderBy('nome', 'asc')
-                                            ->get();
 
         if($segmento == 'MG' && $user->cliente->tipo != 'AG'){
 
             $categorias = Categoria::where('segmento', 'MG')
+                                    ->where('status', 'A')
+                                    ->orderBy('nome', 'asc')
+                                    ->get();
+
+            $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();
@@ -181,7 +186,7 @@ class LancamentoController extends Controller
                                     ->orderBy('nome', 'asc')
                                     ->get();
 
-            return view('painel.movimentacao.lancamento.create_MF', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias', 'fazendas'));
+            return view('painel.movimentacao.lancamento.create_MF', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias'));
         }
 
         return redirect()->route('lancamento.index');
@@ -190,8 +195,6 @@ class LancamentoController extends Controller
 
     public function store_MG(CreateRequest $request)
     {
-
-        dd('store_MG', $request);
 
         if(Gate::denies('create_lancamento')){
             abort('403', 'Página não disponível');
@@ -206,33 +209,92 @@ class LancamentoController extends Controller
             return redirect()->route('painel');
         }
 
-        dd($request);
-
         $message = '';
 
         try {
 
             DB::beginTransaction();
 
-            $lancamento = new lancamento();
+            $lancamento = new Lancamento();
 
             $lancamento->cliente_id = $user->cliente->id;
-            $lancamento->nome = $request->nome;
-            $lancamento->email = $request->email;
-            $lancamento->tipo_pessoa = $request->tipo_pessoa;
-            $lancamento->cpf_cnpj = $request->cpf_cnpj;
-            $lancamento->telefone = $request->telefone;
-            $lancamento->inscricao_estadual = $request->inscricao_estadual;
-            $lancamento->end_cep = $request->end_cep;
-            $lancamento->end_cidade = $request->end_cidade;
-            $lancamento->end_uf = $request->end_uf;
-            $lancamento->end_logradouro = $request->end_logradouro;
-            $lancamento->end_numero = $request->end_numero;
-            $lancamento->end_bairro = $request->end_bairro;
-            $lancamento->end_complemento = $request->end_complemento;
-            $lancamento->status = $request->situacao;
+            $lancamento->data_programada = $request->data_programada;
+            $lancamento->segmento = 'MG';
+            $lancamento->tipo = $request->tipo;
+            $lancamento->empresa_id = ($request->has('empresa')) ? $request->empresa : null;
+            $lancamento->origem = ($request->has('origem')) ? $request->origem : null;
+            $lancamento->destino = ($request->has('destino')) ? $request->destino : null;
+            $lancamento->categoria_id = $request->categoria;
+            $lancamento->observacao = $request->observacao;
+            $lancamento->item_macho = ($request->has('item_macho')) ? $request->item_macho : null;
+            $lancamento->qtd_macho = ($request->has('qtd_macho')) ? $request->qtd_macho : 0;
+            $lancamento->item_femea = ($request->has('item_femea')) ? $request->item_femea : null;
+            $lancamento->qtd_femea = ($request->has('qtd_femea')) ? $request->qtd_femea : 0;
+            $lancamento->gta = $request->gta;
+            $lancamento->observacao = $request->observacao;
 
             $lancamento->save();
+
+            if ($request->path_gta) {
+
+                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+
+                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
+                $lancamento->path_gta = $nome_arquivo;
+                $lancamento->save();
+
+                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
+            }
+
+            // =================================================================
+            // INSERIR MOVIMENTAÇÃO FISCAL PARA LANÇAMENTOS DE COMPRA OU VENDA
+            // =================================================================
+
+            if($lancamento->tipo == 'CP' || $lancamento->tipo == 'VD'){
+
+                if($lancamento->tipo == 'CP'){
+                    $tipo = 'D';
+                } else if($lancamento->tipo == 'VD'){
+                    $tipo = 'R';
+                }
+
+                $movimentacao = new Movimentacao();
+
+                $movimentacao->lancamento_id = $lancamento->id;
+                $movimentacao->produtor_id = $request->produtor;
+                $movimentacao->forma_pagamento_id = $request->forma_pagamento;
+                $movimentacao->data_programada = $lancamento->data_programada;
+                $movimentacao->segmento = 'MG';
+                $movimentacao->tipo = $tipo;
+                $movimentacao->valor = $request->valor;
+                $movimentacao->nota = $request->nota;
+                $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
+                $movimentacao->item_texto = $lancamento->texto_lancamento;
+
+                $movimentacao->save();
+
+                if ($request->path_nota) {
+
+                    $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+
+                    $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                    $movimentacao->path_nota = $nome_arquivo;
+                    $movimentacao->save();
+
+                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
+                }
+
+                if ($request->path_comprovante) {
+
+                    $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+
+                    $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                    $movimentacao->path_comprovante = $nome_arquivo;
+                    $movimentacao->save();
+
+                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+                }
+            }
 
             DB::commit();
 

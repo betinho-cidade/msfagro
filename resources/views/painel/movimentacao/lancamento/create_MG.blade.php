@@ -47,7 +47,7 @@
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento de Movimentação Bovina</h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento da Movimentação Bovina</h5>
                 </div>
 
                 <div class="row">
@@ -191,20 +191,32 @@
                     </div>
                 </div>
 
-                <br>
-
-                <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Pagamento</h5>
-                </div>
-
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="data_programada">Data Programada</label>
                         <input type="date" class="form-control" id="data_programada" name="data_programada" value="{{old('data_programada')}}" placeholder="Data Programada" required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
-                    <div class="col-md-4">
+
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="observacao">Observações</label>
+                            <textarea rows="3" class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Pagamento para Movimentação Fiscal</h5>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor <a href="{{ route('produtor.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Produtor"></i></a> <i onclick="refreshList('PT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Produtores"></i></label>
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-produtor" style="display:none;max-width: 20px; margin-left: 12px;">
@@ -218,7 +230,7 @@
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento<a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-forma_pagamento" style="display:none;max-width: 20px; margin-left: 12px;">
@@ -259,31 +271,18 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="documento" class="{{($errors->first('documento') ? 'form-error-label' : '')}}">Número Nota</label>
-                            <input type="text" class="form-control {{($errors->first('documento') ? 'form-error-field' : '')}}" id="documento" name="documento" value="{{old('documento')}}" placeholder="Número Nota">
+                            <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Número Nota Fiscal</label>
+                            <input type="text" class="form-control {{($errors->first('nota') ? 'form-error-field' : '')}}" id="nota" name="nota" value="{{old('nota')}}" placeholder="Número Nota">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="path_documento" class="{{($errors->first('path_documento') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)</label>
+                        <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)</label>
                         <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input {{($errors->first('path_documento') ? 'form-error-field' : '')}}" id="path_documento" name="path_documento" accept="image/*, application/pdf">
-                            <label class="custom-file-label" for="path_documento">Selecionar Nota</label>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <br>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="observacao">Observações</label>
-                            <textarea rows="3" class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
+                            <input type="file" class="custom-file-input {{($errors->first('path_nota') ? 'form-error-field' : '')}}" id="path_nota" name="path_nota" accept="image/*, application/pdf">
+                            <label id="path_nota_lbl" class="custom-file-label" for="path_nota">Selecionar Nota</label>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -331,11 +330,15 @@
             let destino = document.getElementById('destino');
             let destino_lbl = document.getElementById('destino_lbl');
             let empresa = document.getElementById('empresa');
+            let produtor = document.getElementById('produtor');
             let forma_pagamento = document.getElementById('forma_pagamento');
             let valor = document.getElementById('valor');
             let valor_view = document.getElementById('valor_view');
             let path_comprovante = document.getElementById('path_comprovante');
             let path_comprovante_lbl = document.getElementById('path_comprovante_lbl');
+            let nota = document.getElementById('nota');
+            let path_nota = document.getElementById('path_nota');
+            let path_nota_lbl = document.getElementById('path_nota_lbl');
 
             switch(tipo){
                 case 'CP':
@@ -348,10 +351,15 @@
                     destino_lbl.innerHTML = 'Destino - Fazenda';
 
                     empresa.disabled = false;
+                    produtor.disabled = false;
                     forma_pagamento.disabled = false;
                     valor.disabled = false;
                     valor_view.disabled = false;
                     valor_view.style.backgroundColor = 'white';
+                    nota.disabled = false;
+                    nota.style.backgroundColor = 'white';
+                    path_nota_lbl.style.backgroundColor = 'white';
+                    path_nota.disabled = false;
                     path_comprovante_lbl.style.backgroundColor = 'white';
                     path_comprovante.disabled = false;
                     break;
@@ -366,10 +374,15 @@
                     destino_lbl.innerHTML = 'Destino - Empresa';
 
                     empresa.disabled = false;
+                    produtor.disabled = false;
                     forma_pagamento.disabled = false;
                     valor.disabled = false;
                     valor_view.disabled = false;
                     valor_view.style.backgroundColor = 'white';
+                    nota.disabled = false;
+                    nota.style.backgroundColor = 'white';
+                    path_nota_lbl.style.backgroundColor = 'white';
+                    path_nota.disabled = false;
                     path_comprovante_lbl.style.backgroundColor = 'white';
                     path_comprovante.disabled = false;
                     break;
@@ -394,6 +407,19 @@
                     valor_view.value = '';
                     valor_view.disabled = true;
                     valor_view.style.backgroundColor = '#D3D3D3';
+
+                    produtor.disabled = true;
+
+                    nota.value = '';
+                    nota.disabled = true;
+                    nota.style.backgroundColor = '#D3D3D3';
+
+                    path_nota_lbl.innerHTML = 'Selecionar Nota';
+                    path_nota_lbl.style.backgroundColor = '#D3D3D3';
+
+                    path_nota.value = '';
+                    path_nota.disabled = true;
+                    path_nota.style.color = '#D3D3D3';
 
                     path_comprovante_lbl.innerHTML = 'Selecionar Comprovante';
                     path_comprovante_lbl.style.backgroundColor = '#D3D3D3';
