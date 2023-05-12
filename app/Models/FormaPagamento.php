@@ -20,6 +20,11 @@ class FormaPagamento extends Model
         return $this->belongsTo('App\Models\Produtor');
     }
 
+    public function movimentacaos()
+    {
+        return $this->hasMany('App\Models\Movimentacao');
+    }
+
     public function getTipoContaTextoAttribute()
     {
         $tipo_conta = '';

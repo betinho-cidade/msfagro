@@ -13,6 +13,7 @@ class CreateMovimentacaosTable extends Migration
         Schema::create('movimentacaos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('lancamento_id')->nullable();
+            $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('produtor_id');
             $table->unsignedBigInteger('forma_pagamento_id');
             $table->datetime('data_programada');
@@ -27,6 +28,7 @@ class CreateMovimentacaosTable extends Migration
             $table->string('item_texto', 300);
             $table->timestamps();
             $table->foreign('lancamento_id')->references('id')->on('lancamentos');
+            $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->foreign('produtor_id')->references('id')->on('produtors');
             $table->foreign('forma_pagamento_id')->references('id')->on('forma_pagamentos');
             $table->index(['lancamento_id'], 'idx_movimentacaos_lancamento');

@@ -29,38 +29,42 @@
                 <p class="card-title-desc"></p>
 
                 <!-- Nav tabs - LISTA lancamento - INI -->
+                @if($user->cliente && $user->cliente->tipo != 'AG')
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Lançamentos Mensais</span>
+                            <span class="d-none d-sm-block">Efetivo Pecuário</span>
                         </a>
                     </li>
                 </ul>
+                @endif
                 <!-- Nav tabs - LISTA lancamento - FIM -->
 
                 <!-- Tab panes -->
                 <div class="tab-content p-3 text-muted">
 
                 <!-- Nav tabs - LISTA lancamento - ATIVA - INI -->
+                @if($user->cliente && $user->cliente->tipo != 'AG')
                 <div class="tab-pane active" id="ativa" role="tabpanel">
                     <table id="dt_lancamentos" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
+                            <th>Ordenação</th>
                             <th style="text-align:center;">Mês / Ano</th>
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
-                            <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação de bovinos" style="text-align:center;">Movimentação Bovina*
+                            <th data-toggle="tooltip" title="Total de lançamentos referentes ao Efetivo Pecuário" style="text-align:center;">Lançamentos*
                                 @can('create_lancamento')
-                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Movimentação Bovina"></i>
+                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Efetivo Pecuário"></i>
                                 @endcan
                             </th>
-                            @endif
-                            <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação fiscal" style="text-align:center;">Movimentação Fiscal*
+                            {{--  <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação fiscal" style="text-align:center;">Movimentação Fiscal*
                                 @can('create_lancamento')
                                     <i onClick="createLancamento('MF');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Movimentação Fiscal"></i>
                                 @endcan
-                            </th>
-                            <th style="text-align:center;">Total de Lançamentos</th>
+                            </th>  --}}
+                            <th style="text-align:center;">Qtd. Compras</th>
+                            <th style="text-align:center;">Qtd. Vendas</th>
+                            <th style="text-align:center;">Qtd. Engordas</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -73,16 +77,16 @@
                         <tbody>
                         @forelse($lancamentos as $lancamento)
                         <tr>
+                            <td>{{$lancamento->mes_ano}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$lancamento->mes_referencia}}</td>
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
-                            <td style="text-align:center;vertical-align: middle" class="valor_remessa">{{$lancamento->movimentacao_bovina}}</td>
-                            @endif
-                            <td style="text-align:center;vertical-align: middle" class="valor_remessa">{{$lancamento->movimentacao_fiscal}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$lancamento->total}}</td>
+                            <td style="text-align:center;vertical-align: middle">{{$lancamento->compra}}</td>
+                            <td style="text-align:center;vertical-align: middle">{{$lancamento->venda}}</td>
+                            <td style="text-align:center;vertical-align: middle">{{$lancamento->engorda}}</td>
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_lancamento')
-                                <a href="{{route('lancamento.list', ['mes_referencia' => $lancamento->mes_referencia])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar os Lançamentos do mês"></i></a>
+                                <a href="{{route('lancamento.list_MG', ['mes_referencia' => $lancamento->mes_referencia])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar o Efetivo Pecuário do mês"></i></a>
                             @endcan
 
                             </td>
@@ -96,6 +100,7 @@
                     </table>
                     <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
                 </div>
+                @endif
 
             </div>
 
@@ -127,7 +132,13 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
-                "order": [[ 1, "desc" ]]
+                "order": [[ 0, "desc" ]],
+                columnDefs: [
+                    {
+                        targets: [ 0 ],
+                        visible: false,
+                    },
+                ],
             });
         </script>
     @endif

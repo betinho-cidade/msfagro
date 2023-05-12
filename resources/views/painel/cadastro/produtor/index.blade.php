@@ -73,8 +73,8 @@
                             <td>{{$produtor->id}}</td>
                             <td>{{$produtor->tipo_pessoa_texto}}</td>
                             <td class="{{($produtor->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$produtor->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $produtor->nome }}">{{Str::limit($produtor->nome, 150, '...')}}</td>
-                            <td data-toggle="tooltip" title="{{ $produtor->email }}">{{Str::limit($produtor->email, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $produtor->nome }}">{{$produtor->nome_reduzido}}</td>
+                            <td data-toggle="tooltip" title="{{ $produtor->email }}">{{$produtor->email_reduzido}}</td>
                             <td class="mask_telefone">{{$produtor->telefone}}</td>
                             <td style="text-align:center;">
 
@@ -131,8 +131,8 @@
                             <td>{{$produtor->id}}</td>
                             <td>{{$produtor->tipo_pessoa_texto}}</td>
                             <td class="{{($produtor->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$produtor->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $produtor->nome }}">{{Str::limit($produtor->nome, 150, '...')}}</td>
-                            <td data-toggle="tooltip" title="{{ $produtor->email }}">{{Str::limit($produtor->email, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $produtor->nome }}">{{$produtor->nome_produtor_reduzido}}</td>
+                            <td data-toggle="tooltip" title="{{ $produtor->email }}">{{$produtor->email_reduzido}}</td>
                             <td class="mask_telefone">{{$produtor->telefone}}</td>
                             <td style="text-align:center;">
 

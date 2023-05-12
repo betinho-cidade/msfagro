@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 
@@ -36,6 +37,11 @@ class Cliente extends Model
     public function lancamentos(){
 
         return $this->hasMany('App\Models\Lancamento');
+    }
+
+    public function movimentacaos(){
+
+        return $this->hasMany('App\Models\Movimentacao');
     }
 
     public function getTipoClienteAttribute()
@@ -85,6 +91,27 @@ class Cliente extends Model
         }
 
         return $tipo_pessoa;
+    }
+
+    public function getNomeReduzidoAttribute()
+    {
+        $nome_reduzido =  Str::limit($this->nome, 150, '...');
+
+        return $nome_reduzido;
+    }
+
+    public function getNomeClienteAttribute()
+    {
+        $nome_cliente = $this->nome . ' - ' . $this->tipo_pessoa. ':' . $this->cpf_cnpj;
+
+        return $nome_cliente;
+    }
+
+    public function getNomeClienteReduzidoAttribute()
+    {
+        $nome_cliente_reduzido =  Str::limit($this->getNomeClienteAttribute(), 150, '...');
+
+        return $nome_cliente_reduzido;
     }
 
 }

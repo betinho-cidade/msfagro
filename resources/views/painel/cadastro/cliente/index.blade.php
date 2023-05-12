@@ -74,8 +74,8 @@
                             <td>{{$cliente->id}}</td>
                             <td>{{$cliente->tipo_cliente}}</td>
                             <td class="{{($cliente->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$cliente->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{Str::limit($cliente->nome, 150, '...')}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->email }}">{{Str::limit($cliente->email, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{$cliente->nome_reduzido}}</td>
+                            <td data-toggle="tooltip" title="{{ $cliente->email }}">{{$cliente->email_reduzido}}</td>
                             <td class="mask_telefone">{{$cliente->telefone}}</td>
                             <td data-toggle="tooltip" title="{{ $cliente->user->name }}">{{Str::limit($cliente->user->name, 150, '...')}}</td>
                             <td style="text-align:center;">
@@ -134,8 +134,8 @@
                             <td>{{$cliente->id}}</td>
                             <td>{{$cliente->tipo_cliente}}</td>
                             <td class="{{($cliente->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$cliente->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{Str::limit($cliente->nome, 150, '...')}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->email }}">{{Str::limit($cliente->email, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{$cliente->nome_reduzido}}</td>
+                            <td data-toggle="tooltip" title="{{ $cliente->email }}">{{$cliente->email_reduzido}}</td>
                             <td class="mask_telefone">{{$cliente->telefone}}</td>
                             <td data-toggle="tooltip" title="{{ $cliente->user->name }}">{{Str::limit($cliente->user->name, 150, '...')}}</td>
                             <td style="text-align:center;">

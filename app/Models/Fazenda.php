@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 
@@ -13,6 +14,17 @@ class Fazenda extends Model
     {
         return $this->belongsTo('App\Models\Cliente');
     }
+
+    public function origems(){
+
+        return $this->hasMany('App\Models\Lancamento');
+    }
+
+    public function destinos(){
+
+        return $this->hasMany('App\Models\Lancamento');
+    }
+
 
     public function getEnderecoAttribute()
     {
@@ -32,9 +44,26 @@ class Fazenda extends Model
         return $endereco;
     }
 
+    public function getNomeReduzidoAttribute()
+    {
+        $nome_reduzido =  Str::limit($this->nome, 150, '...');
+
+        return $nome_reduzido;
+    }
+
     public function getNomeFazendaAttribute()
     {
-        return $this->nome . ' - ' . $this->endereco;
+        $nome_fazenda = $this->nome . ' - ' . $this->endereco;
+
+        return $nome_fazenda;
     }
+
+    public function getNomeFazendaReduzidoAttribute()
+    {
+        $nome_fazenda_reduzido =  Str::limit($this->getNomeFazendaAttribute(), 150, '...');
+
+        return $nome_fazenda_reduzido;
+    }
+
 
 }

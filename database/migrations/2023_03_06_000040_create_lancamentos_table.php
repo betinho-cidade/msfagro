@@ -15,8 +15,8 @@ class CreateLancamentosTable extends Migration
             $table->unsignedBigInteger('empresa_id')->nullable();
             $table->unsignedBigInteger('categoria_id');
             $table->datetime('data_programada');
-            $table->unsignedBigInteger('origem')->nullable();
-            $table->unsignedBigInteger('destino')->nullable();
+            $table->unsignedBigInteger('origem_id')->nullable();
+            $table->unsignedBigInteger('destino_id')->nullable();
             $table->enum('segmento', ['MG'])->default('MG');  //MG->Movimentação Bovina  MF->Movimentação Fiscal
             $table->enum('tipo', ['CP', 'VD', 'EG']);  //CP->Compra/Despesa  VD->Venda/Receita  EG->Engorda
             $table->enum('item_macho', ['M1', 'M2', 'M3', 'M4'])->nullable();  //M1->Macho de 0 à 12 meses  M2->Macho de 12 à 24 meses  M3->Macho de 25 à 36 meses  M4->Macho acima de 36 meses
@@ -30,8 +30,8 @@ class CreateLancamentosTable extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->foreign('empresa_id')->references('id')->on('empresas');
             $table->foreign('categoria_id')->references('id')->on('categorias');
-            $table->foreign('origem')->references('id')->on('fazendas');
-            $table->foreign('destino')->references('id')->on('fazendas');
+            $table->foreign('origem_id')->references('id')->on('fazendas');
+            $table->foreign('destino_id')->references('id')->on('fazendas');
         });
     }
 

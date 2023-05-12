@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Novo Lançamento de Movimentação Bovina para o Cliente</h4>
+            <h4 class="mb-0">Novo Lançamento do Efetivo Pecuário para o Cliente</h4>
         </div>
     </div>
 </div>
@@ -41,13 +41,13 @@
             <div class="card-body">
             <!-- FORMULÁRIO - INICIO -->
 
-            <h4 class="card-title">Formulário de Cadastro - Lançamento de Movimentação Bovina</h4>
+            <h4 class="card-title">Formulário de Cadastro - Lançamento de Efetivo Pecuário</h4>
             <p class="card-title-desc">O Lançamento cadastrado estará disponível para os movimentos no sistema.</p>
             <form name="create_lancamento" method="POST" action="{{route('lancamento.store_MG')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento da Movimentação Bovina</h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento do Efetivo Pecuário</h5>
                 </div>
 
                 <div class="row">
@@ -435,15 +435,15 @@
         $('.dynamic_categoria').change(function(){
 
             let categoria = document.getElementById('categoria');
-            let categoria_text = categoria.options[categoria.selectedIndex].text;
+            let categoria_value = categoria.options[categoria.selectedIndex].value;
 
             let item_macho = document.getElementById('item_macho');
             let qtd_macho = document.getElementById('qtd_macho');
             let item_femea = document.getElementById('item_femea');
-            let qtd_femea = document.getElementById('qtd_femea');
+            let qtd_femea = document.getElementById('qtd_femea'); // 1->Macho 2->Fêna 3->Macho/Fêmea
 
-            switch(categoria_text){
-                case 'Macho':
+            switch(categoria_value){
+                case '1':
                     item_macho.disabled = false;
                     qtd_macho.disabled = false;
                     qtd_macho.style.backgroundColor = 'white';
@@ -457,7 +457,7 @@
                     qtd_femea.style.backgroundColor = '#D3D3D3';
                     break;
 
-                case 'Fêmea':
+                case '2':
                     item_macho.options.selectedIndex = 0;
                     $('#item_macho').val(null).trigger('change');
                     item_macho.disabled = true;
@@ -471,7 +471,7 @@
                     qtd_femea.style.backgroundColor = 'white';
                     break;
 
-                default :
+                case '3':
                     item_macho.disabled = false;
                     qtd_macho.disabled = false;
                     qtd_macho.style.backgroundColor = 'white';
@@ -522,7 +522,6 @@
             $('#'+field).trigger('select');
         }
     }
-
 
     function refreshList(tipo) {
 

@@ -75,7 +75,7 @@
                         @forelse($fazendas_AT as $fazenda)
                         <tr>
                             <td>{{$fazenda->id}}</td>
-                            <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{Str::limit($fazenda->nome, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{$fazenda->nome_reduzido}}</td>
                             <td>{{$fazenda->endereco}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
 
@@ -141,7 +141,7 @@
                         @forelse($fazendas_IN as $fazenda)
                         <tr>
                             <td>{{$fazenda->id}}</td>
-                            <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{Str::limit($fazenda->nome, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{$fazenda->nome_reduzido}}</td>
                             <td>{{$fazenda->endereco}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
 

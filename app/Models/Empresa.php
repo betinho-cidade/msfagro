@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 
@@ -12,6 +13,11 @@ class Empresa extends Model
     public function cliente()
     {
         return $this->belongsTo('App\Models\Cliente');
+    }
+
+    public function lancamentos()
+    {
+        return $this->belongsTo('App\Models\Lancamento');
     }
 
     public function getTipoPessoaTextoAttribute()
@@ -36,11 +42,25 @@ class Empresa extends Model
         return $tipo_pessoa;
     }
 
+    public function getNomeReduzidoAttribute()
+    {
+        $nome_reduzido =  Str::limit($this->nome, 150, '...');
+
+        return $nome_reduzido;
+    }
+
     public function getNomeEmpresaAttribute()
     {
-        $nome = $this->nome . ' - ' . $this->tipo_pessoa. ':' . $this->cpf_cnpj;
+        $nome_empresa = $this->nome . ' - ' . $this->tipo_pessoa. ':' . $this->cpf_cnpj;
 
-        return $nome;
+        return $nome_empresa;
+    }
+
+    public function getNomeEmpresaReduzidoAttribute()
+    {
+        $nome_empresa_reduzido =  Str::limit($this->getNomeEmpresaAttribute(), 150, '...');
+
+        return $nome_empresa_reduzido;
     }
 
 

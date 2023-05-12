@@ -15,6 +15,11 @@ class Produtor extends Model
         return $this->belongsTo('App\Models\Cliente');
     }
 
+    public function movimentacaos(){
+
+        return $this->hasMany('App\Models\Movimentacao');
+    }
+
     public function forma_pagamentos(){
 
         return $this->hasMany('App\Models\FormaPagamento');
@@ -42,19 +47,33 @@ class Produtor extends Model
         return $tipo_pessoa;
     }
 
-    public function getNomeProdutorAttribute()
+    public function getNomeReduzidoAttribute()
     {
-        $nome = $this->nome . ' / ' . $this->cpf_cnpj;
-        $nome = Str::limit($nome, 100, '...');
+        $nome_reduzido =  Str::limit($this->nome, 150, '...');
 
-        return $nome;
+        return $nome_reduzido;
     }
 
-    public function getNomeProdutorFullAttribute()
+    public function getNomeProdutorAttribute()
     {
-        $nome = $this->nome . ' / ' . $this->cpf_cnpj;
+        $nome_produtor = $this->nome . ' / ' . $this->cpf_cnpj;
 
-        return $nome;
+        return $nome_produtor;
+    }
+
+
+    public function getNomeProdutorReduzidoAttribute()
+    {
+        $nome_produtor_reduzido =  Str::limit($this->getNomeProdutorAttribute(), 150, '...');
+
+        return $nome_produtor_reduzido;
+    }
+
+    public function getEmailReduzidoAttribute()
+    {
+        $email_reduzido =  Str::limit($this->email, 150, '...');
+
+        return $email_reduzido;
     }
 
 }

@@ -71,7 +71,7 @@
                             <td>{{$empresa->id}}</td>
                             <td>{{$empresa->tipo_pessoa_texto}}</td>
                             <td class="{{($empresa->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$empresa->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $empresa->nome }}">{{Str::limit($empresa->nome, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $empresa->nome }}">{{$empresa->nome_reduzido}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_empresa')
@@ -125,7 +125,7 @@
                             <td>{{$empresa->id}}</td>
                             <td>{{$empresa->tipo_pessoa_texto}}</td>
                             <td class="{{($empresa->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$empresa->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $empresa->nome }}">{{Str::limit($empresa->nome, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $empresa->nome }}">{{$empresa->nome_reduzido}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_empresa')

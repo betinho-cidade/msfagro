@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Movimentacao\Lancamento\CreateRequest;
-//use App\Http\Requests\Movimentacao\Lancamento\UpdateRequest;
+use App\Http\Requests\Movimentacao\Lancamento\UpdateRequest;
 use Carbon\Carbon;
 
 
@@ -50,22 +50,15 @@ class LancamentoController extends Controller
 
         if($user->cliente->tipo != 'AG'){
             $lancamentos = Lancamento::where('lancamentos.cliente_id', $user->cliente->id)
-                                        ->join('movimentacaos', 'movimentacaos.lancamento_id', '=', 'lancamentos.id')
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
-                                        ->groupBy(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0))'))
-                                        ->select(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
-                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MG\') THEN 1 ELSE 0 END) as movimentacao_bovina,
-                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
-                                                        count( lancamentos.id ) AS total'))
-                                        ->get();
-        } else {
-            $lancamentos = Lancamento::where('lancamentos.cliente_id', $user->cliente->id)
-                                        ->join('movimentacaos', 'movimentacaos.lancamento_id', '=', 'lancamentos.id')
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
-                                        ->groupBy(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0))'))
-                                        ->select(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
-                                                        SUM(CASE WHEN movimentacaos.segmento = (\'MF\') THEN 1 ELSE 0 END) as movimentacao_fiscal,
-                                                        count( lancamentos.id ) AS total'))
+                                        ->leftJoin('movimentacaos', 'movimentacaos.lancamento_id', '=', 'lancamentos.id')
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada))'))
+                                        ->select(DB::raw('concat(YEAR(lancamentos.data_programada), LPAD(MONTH(lancamentos.data_programada), 2, 0)) AS mes_ordem,
+                                                        concat(LPAD(MONTH(lancamentos.data_programada), 2, 0), \'-\', YEAR(lancamentos.data_programada)) AS mes_referencia,
+                                                        count( lancamentos.id ) AS total,
+                                                        SUM(CASE WHEN lancamentos.tipo = (\'CP\') THEN 1 ELSE 0 END) as compra,
+                                                        SUM(CASE WHEN lancamentos.tipo = (\'VD\') THEN 1 ELSE 0 END) as venda,
+                                                        SUM(CASE WHEN lancamentos.tipo = (\'EG\') THEN 1 ELSE 0 END) as engorda'))
+                                        ->orderBy('lancamentos.data_programada', 'desc')
                                         ->get();
         }
 
@@ -73,55 +66,46 @@ class LancamentoController extends Controller
     }
 
 
-    // public function list(Request $request)
-    // {
+    public function list_MG(Request $request)
+    {
 
-    //     if(Gate::denies('list_lancamento')){
-    //         abort('403', 'Página não disponível');
-    //     }
+        if(Gate::denies('list_lancamento')){
+            abort('403', 'Página não disponível');
+        }
 
-    //     $user = Auth()->User();
+        $user = Auth()->User();
 
-    //     if(!$user->cliente){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+            return redirect()->route('lancamento.index');
+        }
 
-    //     $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
+        $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
 
-    //     if(!$mes_referencia){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
+        if(!$mes_referencia){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+            return redirect()->route('lancamento.index');
+        }
 
-    //     $data_programada_vetor = explode('-', $mes_referencia);
+        $data_programada_vetor = explode('-', $mes_referencia);
 
-    //     setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
-    //     $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
+        setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
+        $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
-    //     $lancamentos_MG = ($user->cliente->tipo != 'AG') ?
-    //                         Lancamento::where('cliente_id', $user->cliente->id)
-    //                         ->where('segmento', 'MG')
-    //                         ->whereYear('data_programada', $data_programada_vetor[1])
-    //                         ->whereMonth('data_programada', $data_programada_vetor[0])
-    //                         ->orderBy('data_programada', 'asc')
-    //                         ->get() : [];
+        $lancamentos_MG = ($user->cliente->tipo != 'AG') ?
+                            Lancamento::where('cliente_id', $user->cliente->id)
+                            ->where('segmento', 'MG')
+                            ->whereYear('data_programada', $data_programada_vetor[1])
+                            ->whereMonth('data_programada', $data_programada_vetor[0])
+                            ->orderBy('data_programada', 'asc')
+                            ->get() : [];
 
-
-    //     $lancamentos_MF = Lancamento::where('cliente_id', $user->cliente->id)
-    //                         ->where('segmento', 'MF')
-    //                         ->whereYear('data_programada', $data_programada_vetor[1])
-    //                         ->whereMonth('data_programada', $data_programada_vetor[0])
-    //                         ->orderBy('data_programada', 'asc')
-    //                         ->get();
-
-    //     return view('painel.movimentacao.lancamento.index_list', compact('user', 'mes_referencia', 'data_programada', 'lancamentos_MG', 'lancamentos_MF'));
-    // }
-
+        return view('painel.movimentacao.lancamento.index_list_MG', compact('user', 'mes_referencia', 'data_programada', 'lancamentos_MG'));
+    }
 
 
     public function create(Request $request)
@@ -134,7 +118,7 @@ class LancamentoController extends Controller
 
         if(!$segmento || ($segmento != 'MF' && $segmento != 'MG')){
             $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao segmento de Movimentação de Bovinos / Movimentação Fiscais.');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao segmento de Efetivo Pecuário / Movimentação Fiscal.');
 
             return redirect()->route('lancamento.index');
         }
@@ -222,10 +206,9 @@ class LancamentoController extends Controller
             $lancamento->segmento = 'MG';
             $lancamento->tipo = $request->tipo;
             $lancamento->empresa_id = ($request->has('empresa')) ? $request->empresa : null;
-            $lancamento->origem = ($request->has('origem')) ? $request->origem : null;
-            $lancamento->destino = ($request->has('destino')) ? $request->destino : null;
+            $lancamento->origem_id = ($request->has('origem')) ? $request->origem : null;
+            $lancamento->destino_id = ($request->has('destino')) ? $request->destino : null;
             $lancamento->categoria_id = $request->categoria;
-            $lancamento->observacao = $request->observacao;
             $lancamento->item_macho = ($request->has('item_macho')) ? $request->item_macho : null;
             $lancamento->qtd_macho = ($request->has('qtd_macho')) ? $request->qtd_macho : 0;
             $lancamento->item_femea = ($request->has('item_femea')) ? $request->item_femea : null;
@@ -261,6 +244,7 @@ class LancamentoController extends Controller
                 $movimentacao = new Movimentacao();
 
                 $movimentacao->lancamento_id = $lancamento->id;
+                $movimentacao->cliente_id = $user->cliente->id;
                 $movimentacao->produtor_id = $request->produtor;
                 $movimentacao->forma_pagamento_id = $request->forma_pagamento;
                 $movimentacao->data_programada = $lancamento->data_programada;
@@ -296,6 +280,12 @@ class LancamentoController extends Controller
                 }
             }
 
+            // =================================================================
+            // Atualizar Estoque da Fazenda
+            // =================================================================
+
+            $this->atualizaEstoque($lancamento, false);
+
             DB::commit();
 
         } catch (Exception $ex){
@@ -303,6 +293,7 @@ class LancamentoController extends Controller
             DB::rollBack();
 
             $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+
         }
 
         if ($message && $message !='') {
@@ -317,216 +308,436 @@ class LancamentoController extends Controller
     }
 
 
-    // public function show(lancamento $lancamento, Request $request)
-    // {
+    public function show_MG(lancamento $lancamento, Request $request)
+    {
 
-    //     if(Gate::denies('edit_lancamento')){
-    //         abort('403', 'Página não disponível');
-    //     }
+        if(Gate::denies('edit_lancamento')){
+            abort('403', 'Página não disponível');
+        }
 
-    //     $user = Auth()->User();
+        $user = Auth()->User();
 
-    //     if(!$user->cliente || ($user->cliente->id != $lancamento->cliente_id) ){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'O lancamento não pertence ao cliente informado.');
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+            return redirect()->route('painel');
+        }
 
-    //     return view('painel.movimentacao.lancamento.show', compact('user', 'lancamento'));
-    // }
+        if($user->cliente->id != $lancamento->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Lançamento não pertence ao cliente informado.');
 
+            return redirect()->route('lancamento.index');
+        }
 
-    // public function update(UpdateRequest $request, lancamento $lancamento)
-    // {
-    //     if(Gate::denies('edit_lancamento')){
-    //         abort('403', 'Página não disponível');
-    //     }
-
-    //     $user = Auth()->User();
-
-    //     if(!$user->cliente || ($user->cliente->id != $lancamento->cliente_id) ){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'O lancamento não pertence ao cliente informado.');
-
-    //         return redirect()->route('lancamento.index');
-    //     }
-
-    //     $message = '';
-
-    //     try {
-
-    //         DB::beginTransaction();
-
-    //         $lancamento->nome = $request->nome;
-    //         $lancamento->email = $request->email;
-    //         $lancamento->tipo_pessoa = $request->tipo_pessoa;
-    //         $lancamento->cpf_cnpj = $request->cpf_cnpj;
-    //         $lancamento->telefone = $request->telefone;
-    //         $lancamento->inscricao_estadual = $request->inscricao_estadual;
-    //         $lancamento->end_cep = $request->end_cep;
-    //         $lancamento->end_cidade = $request->end_cidade;
-    //         $lancamento->end_uf = $request->end_uf;
-    //         $lancamento->end_logradouro = $request->end_logradouro;
-    //         $lancamento->end_numero = $request->end_numero;
-    //         $lancamento->end_bairro = $request->end_bairro;
-    //         $lancamento->end_complemento = $request->end_complemento;
-    //         $lancamento->status = $request->situacao;
-
-    //         $lancamento->save();
-
-    //         DB::commit();
-
-    //     } catch (Exception $ex){
-
-    //         DB::rollBack();
-
-    //         $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
-    //     }
-
-    //     if ($message && $message !='') {
-    //         $request->session()->flash('message.level', 'danger');
-    //         $request->session()->flash('message.content', $message);
-    //     } else {
-    //         $request->session()->flash('message.level', 'success');
-    //         $request->session()->flash('message.content', 'O lancamento <code class="highlighter-rouge">'. $lancamento->nome .'</code> foi alterado com sucesso');
-    //     }
-
-    //     return redirect()->route('lancamento.index');
-    // }
+        return view('painel.movimentacao.lancamento.show_MG', compact('user', 'lancamento'));
+    }
 
 
-    // public function destroy(Lancamento $lancamento, Request $request)
-    // {
-    //     if(Gate::denies('delete_lancamento')){
-    //         abort('403', 'Página não disponível');
-    //     }
+    public function update_MG(UpdateRequest $request, Lancamento $lancamento)
+    {
 
-    //     $user = Auth()->User();
+        if(Gate::denies('edit_lancamento')){
+            abort('403', 'Página não disponível');
+        }
 
-    //     if(!$user->cliente ||($user->cliente->id != $lancamento->cliente_id) ){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'O lancamento não pertence ao cliente informado.');
+        $user = Auth()->User();
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-    //     $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
+            return redirect()->route('painel');
+        }
 
-    //     if(!$mes_referencia){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
+        if($user->cliente->id != $lancamento->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Lançamento não pertence ao cliente informado.');
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+            return redirect()->route('lancamento.index');
+        }
+
+        if($lancamento->tipo != $request->tipo){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O tipo de lançamento não confere com o registrado.');
+
+            return redirect()->route('lancamento.index');
+        }
+
+        $today = Carbon::today();
+
+        if($request->data_programada > $today && $request->path_comprovante){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Comprovante de Pagamento somente é permitido para data igual ou anterior a data atual.');
+
+            return redirect()->route('lancamento.index');
+        }
+
+        $message = '';
+
+        $ano_mes = Carbon::createFromFormat('Y-m-d', $request->data_programada);
+        $mes_referencia = Str::padLeft($ano_mes->month, 2, '0') . '-' . $ano_mes->year;
+
+        try {
+
+            DB::beginTransaction();
+
+            $lancamento->data_programada = $request->data_programada;
+            $lancamento->observacao = $request->observacao;
+            $lancamento->gta = $request->gta;
+
+            if ($request->path_gta) {
+
+                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+
+                if($lancamento->path_gta){
+                    if(Storage::exists($path_gta)) {
+                        Storage::delete($path_gta . $lancamento->path_gta);
+                    }
+                }
+
+                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
+                $lancamento->path_gta = $nome_arquivo;
+
+                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
+            }
+
+            $lancamento->save();
+
+            // =================================================================
+            // ATUALIZAR MOVIMENTAÇÃO FISCAL PARA LANÇAMENTOS DE COMPRA OU VENDA
+            // =================================================================
+
+            if($lancamento->tipo == 'CP' || $lancamento->tipo == 'VD'){
+
+                $lancamento->movimentacao->data_programada = $lancamento->data_programada;
+                $lancamento->movimentacao->valor = $request->valor;
+                $lancamento->movimentacao->nota = $request->nota;
+
+                if ($request->path_nota) {
+
+                    $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+
+                    if($lancamento->movimentacao->path_nota){
+                        if(Storage::exists($path_nota)) {
+                            Storage::delete($path_nota . $lancamento->movimentacao->path_nota);
+                        }
+                    }
+
+                    $nome_arquivo = 'NOTA_'.$lancamento->movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                    $lancamento->movimentacao->path_nota = $nome_arquivo;
+
+                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
+                }
+
+                if ($request->path_comprovante) {
+
+                    $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+
+                    if($lancamento->movimentacao->path_comprovante){
+                        if(Storage::exists($path_comprovante)) {
+                            Storage::delete($path_comprovante . $lancamento->movimentacao->path_comprovante);
+                        }
+                    }
+
+                    $nome_arquivo = 'COMPROVANTE_'.$lancamento->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                    $lancamento->movimentacao->path_comprovante = $nome_arquivo;
+                    $lancamento->movimentacao->situacao = 'PG';
+
+                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+                }
+
+                $lancamento->movimentacao->save();
+            }
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Lançamento com ID <span style="color: #af1e1e;">'. $lancamento->id .'</span> foi atualizado com sucesso');
+        }
+
+        return redirect()->route('lancamento.list_MG', ['mes_referencia' => $mes_referencia]);
+    }
+
+    public function destroy_MG(Lancamento $lancamento, Request $request)
+    {
+        if(Gate::denies('delete_lancamento')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->id != $lancamento->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Lançamento não pertence ao cliente informado.');
+
+            return redirect()->route('lancamento.index');
+        }
 
 
-    //     $message = '';
-    //     $lancamento_nome = $lancamento->id;
+        $message = '';
+        $lancamento_id = $lancamento->id;
 
-    //     try {
-    //         DB::beginTransaction();
+        $ano_mes = Carbon::createFromFormat('Y-m-d', $lancamento->data_programada_ajustada);
+        $mes_referencia = Str::padLeft($ano_mes->month, 2, '0') . '-' . $ano_mes->year;
 
-    //         $lancamento->delete();
+        try {
+            DB::beginTransaction();
 
-    //         DB::commit();
+            $this->atualizaEstoque($lancamento, true);
 
-    //     } catch (Exception $ex){
+            if($lancamento->movimentacao){
+                $lancamento->movimentacao->delete();
+            }
 
-    //         DB::rollBack();
+            $lancamento->delete();
 
-    //         if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
-    //             $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
-    //         } else{
-    //             $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
-    //         }
+            $this->destroy_files_MG($lancamento);
 
-    //     }
+            DB::commit();
 
-    //     if ($message && $message !='') {
-    //         $request->session()->flash('message.level', 'danger');
-    //         $request->session()->flash('message.content', $message);
-    //     } else {
-    //         $request->session()->flash('message.level', 'success');
-    //         $request->session()->flash('message.content', 'O lancamento com identificador/ID (<code class="highlighter-rouge"> '. $lancamento_nome .' </code>) foi excluído com sucesso');
-    //     }
+        } catch (Exception $ex){
 
-    //     return redirect()->route('lancamento.list', compact('mes_referencia'));
-    // }
+            DB::rollBack();
 
-    // public function list_destroy(Request $request)
-    // {
-    //     if(Gate::denies('delete_list_lancamento')){
-    //         abort('403', 'Página não disponível');
-    //     }
+            if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
+                $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
 
-    //     $user = Auth()->User();
+        }
 
-    //     if(!$user->cliente){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Lançamento com ID <span style="color: #af1e1e;">'. $lancamento_id .'</span> foi excluído com sucesso');
+        }
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+        return redirect()->route('lancamento.list_MG', compact('mes_referencia'));
+    }
 
-    //     $segmento = ($request->has('segmento') ? $request->segmento : null);
+    public function destroy_list_MG(Request $request)
+    {
+        if(Gate::denies('delete_list_lancamento')){
+            abort('403', 'Página não disponível');
+        }
 
-    //     if(!$segmento){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente ao segmento do mês informado.');
+        $user = Auth()->User();
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-    //     $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
+            return redirect()->route('painel');
+        }
 
-    //     if(!$mes_referencia){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
+        $tipo = ($request->has('tipo') ? $request->tipo : null);
 
-    //         return redirect()->route('lancamento.index');
-    //     }
+        if(!$tipo || ($tipo != 'CP' && $tipo != 'VD' && $tipo != 'EG')){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao tipo do lançamento do Efetivo Pecuário.');
 
-    //     $message = '';
+            return redirect()->route('lancamento.index');
+        }
 
-    //     $data_programada_vetor = explode('-', $mes_referencia);
+        $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
 
-    //     setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
-    //     $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
+        if(!$mes_referencia){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-    //     try {
-    //         DB::beginTransaction();
+            return redirect()->route('lancamento.index');
+        }
 
-    //         Lancamento::where('cliente_id', $user->cliente->id)
-    //                     ->where('segmento', $segmento)
-    //                     ->whereYear('data_programada', $data_programada_vetor[1])
-    //                     ->whereMonth('data_programada', $data_programada_vetor[0])
-    //                     ->delete();
+        $texto_tipo = '';
+        switch($tipo){
+            case 'CP':{
+                $texto_tipo = 'COMPRA';
+                break;
+            }
+            case 'VD':{
+                $texto_tipo = 'VENDA';
+                break;
+            }
+            case 'EG':{
+                $texto_tipo = 'ENGORDA';
+                break;
+            }
+        }
 
-    //         DB::commit();
+        $message = '';
 
-    //     } catch (Exception $ex){
+        try {
+            DB::beginTransaction();
 
-    //         DB::rollBack();
+            $data_programada_vetor = explode('-', $mes_referencia);
 
-    //         if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
-    //             $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
-    //         } else{
-    //             $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
-    //         }
+            $lancamentos_MG = ($user->cliente->tipo != 'AG') ?
+                                Lancamento::where('cliente_id', $user->cliente->id)
+                                ->where('segmento', 'MG')
+                                ->whereYear('data_programada', $data_programada_vetor[1])
+                                ->whereMonth('data_programada', $data_programada_vetor[0])
+                                ->orderBy('data_programada', 'asc')
+                                ->get() : [];
 
-    //     }
+            foreach($lancamentos_MG as $lancamento){
 
-    //     if ($message && $message !='') {
-    //         $request->session()->flash('message.level', 'danger');
-    //         $request->session()->flash('message.content', $message);
-    //     } else {
-    //         $request->session()->flash('message.level', 'success');
-    //         $request->session()->flash('message.content', 'Os Lançamentos do mês de referência <code class="highlighter-rouge">'. $data_programada .'</code> foram excluídos com sucesso');
-    //     }
+                $this->atualizaEstoque($lancamento, true);
 
-    //     return redirect()->route('lancamento.list', compact('mes_referencia'));
-    // }
+                if($lancamento->movimentacao){
+                    $lancamento->movimentacao->delete();
+                }
+
+                $lancamento->delete();
+
+                $this->destroy_files_MG($lancamento);
+            }
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
+                $message = "Não foi possível excluir os registros, pois existem referências aos mesmos em outros processos.";
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
+
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'Os Lançamentos do Efetivo Pecuário (<span style="color: #af1e1e;">'.$texto_tipo.'</span>) do mês de referência <span style="color: #af1e1e;">'. $mes_referencia .'</span> foram excluídos com sucesso');
+        }
+
+        return redirect()->route('lancamento.list_MG', compact('mes_referencia'));
+    }
+
+    protected function atualizaEstoque(Lancamento $lancamento, bool $desfazerLancamento){
+
+
+        if($desfazerLancamento){ //Desfaz o Lançamento de quantidades de bovinos originalmente realizado.
+            switch ($lancamento->tipo){
+                case 'CP' : {
+
+                    $destino = Fazenda::where('id', $lancamento->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho - $lancamento->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea - $lancamento->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+
+                case 'VD' : {
+
+                    $origem = Fazenda::where('id', $lancamento->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho + $lancamento->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea + $lancamento->qtd_femea;
+                    $origem->save();
+                    break;
+                }
+
+                case 'EG' : {
+
+                    $origem = Fazenda::where('id', $lancamento->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho + $lancamento->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea + $lancamento->qtd_femea;
+                    $origem->save();
+                    $destino = Fazenda::where('id', $lancamento->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho - $lancamento->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea - $lancamento->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+            }
+
+        } else{
+            switch ($lancamento->tipo){
+                case 'CP' : {
+
+                    $destino = Fazenda::where('id', $lancamento->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho + $lancamento->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea + $lancamento->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+
+                case 'VD' : {
+
+                    $origem = Fazenda::where('id', $lancamento->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho - $lancamento->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea - $lancamento->qtd_femea;
+                    $origem->save();
+                    break;
+                }
+
+                case 'EG' : {
+
+                    $origem = Fazenda::where('id', $lancamento->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho - $lancamento->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea - $lancamento->qtd_femea;
+                    $origem->save();
+                    $destino = Fazenda::where('id', $lancamento->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho + $lancamento->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea + $lancamento->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+            }
+        }
+    }
+
+    protected function destroy_files_MG(Lancamento $lancamento){
+
+        $path_gta = 'documentos/'. $lancamento->cliente->id . '/gtas/';
+        if($lancamento->path_gta){
+            if(Storage::exists($path_gta)) {
+                Storage::delete($path_gta . $lancamento->path_gta);
+            }
+        }
+
+        $path_nota = 'documentos/'. $lancamento->cliente->id . '/notas/';
+        if($lancamento->movimentacao && $lancamento->movimentacao->path_nota){
+            if(Storage::exists($path_nota)) {
+                Storage::delete($path_nota . $lancamento->movimentacao->path_nota);
+            }
+        }
+
+        $path_comprovante = 'documentos/'. $lancamento->cliente->id . '/comprovantes/';
+        if($lancamento->movimentacao && $lancamento->movimentacao->path_comprovante){
+            if(Storage::exists($path_comprovante)) {
+                Storage::delete($path_comprovante . $lancamento->movimentacao->path_comprovante);
+            }
+        }
+
+    }
 
     public function refreshList(Request $request)
     {
@@ -622,6 +833,57 @@ class LancamentoController extends Controller
         }
 
         return response()->json(['mensagem' => $mensagem]);
+    }
+
+    public function download(Lancamento $lancamento, Request $request){
+
+        if(Gate::denies('edit_lancamento')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->id != $lancamento->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Lançamento não pertence ao cliente informado.');
+
+            return redirect()->route('lancamento.index');
+        }
+
+        $tipo_documento = ($request->has('tipo_documento') ? $request->tipo_documento : null);
+
+        if(!$tipo_documento){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível encontrar o tipo de documento solicitado.');
+
+            return redirect()->route('lancamento.index');
+        }
+
+        $path_documento = 'documentos/' . $user->cliente->id . '/';
+
+        switch($tipo_documento){
+            case 'CP':{
+                $path_documento = $path_documento . 'comprovantes/' . $lancamento->movimentacao->path_comprovante;
+                break;
+            }
+            case 'GT':{
+                $path_documento = $path_documento . 'gtas/' . $lancamento->path_gta;
+                break;
+            }
+            case 'NT':{
+                $path_documento = $path_documento . 'notas/' . $lancamento->movimentacao->path_nota;
+                break;
+            }
+        }
+
+        return Storage::download($path_documento);
     }
 
 }

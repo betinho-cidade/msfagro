@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Categoria extends Model
 {
+
+    public function lancamentos()
+    {
+        return $this->belongsTo('App\Models\Lancamento');
+    }
 
     public function getNomeSegmentoAttribute()
     {
@@ -27,6 +33,13 @@ class Categoria extends Model
         }
 
         return $segmento;
+    }
+
+    public function getNomeReduzidoAttribute()
+    {
+        $nome_reduzido =  Str::limit($this->nome, 150, '...');
+
+        return $nome_reduzido;
     }
 
 
