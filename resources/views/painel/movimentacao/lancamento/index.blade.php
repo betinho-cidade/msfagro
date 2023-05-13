@@ -34,7 +34,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Efetivo Pecuário</span>
+                            <span class="d-none d-sm-block">Efetivo Pecuário
+                                @can('create_lancamento')
+                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Efetivo Pecuário"></i>
+                                @endcan
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -52,11 +56,7 @@
                         <tr>
                             <th>Ordenação</th>
                             <th style="text-align:center;">Mês / Ano</th>
-                            <th data-toggle="tooltip" title="Total de lançamentos referentes ao Efetivo Pecuário" style="text-align:center;">Lançamentos*
-                                @can('create_lancamento')
-                                    <i onClick="createLancamento('MG');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Efetivo Pecuário"></i>
-                                @endcan
-                            </th>
+                            <th data-toggle="tooltip" title="Total de lançamentos referentes ao Efetivo Pecuário" style="text-align:center;">Lançamentos</th>
                             {{--  <th data-toggle="tooltip" title="Total de lançamentos referentes a movimentação fiscal" style="text-align:center;">Movimentação Fiscal*
                                 @can('create_lancamento')
                                     <i onClick="createLancamento('MF');" class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Lançamento - Movimentação Fiscal"></i>

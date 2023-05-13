@@ -31,7 +31,6 @@ class LancamentoController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index(Request $request)
     {
         if(Gate::denies('view_lancamento')){
@@ -64,7 +63,6 @@ class LancamentoController extends Controller
 
         return view('painel.movimentacao.lancamento.index', compact('user', 'lancamentos'));
     }
-
 
     public function list_MG(Request $request)
     {
@@ -106,7 +104,6 @@ class LancamentoController extends Controller
 
         return view('painel.movimentacao.lancamento.index_list_MG', compact('user', 'mes_referencia', 'data_programada', 'lancamentos_MG'));
     }
-
 
     public function create(Request $request)
     {
@@ -176,7 +173,6 @@ class LancamentoController extends Controller
         return redirect()->route('lancamento.index');
     }
 
-
     public function store_MG(CreateRequest $request)
     {
 
@@ -218,17 +214,6 @@ class LancamentoController extends Controller
 
             $lancamento->save();
 
-            if ($request->path_gta) {
-
-                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
-
-                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
-                $lancamento->path_gta = $nome_arquivo;
-                $lancamento->save();
-
-                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
-            }
-
             // =================================================================
             // INSERIR MOVIMENTAÇÃO FISCAL PARA LANÇAMENTOS DE COMPRA OU VENDA
             // =================================================================
@@ -257,27 +242,6 @@ class LancamentoController extends Controller
 
                 $movimentacao->save();
 
-                if ($request->path_nota) {
-
-                    $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
-
-                    $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
-                    $movimentacao->path_nota = $nome_arquivo;
-                    $movimentacao->save();
-
-                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
-                }
-
-                if ($request->path_comprovante) {
-
-                    $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
-
-                    $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
-                    $movimentacao->path_comprovante = $nome_arquivo;
-                    $movimentacao->save();
-
-                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
-                }
             }
 
             // =================================================================
@@ -285,6 +249,43 @@ class LancamentoController extends Controller
             // =================================================================
 
             $this->atualizaEstoque($lancamento, false);
+
+            // =================================================================
+            // ARMAZENA OS ARQUIVOS - GTA, NOTA E COMPROVANTE PAGAMENTO
+            // =================================================================
+
+            if ($request->path_gta) {
+
+                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+
+                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
+                $lancamento->path_gta = $nome_arquivo;
+                $lancamento->save();
+
+                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
+            }
+
+            if ($request->path_nota) {
+
+                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+
+                $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                $movimentacao->path_nota = $nome_arquivo;
+                $movimentacao->save();
+
+                Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
+            }
+
+            if ($request->path_comprovante) {
+
+                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+
+                $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                $movimentacao->path_comprovante = $nome_arquivo;
+                $movimentacao->save();
+
+                Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+            }
 
             DB::commit();
 
@@ -306,7 +307,6 @@ class LancamentoController extends Controller
 
         return redirect()->route('lancamento.index');
     }
-
 
     public function show_MG(lancamento $lancamento, Request $request)
     {
@@ -333,7 +333,6 @@ class LancamentoController extends Controller
 
         return view('painel.movimentacao.lancamento.show_MG', compact('user', 'lancamento'));
     }
-
 
     public function update_MG(UpdateRequest $request, Lancamento $lancamento)
     {
@@ -387,22 +386,6 @@ class LancamentoController extends Controller
             $lancamento->observacao = $request->observacao;
             $lancamento->gta = $request->gta;
 
-            if ($request->path_gta) {
-
-                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
-
-                if($lancamento->path_gta){
-                    if(Storage::exists($path_gta)) {
-                        Storage::delete($path_gta . $lancamento->path_gta);
-                    }
-                }
-
-                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
-                $lancamento->path_gta = $nome_arquivo;
-
-                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
-            }
-
             $lancamento->save();
 
             // =================================================================
@@ -415,40 +398,63 @@ class LancamentoController extends Controller
                 $lancamento->movimentacao->valor = $request->valor;
                 $lancamento->movimentacao->nota = $request->nota;
 
-                if ($request->path_nota) {
-
-                    $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
-
-                    if($lancamento->movimentacao->path_nota){
-                        if(Storage::exists($path_nota)) {
-                            Storage::delete($path_nota . $lancamento->movimentacao->path_nota);
-                        }
-                    }
-
-                    $nome_arquivo = 'NOTA_'.$lancamento->movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
-                    $lancamento->movimentacao->path_nota = $nome_arquivo;
-
-                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
-                }
-
-                if ($request->path_comprovante) {
-
-                    $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
-
-                    if($lancamento->movimentacao->path_comprovante){
-                        if(Storage::exists($path_comprovante)) {
-                            Storage::delete($path_comprovante . $lancamento->movimentacao->path_comprovante);
-                        }
-                    }
-
-                    $nome_arquivo = 'COMPROVANTE_'.$lancamento->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
-                    $lancamento->movimentacao->path_comprovante = $nome_arquivo;
-                    $lancamento->movimentacao->situacao = 'PG';
-
-                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
-                }
-
                 $lancamento->movimentacao->save();
+            }
+
+            // =================================================================
+            // ATUALIZA/ARMAZENA OS ARQUIVOS - GTA, NOTA E COMPROVANTE PAGAMENTO
+            // =================================================================
+
+            if ($request->path_gta) {
+
+                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+
+                if($lancamento->path_gta){
+                    if(Storage::exists($path_gta)) {
+                        Storage::delete($path_gta . $lancamento->path_gta);
+                    }
+                }
+
+                $nome_arquivo = 'GTA_'.$lancamento->id.'.'.$request->path_gta->getClientOriginalExtension();
+                $lancamento->path_gta = $nome_arquivo;
+                $lancamento->save();
+
+                Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
+            }
+
+            if ($request->path_nota) {
+
+                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+
+                if($lancamento->movimentacao->path_nota){
+                    if(Storage::exists($path_nota)) {
+                        Storage::delete($path_nota . $lancamento->movimentacao->path_nota);
+                    }
+                }
+
+                $nome_arquivo = 'NOTA_'.$lancamento->movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                $lancamento->movimentacao->path_nota = $nome_arquivo;
+                $lancamento->movimentacao->save();
+
+                Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
+            }
+
+            if ($request->path_comprovante) {
+
+                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+
+                if($lancamento->movimentacao->path_comprovante){
+                    if(Storage::exists($path_comprovante)) {
+                        Storage::delete($path_comprovante . $lancamento->movimentacao->path_comprovante);
+                    }
+                }
+
+                $nome_arquivo = 'COMPROVANTE_'.$lancamento->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                $lancamento->movimentacao->path_comprovante = $nome_arquivo;
+                $lancamento->movimentacao->situacao = 'PG';
+                $lancamento->movimentacao->save();
+
+                Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
 
             DB::commit();
@@ -458,7 +464,6 @@ class LancamentoController extends Controller
             DB::rollBack();
 
             $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
-
         }
 
         if ($message && $message !='') {
@@ -506,13 +511,21 @@ class LancamentoController extends Controller
 
             $this->atualizaEstoque($lancamento, true);
 
+            $lancamento_arquivos = [];
+            $lancamento_arquivos[0]['cliente_id'] = $lancamento->cliente_id;
+            $lancamento_arquivos[0]['lancamento_id'] = $lancamento->id;
+            $lancamento_arquivos[0]['movimentacao_id'] = ($lancamento->movimentacao) ? $lancamento->movimentacao->id : 0;
+            $lancamento_arquivos[0]['path_gta'] = $lancamento->path_gta;
+
             if($lancamento->movimentacao){
+                $lancamento_arquivos[0]['path_nota'] = $lancamento->movimentacao->path_nota;
+                $lancamento_arquivos[0]['path_comprovante'] = $lancamento->movimentacao->path_comprovante;
                 $lancamento->movimentacao->delete();
             }
 
             $lancamento->delete();
 
-            $this->destroy_files_MG($lancamento);
+            $this->destroy_files_MG($lancamento_arquivos);
 
             DB::commit();
 
@@ -603,18 +616,37 @@ class LancamentoController extends Controller
                                 ->orderBy('data_programada', 'asc')
                                 ->get() : [];
 
+            $lancamento_arquivos = [];
+            $contArquivos = 0;
+
             foreach($lancamentos_MG as $lancamento){
+
+                if($user->cliente->id != $lancamento->cliente_id){
+                    $request->session()->flash('message.level', 'warning');
+                    $request->session()->flash('message.content', 'O Lançamento não pertence ao cliente informado.');
+
+                    DB::rollBack();
+                    return redirect()->route('lancamento.index');
+                }
+
+                $lancamento_arquivos[$contArquivos]['cliente_id'] = $lancamento->cliente_id;
+                $lancamento_arquivos[$contArquivos]['lancamento_id'] = $lancamento->id;
+                $lancamento_arquivos[$contArquivos]['movimentacao_id'] = ($lancamento->movimentacao) ? $lancamento->movimentacao->id : 0;
+                $lancamento_arquivos[$contArquivos]['path_gta'] = $lancamento->path_gta;
 
                 $this->atualizaEstoque($lancamento, true);
 
                 if($lancamento->movimentacao){
+                    $lancamento_arquivos[$contArquivos]['path_nota'] = $lancamento->movimentacao->path_nota;
+                    $lancamento_arquivos[$contArquivos]['path_comprovante'] = $lancamento->movimentacao->path_comprovante;
                     $lancamento->movimentacao->delete();
                 }
 
                 $lancamento->delete();
-
-                $this->destroy_files_MG($lancamento);
+                $contArquivos++;
             }
+
+            $this->destroy_files_MG($lancamento_arquivos);
 
             DB::commit();
 
@@ -714,29 +746,32 @@ class LancamentoController extends Controller
         }
     }
 
-    protected function destroy_files_MG(Lancamento $lancamento){
+    protected function destroy_files_MG(Array $lancamento_arquivos){
 
-        $path_gta = 'documentos/'. $lancamento->cliente->id . '/gtas/';
-        if($lancamento->path_gta){
-            if(Storage::exists($path_gta)) {
-                Storage::delete($path_gta . $lancamento->path_gta);
+        foreach($lancamento_arquivos as $lancamento){
+
+            $path_gta = 'documentos/'. $lancamento['cliente_id'] . '/gtas/';
+            if($lancamento['path_gta']){
+                if(Storage::exists($path_gta)) {
+                    Storage::delete($path_gta . $lancamento['path_gta']);
+                }
             }
-        }
 
-        $path_nota = 'documentos/'. $lancamento->cliente->id . '/notas/';
-        if($lancamento->movimentacao && $lancamento->movimentacao->path_nota){
-            if(Storage::exists($path_nota)) {
-                Storage::delete($path_nota . $lancamento->movimentacao->path_nota);
+            $path_nota = 'documentos/'. $lancamento['cliente_id'] . '/notas/';
+            if($lancamento['movimentacao_id'] != 0 && $lancamento['path_nota']){
+                if(Storage::exists($path_nota)) {
+                    Storage::delete($path_nota . $lancamento['path_nota']);
+                }
             }
-        }
 
-        $path_comprovante = 'documentos/'. $lancamento->cliente->id . '/comprovantes/';
-        if($lancamento->movimentacao && $lancamento->movimentacao->path_comprovante){
-            if(Storage::exists($path_comprovante)) {
-                Storage::delete($path_comprovante . $lancamento->movimentacao->path_comprovante);
+            $path_comprovante = 'documentos/'. $lancamento['cliente_id'] . '/comprovantes/';
+            if($lancamento['movimentacao_id'] != 0 && $lancamento['path_comprovante']){
+                if(Storage::exists($path_comprovante)) {
+                    Storage::delete($path_comprovante . $lancamento['path_comprovante']);
+                }
             }
-        }
 
+        }
     }
 
     public function refreshList(Request $request)

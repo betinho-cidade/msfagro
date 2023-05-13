@@ -111,7 +111,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_macho">Qtd. Machos</label>
-                            <input type="text" class="form-control" id="qtd_macho" name="qtd_macho" value="{{old('qtd_macho')}}" placeholder="Qtd. Machos" required>
+                            <input type="number" class="form-control" id="qtd_macho" name="qtd_macho" value="{{old('qtd_macho')}}" placeholder="Qtd. Machos" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -133,7 +133,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_femea">Qtd. Fêmeas</label>
-                            <input type="text" class="form-control" id="qtd_femea" name="qtd_femea" value="{{old('qtd_femea')}}" placeholder="Qtd. Fêmeas" required>
+                            <input type="number" class="form-control" id="qtd_femea" name="qtd_femea" value="{{old('qtd_femea')}}" placeholder="Qtd. Fêmeas" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
