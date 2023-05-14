@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Movimentacao\Lancamento;
+namespace App\Http\Requests\Lancamento\Efetivo;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;

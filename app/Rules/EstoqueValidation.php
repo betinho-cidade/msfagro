@@ -37,7 +37,7 @@ class EstoqueValidation implements Rule
 
         if($attribute == 'qtd_macho'){
             if($this->origem->qtd_macho < $value){
-                $this->message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda('.$this->origem->qtd_macho.') - movimentação('.$value.')';
+                $this->message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.$this->origem->qtd_macho.') - movimentação ('.$value.')';
                 return false;
             } else {
                 return true;

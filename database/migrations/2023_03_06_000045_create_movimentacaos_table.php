@@ -12,10 +12,11 @@ class CreateMovimentacaosTable extends Migration
     {
         Schema::create('movimentacaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('lancamento_id')->nullable();
+            $table->unsignedBigInteger('efetivo_id')->nullable();
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('produtor_id');
             $table->unsignedBigInteger('forma_pagamento_id');
+            $table->unsignedBigInteger('categoria_id');
             $table->datetime('data_programada');
             $table->datetime('data_pagamento')->nullable();
             $table->enum('tipo', ['R' ,'D']); //R->Receita  D->Despesa
@@ -26,12 +27,14 @@ class CreateMovimentacaosTable extends Migration
             $table->string('path_nota', 500);
             $table->enum('situacao', ['PD', 'PG', 'CL'])->default('PD');  //PD->Movimentação Pendente  PG->Movimentação Paga  CL->Movimentação Cancelada
             $table->string('item_texto', 300);
+            $table->string('observacao', 1000)->nullable();
             $table->timestamps();
-            $table->foreign('lancamento_id')->references('id')->on('lancamentos');
+            $table->foreign('efetivo_id')->references('id')->on('efetivos');
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->foreign('produtor_id')->references('id')->on('produtors');
             $table->foreign('forma_pagamento_id')->references('id')->on('forma_pagamentos');
-            $table->index(['lancamento_id'], 'idx_movimentacaos_lancamento');
+            $table->foreign('categoria_id')->references('id')->on('categorias');
+            $table->index(['efetivo_id'], 'idx_movimentacaos_efetivo');
             $table->index(['forma_pagamento_id'], 'idx_movimentacaos_forma_pagamento');
             $table->index(['data_programada'], 'idx_movimentacaos_data');
             $table->index(['tipo'], 'idx_movimentacaos_tipo');

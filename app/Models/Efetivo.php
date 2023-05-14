@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 
-class Lancamento extends Model
+class Efetivo extends Model
 {
 
     public function cliente()
@@ -61,30 +61,30 @@ class Lancamento extends Model
         return $tipo_pessoa;
     }
 
-    public function getTipoLancamentoTextoAttribute()
+    public function getTipoEfetivoTextoAttribute()
     {
-        $tipo_lancamento = '';
+        $tipo_efetivo = '';
 
         switch($this->tipo){
             case 'CP' : {
-                $tipo_lancamento = 'Compra';
+                $tipo_efetivo = 'Compra';
                 break;
             }
             case 'VD' : {
-                $tipo_lancamento = 'Venda';
+                $tipo_efetivo = 'Venda';
                 break;
             }
             case 'EG' : {
-                $tipo_lancamento = 'Engorda';
+                $tipo_efetivo = 'Engorda';
                 break;
             }
             default : {
-                $tipo_lancamento = '---';
+                $tipo_efetivo = '---';
                 break;
             }
         }
 
-        return $tipo_lancamento;
+        return $tipo_efetivo;
     }
 
 
@@ -150,23 +150,23 @@ class Lancamento extends Model
     }
 
 
-    public function getTextoLancamentoAttribute(){
+    public function getTextoEfetivoAttribute(){
 
         if($this->tipo == 'VD'){
-            $tipo_lancamento = 'Venda de: ';
+            $tipo_efetivo = 'Venda de: ';
         } else if($this->tipo == 'CP'){
-            $tipo_lancamento = 'Compra de: ';
+            $tipo_efetivo = 'Compra de: ';
         }
 
         $texto_macho = ($this->qtd_macho > 0) ? $this->getClassificacaoMachoAttribute() . ' (qtd: ' . $this->qtd_macho . ')' : '';
 
         $texto_femea = ($this->qtd_femea > 0) ? $this->getClassificacaoFemeaAttribute() . ' (qtd: ' . $this->qtd_femea . ')' : '';
 
-        return $tipo_lancamento . $texto_macho . $texto_femea;
+        return $tipo_efetivo . $texto_macho . $texto_femea;
     }
 
 
-    public function getTotalAttribute()
+    public function getTotalBovinosAttribute()
     {
         return number_format($this->qtd_macho + $this->qtd_femea, 0, ',', '.');
     }

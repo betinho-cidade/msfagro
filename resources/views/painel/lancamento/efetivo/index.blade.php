@@ -28,53 +28,53 @@
                 <h4 class="card-title">Listagem do Efetivo Pecuário registrado para o Cliente - Referência {!! strtoupper($data_programada) !!}</h4>
                 <p class="card-title-desc"></p>
 
-                <!-- Nav tabs - LISTA lancamento - INI -->
+                <!-- Nav tabs - LISTA efetivo - INI -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#lancamento_CP" role="tab">
+                        <a class="nav-link active" data-toggle="tab" href="#efetivo_CP" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Compra ( <code class="highlighter-rouge">{{$lancamentos_MG->where('tipo', 'CP')->count()}}</code> )
-                                @can('delete_list_lancamento')
-                                    @if($lancamentos_MG->where('tipo', 'CP')->count() > 0)
-                                        <i onClick="deleteDataList('CP');" data-toggle="modal" data-target="#modal-delete-lancamento-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de COMPRA do mês - Efetivo Pecuário"></i>
+                            <span class="d-none d-sm-block">Compra ( <code class="highlighter-rouge">{{$efetivos->where('tipo', 'CP')->count()}}</code> )
+                                @can('delete_list_efetivo')
+                                    @if($efetivos->where('tipo', 'CP')->count() > 0)
+                                        <i onClick="deleteDataList('CP');" data-toggle="modal" data-target="#modal-delete-efetivo-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de COMPRA do mês - Efetivo Pecuário"></i>
                                     @endif
                                 @endcan
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#lancamento_VD" role="tab">
+                        <a class="nav-link" data-toggle="tab" href="#efetivo_VD" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Venda ( <code class="highlighter-rouge">{{$lancamentos_MG->where('tipo', 'VD')->count()}}</code> )
-                                @can('delete_list_lancamento')
-                                    @if($lancamentos_MG->where('tipo', 'VD')->count() > 0)
-                                        <i onClick="deleteDataList('VD');" data-toggle="modal" data-target="#modal-delete-lancamento-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de VENDA do mês - Efetivo Pecuário"></i>
+                            <span class="d-none d-sm-block">Venda ( <code class="highlighter-rouge">{{$efetivos->where('tipo', 'VD')->count()}}</code> )
+                                @can('delete_list_efetivo')
+                                    @if($efetivos->where('tipo', 'VD')->count() > 0)
+                                        <i onClick="deleteDataList('VD');" data-toggle="modal" data-target="#modal-delete-efetivo-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de VENDA do mês - Efetivo Pecuário"></i>
                                     @endif
                                 @endcan
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#lancamento_EG" role="tab">
+                        <a class="nav-link" data-toggle="tab" href="#efetivo_EG" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Engorda ( <code class="highlighter-rouge">{{$lancamentos_MG->where('tipo', 'EG')->count()}}</code> )
-                                @can('delete_list_lancamento')
-                                    @if($lancamentos_MG->where('tipo', 'EG')->count() > 0)
-                                        <i onClick="deleteDataList('EG');" data-toggle="modal" data-target="#modal-delete-lancamento-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de ENGORDA do mês - Efetivo Pecuário"></i>
+                            <span class="d-none d-sm-block">Engorda ( <code class="highlighter-rouge">{{$efetivos->where('tipo', 'EG')->count()}}</code> )
+                                @can('delete_list_efetivo')
+                                    @if($efetivos->where('tipo', 'EG')->count() > 0)
+                                        <i onClick="deleteDataList('EG');" data-toggle="modal" data-target="#modal-delete-efetivo-list" class="fa fa-minus-circle" style="color: #dc143c; margin-left: 5px; vertical-align: middle;" title="Excluir os Lançamentos de ENGORDA do mês - Efetivo Pecuário"></i>
                                     @endif
                                 @endcan
                             </span>
                         </a>
                     </li>
                 </ul>
-                <!-- Nav tabs - LISTA lancamento - FIM -->
+                <!-- Nav tabs - LISTA efetivo - FIM -->
 
                 <!-- Tab panes -->
                 <div class="tab-content p-3 text-muted">
 
-                <!-- Nav tabs - LISTA lancamento - COMPRA - INI -->
-                <div class="tab-pane active" id="lancamento_CP" role="tabpanel">
-                    <table id="dt_lancamentos_CP" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <!-- Nav tabs - LISTA efetivo - COMPRA - INI -->
+                <div class="tab-pane active" id="efetivo_CP" role="tabpanel">
+                    <table id="dt_efetivos_CP" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
                             <th>Ordenação</th>
@@ -88,23 +88,23 @@
                         </thead>
 
                         <tbody>
-                        @forelse($lancamentos_MG->where('tipo', 'CP') as $lancamento)
+                        @forelse($efetivos->where('tipo', 'CP') as $efetivo)
                         <tr>
-                            <td>{{$lancamento->data_programada_ordenacao}}</td>
-                            <td>{{$lancamento->id}}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->empresa->nome_empresa ?? '...' }}">{{ $lancamento->empresa->nome_empresa_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->destino->nome_fazenda ?? '...' }}">{{$lancamento->destino->nome_fazenda_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->categoria->nome ?? '...' }}">{{ $lancamento->categoria->nome_reduzido ?? '...' }} ({{ $lancamento->total }})</td>
-                            <td>{{$lancamento->data_programada_formatada}}</td>
+                            <td>{{$efetivo->data_programada_ordenacao}}</td>
+                            <td>{{$efetivo->id}}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->empresa->nome_empresa ?? '...' }}">{{ $efetivo->empresa->nome_empresa_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->destino->nome_fazenda ?? '...' }}">{{$efetivo->destino->nome_fazenda_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
+                            <td>{{$efetivo->data_programada_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_lancamento')
-                                <a href="{{route('lancamento.show_MG', compact('lancamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Lançamento"></i></a>
+                            @can('edit_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
                             @endcan
 
-                            @can('delete_lancamento')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$lancamento->id}})"
-                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Lançamento"></i></a>
+                            @can('delete_efetivo')
+                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$efetivo->id}})"
+                                    data-target="#modal-delete-efetivo"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Efetivo Pecuário"></i></a>
                             @endcan
                             </td>
                         </tr>
@@ -115,12 +115,12 @@
                         @endforelse
                         </tbody>
                     </table>
-                    <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
+                    <!-- Nav tabs - LISTA efetivo - ATIVA - FIM -->
                 </div>
 
-                <!-- Nav tabs - LISTA lancamento - VENDA - INI -->
-                <div class="tab-pane" id="lancamento_VD" role="tabpanel">
-                    <table id="dt_lancamentos_VD" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <!-- Nav tabs - LISTA efetivo - VENDA - INI -->
+                <div class="tab-pane" id="efetivo_VD" role="tabpanel">
+                    <table id="dt_efetivos_VD" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
                             <th>Ordenação</th>
@@ -134,23 +134,23 @@
                         </thead>
 
                         <tbody>
-                        @forelse($lancamentos_MG->where('tipo', 'VD') as $lancamento)
+                        @forelse($efetivos->where('tipo', 'VD') as $efetivo)
                         <tr>
-                            <td>{{$lancamento->data_programada_ordenacao}}</td>
-                            <td>{{$lancamento->id}}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->origem->nome_fazenda ?? '...' }}">{{$lancamento->origem->nome_fazenda_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->empresa->nome_empresa ?? '...' }}">{{ $lancamento->empresa->nome_empresa_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->categoria->nome ?? '...' }}">{{ $lancamento->categoria->nome_reduzido ?? '...' }} ({{ $lancamento->total }})</td>
-                            <td>{{$lancamento->data_programada_formatada}}</td>
+                            <td>{{$efetivo->data_programada_ordenacao}}</td>
+                            <td>{{$efetivo->id}}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->origem->nome_fazenda ?? '...' }}">{{$efetivo->origem->nome_fazenda_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->empresa->nome_empresa ?? '...' }}">{{ $efetivo->empresa->nome_empresa_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
+                            <td>{{$efetivo->data_programada_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_lancamento')
-                                <a href="{{route('lancamento.show_MG', compact('lancamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Lançamento"></i></a>
+                            @can('edit_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
                             @endcan
 
-                            @can('delete_lancamento')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$lancamento->id}})"
-                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Lançamento"></i></a>
+                            @can('delete_efetivo')
+                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$efetivo->id}})"
+                                    data-target="#modal-delete-efetivo"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Efetivo Pecuário"></i></a>
                             @endcan
                             </td>
                         </tr>
@@ -161,12 +161,12 @@
                         @endforelse
                         </tbody>
                     </table>
-                    <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
+                    <!-- Nav tabs - LISTA efetivo - ATIVA - FIM -->
                 </div>
 
-                <!-- Nav tabs - LISTA lancamento - ENGORDA - INI -->
-                <div class="tab-pane" id="lancamento_EG" role="tabpanel">
-                    <table id="dt_lancamentos_EG" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <!-- Nav tabs - LISTA efetivo - ENGORDA - INI -->
+                <div class="tab-pane" id="efetivo_EG" role="tabpanel">
+                    <table id="dt_efetivos_EG" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
                             <th>Ordenação</th>
@@ -180,23 +180,23 @@
                         </thead>
 
                         <tbody>
-                        @forelse($lancamentos_MG->where('tipo', 'EG') as $lancamento)
+                        @forelse($efetivos->where('tipo', 'EG') as $efetivo)
                         <tr>
-                            <td>{{$lancamento->data_programada_ordenacao}}</td>
-                            <td>{{$lancamento->id}}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->origem->nome_fazenda ?? '...' }}">{{$lancamento->origem->nome_fazenda_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->destino->nome_fazenda ?? '...' }}">{{$lancamento->destino->nome_fazenda_reduzido ?? '...' }}</td>
-                            <td data-toggle="tooltip" title="{{ $lancamento->categoria->nome ?? '...' }}">{{ $lancamento->categoria->nome_reduzido ?? '...' }} ({{ $lancamento->total }})</td>
-                            <td>{{$lancamento->data_programada_formatada}}</td>
+                            <td>{{$efetivo->data_programada_ordenacao}}</td>
+                            <td>{{$efetivo->id}}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->origem->nome_fazenda ?? '...' }}">{{$efetivo->origem->nome_fazenda_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->destino->nome_fazenda ?? '...' }}">{{$efetivo->destino->nome_fazenda_reduzido ?? '...' }}</td>
+                            <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
+                            <td>{{$efetivo->data_programada_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_lancamento')
-                                <a href="{{route('lancamento.show_MG', compact('lancamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Lançamento"></i></a>
+                            @can('edit_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
                             @endcan
 
-                            @can('delete_lancamento')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$lancamento->id}})"
-                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Lançamento"></i></a>
+                            @can('delete_efetivo')
+                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$efetivo->id}})"
+                                    data-target="#modal-delete-efetivo"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Efetivo Pecuário"></i></a>
                             @endcan
                             </td>
                         </tr>
@@ -207,7 +207,7 @@
                         @endforelse
                         </tbody>
                     </table>
-                    <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
+                    <!-- Nav tabs - LISTA efetivo - ATIVA - FIM -->
                 </div>
 
             </div>
@@ -227,7 +227,7 @@
     <input type="hidden" id="mes_referencia" name="mes_referencia" value="{{ $mes_referencia }}">
 </form>
 
-<div class="modal fade" id="modal-delete-lancamento-list" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modal-delete-efetivo-list" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -237,7 +237,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Todos os registros do mês selecionado serão excluídos definitivamente. Também serão excluídas suas movimentações fiscais de compra/venda, bem como as operações de atualização do estoque realizadas anterioremente nas respectivas Fazendas, serão desfeitas. Deseja Continuar ?</p>
+                <p>Todos os registros do mês selecionado serão excluídos definitivamente. Também serão excluídas suas movimentações fiscais de compra/venda, bem como as operações de atualização de estoque realizadas anterioremente nas respectivas Fazendas, serão desfeitas. Deseja Continuar ?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Fechar </button>
@@ -255,7 +255,7 @@
     @method('DELETE')
 </form>
 
-<div class="modal fade" id="modal-delete-lancamento" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modal-delete-efetivo" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -265,7 +265,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>O registro selecionado será excluído definitivamente. Também será excluída a movimentação fiscal de compra/venda, bem como as operações de atualização do estoque realizadas anterioremente nas respectivas Fazendas, serão desfeitas. Deseja Continuar ?</p>
+                <p>O registro selecionado será excluído definitivamente. Também será excluída a movimentação fiscal de compra/venda, bem como as operações de atualização de estoque realizadas anterioremente nas respectivas Fazendas, serão desfeitas. Deseja Continuar ?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Fechar </button>
@@ -301,9 +301,9 @@
 		});
 	</script>
 
-    @if($lancamentos_MG->where('tipo', 'CP')->count() > 0)
+    @if($efetivos->where('tipo', 'CP')->count() > 0)
         <script>
-            var table_CP = $('#dt_lancamentos_CP').DataTable({
+            var table_CP = $('#dt_efetivos_CP').DataTable({
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
@@ -318,9 +318,9 @@
         </script>
     @endif
 
-    @if($lancamentos_MG->where('tipo', 'VD')->count() > 0)
+    @if($efetivos->where('tipo', 'VD')->count() > 0)
         <script>
-            var table_VD = $('#dt_lancamentos_VD').DataTable({
+            var table_VD = $('#dt_efetivos_VD').DataTable({
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
@@ -336,9 +336,9 @@
     @endif
 
 
-    @if($lancamentos_MG->where('tipo', 'EG')->count() > 0)
+    @if($efetivos->where('tipo', 'EG')->count() > 0)
         <script>
-            var table_EG = $('#dt_lancamentos_EG').DataTable({
+            var table_EG = $('#dt_efetivos_EG').DataTable({
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
@@ -358,7 +358,7 @@
        function deleteData(id)
        {
            var id = id;
-           var url = '{{ route("lancamento.destroy_MG", ":id") }}';
+           var url = '{{ route("efetivo.destroy", ":id") }}';
            url = url.replace(':id', id);
            $("#deleteForm").attr('action', url);
        }
@@ -374,7 +374,7 @@
         function deleteDataList(tipo)
         {
             var tipo = tipo;
-            var url = '{{ route("lancamento.destroy_list_MG") }}';
+            var url = '{{ route("efetivo.destroy_list") }}';
             document.forms['deleteFormList']['tipo'].value = tipo;
             $("#deleteFormList").attr('action', url);
         }

@@ -17,12 +17,12 @@ class Fazenda extends Model
 
     public function origems(){
 
-        return $this->hasMany('App\Models\Lancamento');
+        return $this->hasMany('App\Models\Efetivo');
     }
 
     public function destinos(){
 
-        return $this->hasMany('App\Models\Lancamento');
+        return $this->hasMany('App\Models\Efetivo');
     }
 
 

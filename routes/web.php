@@ -120,20 +120,34 @@ Route::middleware(['auth'])->group(function () {
 
         });
 
-        Route::group(['namespace' => 'Movimentacao'], function(){
+        Route::group(['namespace' => 'Lancamento'], function(){
 
-            Route::group(['namespace' => 'Lancamento'], function(){
-                Route::get('/lancamento', 'LancamentoController@index')->name('lancamento.index');
-                Route::get('/lancamento/create', 'LancamentoController@create')->name('lancamento.create');
-                Route::post('/lancamento/store_MG', 'LancamentoController@store_MG')->name('lancamento.store_MG');
-                Route::get('/lancamento/list_MG', 'LancamentoController@list_MG')->name('lancamento.list_MG');
-                Route::post('/lancamento/store_MF', 'LancamentoController@store_MF')->name('lancamento.store_MF');
-                Route::post('/lancamento/refreshList', 'LancamentoController@refreshList')->name('lancamento.refreshList');
-                Route::post('/lancamento/destroy_list_MG', 'LancamentoController@destroy_list_MG')->name('lancamento.destroy_list_MG');
-                Route::get('/lancamento/{lancamento}', 'LancamentoController@show_MG')->name('lancamento.show_MG');
-                Route::get('/lancamento/{lancamento}/download', 'LancamentoController@download')->name('lancamento.download');
-                Route::put('/lancamento/{lancamento}/update_MG', 'LancamentoController@update_MG')->name('lancamento.update_MG');
-                Route::delete('/lancamento/{lancamento}/destroy_MG', 'LancamentoController@destroy_MG')->name('lancamento.destroy_MG');
+            Route::get('/lancamento', 'LancamentoController@index')->name('lancamento.index');
+            Route::post('/lancamento/refreshList', 'LancamentoController@refreshList')->name('lancamento.refreshList');
+
+            Route::group(['namespace' => 'Efetivo'], function(){
+                Route::get('/efetivo', 'EfetivoController@index')->name('efetivo.index');
+                Route::get('/efetivo/create', 'EfetivoController@create')->name('efetivo.create');
+                Route::post('/efetivo/store', 'EfetivoController@store')->name('efetivo.store');
+                Route::get('/efetivo/list', 'EfetivoController@list')->name('efetivo.list');
+                Route::post('/efetivo/destroy_list', 'EfetivoController@destroy_list')->name('efetivo.destroy_list');
+                Route::get('/efetivo/{efetivo}', 'EfetivoController@show')->name('efetivo.show');
+                Route::put('/efetivo/{efetivo}/update', 'EfetivoController@update')->name('efetivo.update');
+                Route::delete('/efetivo/{efetivo}/destroy', 'EfetivoController@destroy')->name('efetivo.destroy');
+                Route::get('/efetivo/{efetivo}/download', 'EfetivoController@download')->name('efetivo.download');
+            });
+
+            Route::group(['namespace' => 'Movimentacao'], function(){
+                Route::get('/movimentacao', 'MovimentacaoController@index')->name('movimentacao.index');
+                Route::get('/movimentacao/create', 'MovimentacaoController@create')->name('movimentacao.create');
+                Route::post('/movimentacao/store', 'MovimentacaoController@store')->name('movimentacao.store');
+                Route::get('/movimentacao/list', 'MovimentacaoController@list')->name('movimentacao.list');
+                Route::post('/movimentacao/destroy_list', 'MovimentacaoController@destroy_list')->name('movimentacao.destroy_list');
+                Route::post('/movimentacao/refreshList', 'MovimentacaoController@refreshList')->name('movimentacao.refreshList');
+                Route::get('/movimentacao/{movimentacao}', 'MovimentacaoController@show')->name('movimentacao.show');
+                Route::put('/movimentacao/{movimentacao}/update', 'MovimentacaoController@update')->name('movimentacao.update');
+                Route::delete('/movimentacao/{movimentacao}/destroy', 'MovimentacaoController@destroy')->name('movimentacao.destroy');
+                Route::get('/movimentacao/{movimentacao}/download', 'MovimentacaoController@download')->name('movimentacao.download');
             });
 
         });

@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 class Categoria extends Model
 {
 
-    public function lancamentos()
+    public function efetivos()
     {
-        return $this->belongsTo('App\Models\Lancamento');
+        return $this->belongsTo('App\Models\Efetivo');
     }
 
     public function getNomeSegmentoAttribute()

@@ -9,9 +9,9 @@ use Carbon\Carbon;
 class Movimentacao extends Model
 {
 
-    public function lancamento()
+    public function efetivo()
     {
-        return $this->belongsTo('App\Models\Lancamento');
+        return $this->belongsTo('App\Models\Efetivo');
     }
 
     public function cliente()

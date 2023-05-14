@@ -43,7 +43,7 @@
 
             <h4 class="card-title">Formulário de Cadastro - Lançamento de Efetivo Pecuário</h4>
             <p class="card-title-desc">O Lançamento cadastrado estará disponível para os movimentos no sistema.</p>
-            <form name="create_lancamento" method="POST" action="{{route('lancamento.store_MG')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
+            <form name="create_efetivo" method="POST" action="{{route('efetivo.store')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
@@ -167,7 +167,7 @@
                             <select id="origem" name="origem" class="form-control {{($errors->first('origem') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
                                 @foreach($fazendas as $fazenda)
-                                    <option value="{{ $fazenda->id }}" {{(old('fazenda') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
+                                    <option value="{{ $fazenda->id }}" {{(old('origem') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
                                 @endforeach
                             </select>
                             <div class="valid-feedback">ok!</div>
@@ -182,7 +182,7 @@
                             <select id="destino" name="destino" class="form-control {{($errors->first('destino') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
                                 @foreach($fazendas as $fazenda)
-                                    <option value="{{ $fazenda->id }}" {{(old('fazenda') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
+                                    <option value="{{ $fazenda->id }}" {{(old('destino') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
                                 @endforeach
                             </select>
                             <div class="valid-feedback">ok!</div>
@@ -253,7 +253,7 @@
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
                             <input type="hidden" class="form-control" id="valor" name="valor" value="">
-                            <input type="text" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{old('valor_view')}}" placeholder="Valor" required>
+                            <input type="text" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{old('valor')}}" placeholder="Valor" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>

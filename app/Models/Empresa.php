@@ -15,9 +15,9 @@ class Empresa extends Model
         return $this->belongsTo('App\Models\Cliente');
     }
 
-    public function lancamentos()
+    public function efetivos()
     {
-        return $this->belongsTo('App\Models\Lancamento');
+        return $this->belongsTo('App\Models\Efetivos');
     }
 
     public function getTipoPessoaTextoAttribute()
