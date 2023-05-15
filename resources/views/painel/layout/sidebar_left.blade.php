@@ -64,7 +64,13 @@
                                     <span>Lançamentos</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{ route('lancamento.index') }}">Efetivo / Movimento Fiscal</a></li>
+                                    <li><a href="{{ route('lancamento.index') }}">
+                                    @if($user->cliente->tipo == 'AG')
+                                    Movimento Fiscal
+                                    @else
+                                    Efetivo / Movimento Fiscal
+                                    @endif
+                                    </a></li>
                                 </ul>
                             </li>
 

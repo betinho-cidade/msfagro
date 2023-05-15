@@ -29,8 +29,8 @@
                 <p class="card-title-desc"></p>
 
                 <!-- Nav tabs - LISTA efetivo - INI -->
-                @if($user->cliente && $user->cliente->tipo != 'AG')
                 <ul class="nav nav-tabs" role="tablist">
+                    @if($user->cliente && $user->cliente->tipo != 'AG')
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#efetivo" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
@@ -41,8 +41,9 @@
                             </span>
                         </a>
                     </li>
+                    @endif
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#fiscal" role="tab">
+                        <a class="nav-link {{ $user->cliente->tipo == 'AG' ? 'active' : '' }}" data-toggle="tab" href="#fiscal" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
                             <span class="d-none d-sm-block">Lançamento Fiscal ( <code class="highlighter-rouge">{{$movimentacaos->count()}}</code> )
                                 @can('create_movimentacao')
@@ -52,7 +53,6 @@
                         </a>
                     </li>
                 </ul>
-                @endif
                 <!-- Nav tabs - LISTA efetivo - FIM -->
 
                 <!-- Tab panes -->
@@ -102,7 +102,7 @@
                 </div>
                 @endif
 
-                <div class="tab-pane" id="fiscal" role="tabpanel">
+                <div class="tab-pane {{ $user->cliente->tipo == 'AG' ? 'active' : '' }}" id="fiscal" role="tabpanel">
                     <table id="dt_fiscal" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
@@ -164,7 +164,7 @@
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
 
-    @if($efetivos->count() > 0)
+    @if($user->cliente->tipo != 'AG' && $efetivos->count() > 0)
         <script>
             var table = $('#dt_efetivo').DataTable({
                 language: {

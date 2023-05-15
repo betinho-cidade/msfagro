@@ -46,6 +46,13 @@ class EfetivoController extends Controller
             return redirect()->route('lancamento.index');
         }
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }
+
         $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
 
         if(!$mes_referencia){
@@ -60,13 +67,12 @@ class EfetivoController extends Controller
         setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
         $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
-        $efetivos = ($user->cliente->tipo != 'AG') ?
-                            Efetivo::where('cliente_id', $user->cliente->id)
-                                    ->where('segmento', 'MG')
-                                    ->whereYear('data_programada', $data_programada_vetor[1])
-                                    ->whereMonth('data_programada', $data_programada_vetor[0])
-                                    ->orderBy('data_programada', 'asc')
-                                    ->get() : [];
+        $efetivos = Efetivo::where('cliente_id', $user->cliente->id)
+                                ->where('segmento', 'MG')
+                                ->whereYear('data_programada', $data_programada_vetor[1])
+                                ->whereMonth('data_programada', $data_programada_vetor[0])
+                                ->orderBy('data_programada', 'asc')
+                                ->get();
 
         return view('painel.lancamento.efetivo.index', compact('user', 'mes_referencia', 'data_programada', 'efetivos'));
     }
@@ -135,6 +141,13 @@ class EfetivoController extends Controller
         if(!$user->cliente){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
@@ -288,6 +301,13 @@ class EfetivoController extends Controller
             return redirect()->route('painel');
         }
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }
+
         if($user->cliente->id != $efetivo->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
@@ -310,6 +330,13 @@ class EfetivoController extends Controller
         if(!$user->cliente){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
@@ -457,6 +484,13 @@ class EfetivoController extends Controller
             return redirect()->route('painel');
         }
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }
+
         if($user->cliente->id != $efetivo->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
@@ -538,6 +572,13 @@ class EfetivoController extends Controller
         if(!$user->cliente){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
@@ -696,6 +737,13 @@ class EfetivoController extends Controller
         if(!$user->cliente){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
