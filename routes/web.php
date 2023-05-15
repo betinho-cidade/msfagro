@@ -143,7 +143,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/movimentacao/store', 'MovimentacaoController@store')->name('movimentacao.store');
                 Route::get('/movimentacao/list', 'MovimentacaoController@list')->name('movimentacao.list');
                 Route::post('/movimentacao/destroy_list', 'MovimentacaoController@destroy_list')->name('movimentacao.destroy_list');
-                Route::post('/movimentacao/refreshList', 'MovimentacaoController@refreshList')->name('movimentacao.refreshList');
                 Route::get('/movimentacao/{movimentacao}', 'MovimentacaoController@show')->name('movimentacao.show');
                 Route::put('/movimentacao/{movimentacao}/update', 'MovimentacaoController@update')->name('movimentacao.update');
                 Route::delete('/movimentacao/{movimentacao}/destroy', 'MovimentacaoController@destroy')->name('movimentacao.destroy');

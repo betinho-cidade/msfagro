@@ -20,6 +20,11 @@ class Empresa extends Model
         return $this->belongsTo('App\Models\Efetivos');
     }
 
+    public function movimentacaos()
+    {
+        return $this->belongsTo('App\Models\Movimentacao');
+    }
+
     public function getTipoPessoaTextoAttribute()
     {
         $tipo_pessoa = '';

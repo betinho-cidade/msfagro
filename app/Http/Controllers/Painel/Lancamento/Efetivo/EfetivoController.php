@@ -19,10 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Lancamento\Efetivo\CreateRequest;
 use App\Http\Requests\Lancamento\Efetivo\UpdateRequest;
-//use App\Http\Requests\Movimentacao\efetivo\CreateRequest_MF;
-//use App\Http\Requests\Movimentacao\efetivo\UpdateRequest_MF;
 use Carbon\Carbon;
-
 
 
 class EfetivoController extends Controller
@@ -186,6 +183,7 @@ class EfetivoController extends Controller
 
                 $movimentacao->efetivo_id = $efetivo->id;
                 $movimentacao->cliente_id = $user->cliente->id;
+                $movimentacao->empresa_id = $efetivo->empresa_id;
                 $movimentacao->produtor_id = $request->produtor;
                 $movimentacao->forma_pagamento_id = $request->forma_pagamento;
                 $movimentacao->categoria_id = $efetivo->categoria_id;
@@ -332,7 +330,7 @@ class EfetivoController extends Controller
 
         $today = Carbon::today();
 
-        if($request->data_programada > $today && $request->path_comprovante){
+        if($request->data_programada > $today && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante)){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Comprovante de Pagamento somente é permitido para data igual ou anterior a data atual.');
 
@@ -418,6 +416,7 @@ class EfetivoController extends Controller
                 $nome_arquivo = 'COMPROVANTE_'.$efetivo->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $efetivo->movimentacao->path_comprovante = $nome_arquivo;
                 $efetivo->movimentacao->situacao = 'PG';
+                $efetivo->movimentacao->data_pagamento = Carbon::now();
                 $efetivo->movimentacao->save();
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
@@ -858,136 +857,4 @@ class EfetivoController extends Controller
 
         return $message;
     }
-
-
-
-
-
-    public function store_MF(CreateRequest_MF $request)
-    {
-        if(Gate::denies('create_efetivo')){
-            abort('403', 'Página não disponível');
-        }
-
-        $user = Auth()->User();
-
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-
-            return redirect()->route('painel');
-        }
-
-        $message = '';
-
-        try {
-
-            DB::beginTransaction();
-
-            $movimentacao = new Movimentacao();
-
-            $movimentacao->cliente_id = $user->cliente->id;
-            $movimentacao->produtor_id = $request->produtor;
-            $movimentacao->forma_pagamento_id = $request->forma_pagamento;
-            $movimentacao->categoria_id = $request->categoria;
-            $movimentacao->data_programada = $request->data_programada;
-            $movimentacao->data_pagamento = $request->path_comprovante ? Carbon::now() : null;
-            $movimentacao->segmento = 'MF';
-            $movimentacao->tipo = $request->tipo;
-            $movimentacao->valor = $request->valor;
-            $movimentacao->nota = $request->nota;
-            $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
-            $movimentacao->item_texto = $request->item_texto;
-            $movimentacao->observacao = $request->observacao;
-
-            $movimentacao->save();
-
-            // =================================================================
-            // ARMAZENA OS ARQUIVOS - GTA, NOTA E COMPROVANTE PAGAMENTO
-            // =================================================================
-
-            if ($request->path_nota) {
-
-                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
-
-                $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
-                $movimentacao->path_nota = $nome_arquivo;
-                $movimentacao->save();
-
-                Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
-            }
-
-            if ($request->path_comprovante) {
-
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
-
-                $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
-                $movimentacao->path_comprovante = $nome_arquivo;
-                $movimentacao->save();
-
-                Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
-            }
-
-            DB::commit();
-
-        } catch (Exception $ex){
-
-            DB::rollBack();
-
-            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
-
-        }
-
-        if ($message && $message !='') {
-            $request->session()->flash('message.level', 'danger');
-            $request->session()->flash('message.content', $message);
-        } else {
-            $request->session()->flash('message.level', 'success');
-            $request->session()->flash('message.content', 'O Lançamento de Movimentação Fiscal foi criado com sucesso');
-        }
-
-        return redirect()->route('efetivo.index');
-    }
-
-    public function list_MF(Request $request)
-    {
-
-        if(Gate::denies('list_efetivo')){
-            abort('403', 'Página não disponível');
-        }
-
-        $user = Auth()->User();
-
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-
-            return redirect()->route('efetivo.index');
-        }
-
-        $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
-
-        if(!$mes_referencia){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
-
-            return redirect()->route('efetivo.index');
-        }
-
-        $data_programada_vetor = explode('-', $mes_referencia);
-
-        setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
-        $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
-
-        $movimentacaos_MF = Movimentacao::where('cliente_id', $user->cliente->id)
-                            ->where('segmento', 'MF')
-                            ->whereYear('data_programada', $data_programada_vetor[1])
-                            ->whereMonth('data_programada', $data_programada_vetor[0])
-                            ->orderBy('data_programada', 'asc')
-                            ->get();
-
-        return view('painel.movimentacao.efetivo.index_list_MF', compact('user', 'mes_referencia', 'data_programada', 'movimentacaos_MF'));
-    }
-
-
 }

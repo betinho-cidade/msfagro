@@ -57,6 +57,8 @@ class LancamentoController extends Controller
                                                         SUM(CASE WHEN efetivos.tipo = (\'EG\') THEN 1 ELSE 0 END) as engorda'))
                                         ->orderBy('efetivos.data_programada', 'desc')
                                         ->get();
+        } else {
+            $efetivos = [];
         }
 
         $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)

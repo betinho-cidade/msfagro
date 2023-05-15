@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Novo Lançamento do Efetivo Pecuário para o Cliente</h4>
+            <h4 class="mb-0">Novo Lançamento de Movimentação Fiscal do Cliente</h4>
         </div>
     </div>
 </div>
@@ -41,13 +41,13 @@
             <div class="card-body">
             <!-- FORMULÁRIO - INICIO -->
 
-            <h4 class="card-title">Formulário de Cadastro - Lançamento de Efetivo Pecuário</h4>
+            <h4 class="card-title">Formulário de Cadastro - Lançamento de Movimentação Fiscal</h4>
             <p class="card-title-desc">O Lançamento cadastrado estará disponível para os movimentos no sistema.</p>
-            <form name="create_efetivo" method="POST" action="{{route('efetivo.store')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
+            <form name="create_movimentacao" method="POST" action="{{route('movimentacao.store')}}"  class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento do Efetivo Pecuário</h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Movimentação Fiscal</h5>
                 </div>
 
                 <div class="row">
@@ -56,9 +56,8 @@
                             <label for="tipo" class="{{($errors->first('tipo') ? 'form-error-label' : '')}}">Tipo Movimentação</label>
                             <select id="tipo" name="tipo" class="form-control {{($errors->first('tipo') ? 'form-error-field' : '')}} dynamic_tipo" required>
                                 <option value="">---</option>
-                                <option value="CP" {{(old('tipo') == 'CP') ? 'selected' : '' }}>Compra</option>
-                                <option value="VD" {{(old('tipo') == 'VD') ? 'selected' : '' }}>Venda</option>
-                                <option value="EG" {{(old('tipo') == 'EG') ? 'selected' : '' }}>Engorda</option>
+                                <option value="R" {{(old('tipo') == 'R') ? 'selected' : '' }}>Receita</option>
+                                <option value="D" {{(old('tipo') == 'D') ? 'selected' : '' }}>Despesa</option>
                             </select>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -94,115 +93,26 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="item_macho" class="{{($errors->first('item_macho') ? 'form-error-label' : '')}}">Classificação Machos</label>
-                            <select id="item_macho" name="item_macho" class="form-control {{($errors->first('item_macho') ? 'form-error-field' : '')}} select2" required>
-                                <option value="">---</option>
-                                <option value="M1" {{(old('item_macho') == 'M1') ? 'selected' : '' }}>Macho de 0 à 12 meses</option>
-                                <option value="M2" {{(old('item_macho') == 'M2') ? 'selected' : '' }}>Macho de 12 à 24 meses</option>
-                                <option value="M3" {{(old('item_macho') == 'M3') ? 'selected' : '' }}>Macho de 25 à 36 meses</option>
-                                <option value="M4" {{(old('item_macho') == 'M4') ? 'selected' : '' }}>Macho acima de 36 meses</option>
-                            </select>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
                     <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="qtd_macho">Qtd. Machos</label>
-                            <input type="number" class="form-control" id="qtd_macho" name="qtd_macho" value="{{old('qtd_macho')}}" placeholder="Qtd. Machos" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="item_femea" class="{{($errors->first('item_femea') ? 'form-error-label' : '')}}">Classificação Fêmeas</label>
-                            <select id="item_femea" name="item_femea" class="form-control {{($errors->first('item_femea') ? 'form-error-field' : '')}} select2" required>
-                                <option value="">---</option>
-                                <option value="F1" {{(old('item_femea') == 'F1') ? 'selected' : '' }}>Fêmea de 0 à 2 meses</option>
-                                <option value="F2" {{(old('item_femea') == 'F2') ? 'selected' : '' }}>Fêmea de 12 à 24 meses</option>
-                                <option value="F3" {{(old('item_femea') == 'F3') ? 'selected' : '' }}>Fêmea de 25 à 36 meses</option>
-                                <option value="F4" {{(old('item_femea') == 'F4') ? 'selected' : '' }}>Fêmea acima de 36 meses</option>
-                            </select>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="qtd_femea">Qtd. Fêmeas</label>
-                            <input type="number" class="form-control" id="qtd_femea" name="qtd_femea" value="{{old('qtd_femea')}}" placeholder="Qtd. Fêmeas" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="gta">Número GTA</label>
-                            <input type="text" class="form-control" id="gta" name="gta" value="{{old('gta')}}" placeholder="Número GTA">
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="path_gta" class="{{($errors->first('path_gta') ? 'form-error-label' : '')}}">GTA (imagem/pdf)</label>
-                        <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input {{($errors->first('path_gta') ? 'form-error-field' : '')}}" id="path_gta" name="path_gta" accept="image/*, application/pdf">
-                            <label class="custom-file-label" for="path_gta">Selecionar GTA</label>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label id="origem_lbl" for="origem" class="{{($errors->first('origem') ? 'form-error-label' : '')}}">Origem</label> <a href="{{ route('fazenda.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Fazenda"></i></a> <i onclick="refreshList('OG');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Fazendas"></i>
-                            <img src="{{asset('images/loading.gif')}}" id="img-loading-origem" style="display:none;max-width: 20px; margin-left: 12px;">
-                            <select id="origem" name="origem" class="form-control {{($errors->first('origem') ? 'form-error-field' : '')}} select2" required>
-                                <option value="">---</option>
-                                @foreach($fazendas as $fazenda)
-                                    <option value="{{ $fazenda->id }}" {{(old('origem') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
-                                @endforeach
-                            </select>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label id="destino_lbl" for="destino" class="{{($errors->first('destino') ? 'form-error-label' : '')}}">Destino</label>  <a href="{{ route('fazenda.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Fazenda"></i></a> <i onclick="refreshList('DT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Fazendas"></i>
-                            <img src="{{asset('images/loading.gif')}}" id="img-loading-destino" style="display:none;max-width: 20px; margin-left: 12px;">
-                            <select id="destino" name="destino" class="form-control {{($errors->first('destino') ? 'form-error-field' : '')}} select2" required>
-                                <option value="">---</option>
-                                @foreach($fazendas as $fazenda)
-                                    <option value="{{ $fazenda->id }}" {{(old('destino') == $fazenda->id) ? 'selected' : '' }}>{{ $fazenda->nome_fazenda }}</option>
-                                @endforeach
-                            </select>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
                         <label for="data_programada">Data Programada</label>
                         <input type="date" class="form-control" id="data_programada" name="data_programada" value="{{old('data_programada')}}" placeholder="Data Programada" required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
 
-                    <div class="col-md-8">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="item_texto" class="{{($errors->first('item_texto') ? 'form-error-label' : '')}}">Item Fiscal</label>
+                            <textarea class="form-control {{($errors->first('item_texto') ? 'form-error-field' : '')}}" id="item_texto" name="item_texto" placeholder="Item Fiscal" required>{{old('item_texto')}}</textarea>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="observacao">Observações</label>
-                            <textarea rows="3" class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
+                            <textarea class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -272,7 +182,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Número Nota Fiscal</label>
-                            <input type="text" class="form-control {{($errors->first('nota') ? 'form-error-field' : '')}}" id="nota" name="nota" value="{{old('nota')}}" placeholder="Número Nota">
+                            <input type="text" class="form-control {{($errors->first('nota') ? 'form-error-field' : '')}}" id="nota" name="nota" value="{{old('nota')}}" placeholder="Número Nota" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -281,7 +191,7 @@
                     <div class="col-md-4">
                         <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)</label>
                         <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input {{($errors->first('path_nota') ? 'form-error-field' : '')}}" id="path_nota" name="path_nota" accept="image/*, application/pdf">
+                            <input type="file" class="custom-file-input {{($errors->first('path_nota') ? 'form-error-field' : '')}}" id="path_nota" name="path_nota" accept="image/*, application/pdf" required>
                             <label id="path_nota_lbl" class="custom-file-label" for="path_nota">Selecionar Nota</label>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -322,168 +232,6 @@
 
         $('.select2').select2();
 
-        $('.dynamic_tipo').change(function(){
-
-            let tipo = document.getElementById('tipo').value;
-            let origem = document.getElementById('origem');
-            let origem_lbl = document.getElementById('origem_lbl');
-            let destino = document.getElementById('destino');
-            let destino_lbl = document.getElementById('destino_lbl');
-            let empresa = document.getElementById('empresa');
-            let produtor = document.getElementById('produtor');
-            let forma_pagamento = document.getElementById('forma_pagamento');
-            let valor = document.getElementById('valor');
-            let valor_view = document.getElementById('valor_view');
-            let path_comprovante = document.getElementById('path_comprovante');
-            let path_comprovante_lbl = document.getElementById('path_comprovante_lbl');
-            let nota = document.getElementById('nota');
-            let path_nota = document.getElementById('path_nota');
-            let path_nota_lbl = document.getElementById('path_nota_lbl');
-
-            switch(tipo){
-                case 'CP':
-                    origem.options.selectedIndex = 0;
-                    $('#origem').val(null).trigger('change');
-                    origem.disabled = true;
-                    origem_lbl.innerHTML = 'Origem - Empresa';
-
-                    destino.disabled = false;
-                    destino_lbl.innerHTML = 'Destino - Fazenda';
-
-                    empresa.disabled = false;
-                    produtor.disabled = false;
-                    forma_pagamento.disabled = false;
-                    valor.disabled = false;
-                    valor_view.disabled = false;
-                    valor_view.style.backgroundColor = 'white';
-                    nota.disabled = false;
-                    nota.style.backgroundColor = 'white';
-                    path_nota_lbl.style.backgroundColor = 'white';
-                    path_nota.disabled = false;
-                    path_comprovante_lbl.style.backgroundColor = 'white';
-                    path_comprovante.disabled = false;
-                    break;
-
-                case 'VD':
-                    origem.disabled = false;
-                    origem_lbl.innerHTML = 'Origem - Fazenda';
-
-                    destino.options.selectedIndex = 0;
-                    $('#destino').val(null).trigger('change');
-                    destino.disabled = true;
-                    destino_lbl.innerHTML = 'Destino - Empresa';
-
-                    empresa.disabled = false;
-                    produtor.disabled = false;
-                    forma_pagamento.disabled = false;
-                    valor.disabled = false;
-                    valor_view.disabled = false;
-                    valor_view.style.backgroundColor = 'white';
-                    nota.disabled = false;
-                    nota.style.backgroundColor = 'white';
-                    path_nota_lbl.style.backgroundColor = 'white';
-                    path_nota.disabled = false;
-                    path_comprovante_lbl.style.backgroundColor = 'white';
-                    path_comprovante.disabled = false;
-                    break;
-
-                case 'EG':
-                    origem.disabled = false;
-                    origem_lbl.innerHTML = 'Origem - Fazenda';
-
-                    destino.disabled = false;
-                    destino_lbl.innerHTML = 'Destino - Fazenda';
-
-                    empresa.options.selectedIndex = 0;
-                    $('#empresa').val(null).trigger('change');
-                    empresa.disabled = true;
-
-                    forma_pagamento.options.selectedIndex = 0;
-                    $('#forma_pagamento').val(null).trigger('change');
-                    forma_pagamento.disabled = true;
-
-                    valor.value = '';
-                    valor.disabled = true;
-                    valor_view.value = '';
-                    valor_view.disabled = true;
-                    valor_view.style.backgroundColor = '#D3D3D3';
-
-                    produtor.disabled = true;
-
-                    nota.value = '';
-                    nota.disabled = true;
-                    nota.style.backgroundColor = '#D3D3D3';
-
-                    path_nota_lbl.innerHTML = 'Selecionar Nota';
-                    path_nota_lbl.style.backgroundColor = '#D3D3D3';
-
-                    path_nota.value = '';
-                    path_nota.disabled = true;
-                    path_nota.style.color = '#D3D3D3';
-
-                    path_comprovante_lbl.innerHTML = 'Selecionar Comprovante';
-                    path_comprovante_lbl.style.backgroundColor = '#D3D3D3';
-
-                    path_comprovante.value = '';
-                    path_comprovante.disabled = true;
-                    path_comprovante.style.color = '#D3D3D3';
-                    break;
-            }
-
-        });
-
-        $('.dynamic_categoria').change(function(){
-
-            let categoria = document.getElementById('categoria');
-            let categoria_value = categoria.options[categoria.selectedIndex].value;
-
-            let item_macho = document.getElementById('item_macho');
-            let qtd_macho = document.getElementById('qtd_macho');
-            let item_femea = document.getElementById('item_femea');
-            let qtd_femea = document.getElementById('qtd_femea'); // 1->Macho 2->Fêna 3->Macho/Fêmea
-
-            switch(categoria_value){
-                case '1':
-                    item_macho.disabled = false;
-                    qtd_macho.disabled = false;
-                    qtd_macho.style.backgroundColor = 'white';
-
-                    item_femea.options.selectedIndex = 0;
-                    $('#item_femea').val(null).trigger('change');
-                    item_femea.disabled = true;
-
-                    qtd_femea.value = '';
-                    qtd_femea.disabled = true;
-                    qtd_femea.style.backgroundColor = '#D3D3D3';
-                    break;
-
-                case '2':
-                    item_macho.options.selectedIndex = 0;
-                    $('#item_macho').val(null).trigger('change');
-                    item_macho.disabled = true;
-
-                    qtd_macho.value = '';
-                    qtd_macho.disabled = true;
-                    qtd_macho.style.backgroundColor = '#D3D3D3';
-
-                    item_femea.disabled = false;
-                    qtd_femea.disabled = false;
-                    qtd_femea.style.backgroundColor = 'white';
-                    break;
-
-                case '3':
-                    item_macho.disabled = false;
-                    qtd_macho.disabled = false;
-                    qtd_macho.style.backgroundColor = 'white';
-
-                    item_femea.disabled = false;
-                    qtd_femea.disabled = false;
-                    qtd_femea.style.backgroundColor = 'white';
-                    break;
-            }
-
-        });
-
         $('.mask_valor').maskMoney({
             prefix:'R$ ',
             allowNegative: false,
@@ -507,9 +255,6 @@
                 valor.value = valor_new;
             }
         });
-
-        $('.dynamic_tipo').trigger('change');
-        $('.dynamic_categoria').trigger('change');
     });
 
     function formatValorMoeda(field){
@@ -543,16 +288,6 @@
         if(tipo == 'PT'){
             objectList = $('#produtor');
             objectName = 'produtor';
-        }
-
-        if(tipo == 'OG'){
-            objectList = $('#origem');
-            objectName = 'origem';
-        }
-
-        if(tipo == 'DT'){
-            objectList = $('#destino');
-            objectName = 'destino';
         }
 
         document.getElementById("img-loading-"+objectName).style.display = '';

@@ -14,6 +14,7 @@ class CreateMovimentacaosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('efetivo_id')->nullable();
             $table->unsignedBigInteger('cliente_id');
+            $table->unsignedBigInteger('empresa_id');
             $table->unsignedBigInteger('produtor_id');
             $table->unsignedBigInteger('forma_pagamento_id');
             $table->unsignedBigInteger('categoria_id');
@@ -31,6 +32,7 @@ class CreateMovimentacaosTable extends Migration
             $table->timestamps();
             $table->foreign('efetivo_id')->references('id')->on('efetivos');
             $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('empresa_id')->references('id')->on('empresas');
             $table->foreign('produtor_id')->references('id')->on('produtors');
             $table->foreign('forma_pagamento_id')->references('id')->on('forma_pagamentos');
             $table->foreign('categoria_id')->references('id')->on('categorias');

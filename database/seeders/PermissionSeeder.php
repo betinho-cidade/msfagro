@@ -306,6 +306,48 @@ class PermissionSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'id' => 43,
+                    'name' => 'view_movimentacao',
+                    'description' => 'Visualizar as informações das movimentações fiscais',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 44,
+                    'name' => 'edit_movimentacao',
+                    'description' => 'Editar as informações das movimentações fiscais',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 45,
+                    'name' => 'create_movimentacao',
+                    'description' => 'Criar uma nova movimentação fiscal',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 46,
+                    'name' => 'delete_movimentacao',
+                    'description' => 'Excluir uma movimentação fiscal',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 47,
+                    'name' => 'list_movimentacao',
+                    'description' => 'Listar o resumo mensal das movimentações fiscais',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 48,
+                    'name' => 'delete_list_movimentacao',
+                    'description' => 'Excluir a lista mensal das movimentações fiscais',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

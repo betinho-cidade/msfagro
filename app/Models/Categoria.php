@@ -13,6 +13,11 @@ class Categoria extends Model
         return $this->belongsTo('App\Models\Efetivo');
     }
 
+    public function movimentacaos()
+    {
+        return $this->belongsTo('App\Models\Movimentacao');
+    }
+
     public function getNomeSegmentoAttribute()
     {
         $segmento = '';

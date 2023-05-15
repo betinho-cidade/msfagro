@@ -277,6 +277,42 @@ class PermissionRoleSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'permission_id' => 43,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'permission_id' => 44,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'permission_id' => 45,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'permission_id' => 46,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'permission_id' => 47,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'permission_id' => 48,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
         } else {
             echo "\e[31mTabela Permission_Role não está vazia. ";

@@ -151,13 +151,23 @@
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
+
+                    @if($efetivo->tipo != 'EG')
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="data_programada">Data Pagamento</label>
+                            <input type="date" style="background-color: #D3D3D3;" class="form-control" value="{{$efetivo->movimentacao->data_pagamento_ajustada}}" disabled>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="item_texto">Item</label>
+                            <label for="item_texto">Item Fiscal</label>
                             <textarea style="background-color: #D3D3D3;" type="text" class="form-control" disabled>{{$efetivo->movimentacao->item_texto ?? '...'}}</textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-{{($efetivo->tipo != 'EG') ? '4' : '6' }}">
                         <div class="form-group">
                             <label for="observacao">Observações</label>
                             <textarea class="form-control" id="observacao" name="observacao" placeholder="Observação">{{$efetivo->observacao}}</textarea>
@@ -167,8 +177,8 @@
                     </div>
                 </div>
 
+                @if($efetivo->tipo != 'EG')
                 <br>
-
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Pagamento para Movimentação Fiscal</h5>
                 </div>
@@ -242,6 +252,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
             <!-- Dados Pessoais -- FIM -->
 
