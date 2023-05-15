@@ -578,6 +578,8 @@
                         objectList.append(option);
                     }
                     document.getElementById("img-loading-"+objectName).style.display = 'none';
+                } else {
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
                 }
             },
             error:function(erro){

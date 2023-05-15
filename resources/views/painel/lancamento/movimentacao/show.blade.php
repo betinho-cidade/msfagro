@@ -256,6 +256,61 @@
         }
     }
 
+    function refreshList(tipo) {
+
+        var _token = $('input[name="_token"]').val();
+        var _tipo = tipo;
+        var objectList;
+        var objectName;
+
+        if(tipo == 'EP'){
+            objectList = $('#empresa');
+            objectName = 'empresa';
+        }
+
+        if(tipo == 'FP'){
+            objectList = $('#forma_pagamento');
+            objectName = 'forma_pagamento';
+        }
+
+        if(tipo == 'PT'){
+            objectList = $('#produtor');
+            objectName = 'produtor';
+        }
+
+        document.getElementById("img-loading-"+objectName).style.display = '';
+
+        $.ajax({
+            url: "{{route('lancamento.refreshList')}}",
+            method: "POST",
+            dataType: "json",
+            data: {_token:_token, tipo:_tipo},
+            success:function(response){
+
+                var len = 0;
+                if (response.mensagem != null) {
+                    len = response.mensagem.length;
+                }
+
+                if (len>0) {
+                    objectList.find('option').not(':first').remove();
+                    for (var i = 0; i<len; i++) {
+                        var id = response.mensagem[i].id;
+                        var nome = response.mensagem[i].nome;
+                        var option = "<option value='"+id+"'>"+nome+"</option>";
+                        objectList.append(option);
+                    }
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                } else {
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                }
+            },
+            error:function(erro){
+                document.getElementById("img-loading-"+objectName).style.display = 'none';
+            }
+        })
+    }
+
     </script>
 
 @endsection
