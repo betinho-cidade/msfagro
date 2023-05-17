@@ -82,8 +82,8 @@
                             <th>Origem/Empresa</th>
                             <th>Destino/Fazenda</th>
                             <th>Categoria</th>
-                            <th>Programada</th>
-                            <th>Pagamento</th>
+                            <th style="text-align:center;">Programada</th>
+                            <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -96,8 +96,8 @@
                             <td data-toggle="tooltip" title="{{ $efetivo->empresa->nome_empresa ?? '...' }}">{{ $efetivo->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->destino->nome_fazenda ?? '...' }}">{{$efetivo->destino->nome_fazenda_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
-                            <td>{{$efetivo->data_programada_formatada}}</td>
-                            <td>{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
+                            <td style="text-align:center;">{{$efetivo->data_programada_formatada}}</td>
+                            <td style="text-align:center;">{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_efetivo')
@@ -130,8 +130,8 @@
                             <th>Origem/Fazenda</th>
                             <th>Destino/Empresa</th>
                             <th>Categoria</th>
-                            <th>Programada</th>
-                            <th>Pagamento</th>
+                            <th style="text-align:center;">Programada</th>
+                            <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -144,8 +144,8 @@
                             <td data-toggle="tooltip" title="{{ $efetivo->origem->nome_fazenda ?? '...' }}">{{$efetivo->origem->nome_fazenda_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->empresa->nome_empresa ?? '...' }}">{{ $efetivo->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
-                            <td>{{$efetivo->data_programada_formatada}}</td>
-                            <td>{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
+                            <td style="text-align:center;">{{$efetivo->data_programada_formatada}}</td>
+                            <td style="text-align:center;">{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_efetivo')
@@ -178,7 +178,7 @@
                             <th>Origem/Fazenda</th>
                             <th>Destino/Fazenda</th>
                             <th>Categoria</th>
-                            <th>Programada</th>
+                            <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -191,7 +191,7 @@
                             <td data-toggle="tooltip" title="{{ $efetivo->origem->nome_fazenda ?? '...' }}">{{$efetivo->origem->nome_fazenda_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->destino->nome_fazenda ?? '...' }}">{{$efetivo->destino->nome_fazenda_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $efetivo->categoria->nome ?? '...' }}">{{ $efetivo->categoria->nome_reduzido ?? '...' }} ({{ $efetivo->total_bovinos }})</td>
-                            <td>{{$efetivo->data_programada_formatada}}</td>
+                            <td style="text-align:center;">{{$efetivo->data_programada_formatada}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_efetivo')

@@ -74,6 +74,16 @@
                                 </ul>
                             </li>
 
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>Financeiro</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{ route('financeiro.index') }}">Movimentação Fiscal</a></li>
+                                </ul>
+                            </li>
+
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
                             @endif
 

@@ -70,8 +70,8 @@
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
                             <th>Valor</th>
-                            <th>Programada</th>
-                            <th>Pagamento</th>
+                            <th style="text-align:center;">Programada</th>
+                            <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -83,9 +83,9 @@
                             <td>{{$movimentacao->id}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td>{{$movimentacao->valor}}</td>
-                            <td>{{$movimentacao->data_programada_formatada}}</td>
-                            <td>{{$movimentacao->data_pagamento_formatada}}</td>
+                            <td class="valor_mask">{{$movimentacao->valor}}</td>
+                            <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
+                            <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')
@@ -118,8 +118,8 @@
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
                             <th>Valor</th>
-                            <th>Programada</th>
-                            <th>Pagamento</th>
+                            <th style="text-align:center;">Programada</th>
+                            <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -131,9 +131,9 @@
                             <td>{{$movimentacao->id}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td>{{$movimentacao->valor}}</td>
-                            <td>{{$movimentacao->data_programada_formatada}}</td>
-                            <td>{{$movimentacao->data_pagamento_formatada}}</td>
+                            <td class="valor_mask">{{$movimentacao->valor}}</td>
+                            <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
+                            <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')
@@ -241,10 +241,7 @@
 
     <script>
 		$(document).ready(function(){
-            $('.mask_cpf').inputmask('999.999.999-99');
-            $('.mask_cnpj').inputmask('99.999.999/9999-99');
-            $('.mask_telefone').inputmask('(99) 99999-9999');
-            $('.select2').select2();
+            $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
 		});
 	</script>
 

@@ -49,7 +49,7 @@ class Empresa extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 150, '...');
+        $nome_reduzido =  Str::limit($this->nome, 30, '...');
 
         return $nome_reduzido;
     }
@@ -63,7 +63,7 @@ class Empresa extends Model
 
     public function getNomeEmpresaReduzidoAttribute()
     {
-        $nome_empresa_reduzido =  Str::limit($this->getNomeEmpresaAttribute(), 150, '...');
+        $nome_empresa_reduzido =  Str::limit($this->getNomeEmpresaAttribute(), 30, '...');
 
         return $nome_empresa_reduzido;
     }

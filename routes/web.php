@@ -151,6 +151,13 @@ Route::middleware(['auth'])->group(function () {
 
         });
 
+        Route::group(['namespace' => 'Financeiro'], function(){
+
+            Route::get('/financeiro', 'FinanceiroController@index')->name('financeiro.index');
+            Route::get('/financeiro/list', 'FinanceiroController@list')->name('financeiro.list');
+            Route::get('/financeiro/search', 'FinanceiroController@search')->name('financeiro.search');
+        });
+
     });
 
 });

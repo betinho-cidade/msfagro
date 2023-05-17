@@ -348,6 +348,20 @@ class PermissionSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'id' => 49,
+                    'name' => 'view_financeiro',
+                    'description' => 'Visualizar as informações agruapdas de movimentação fiscal/bovina',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 50,
+                    'name' => 'list_financeiro',
+                    'description' => 'Listar individualmente as informações de movimentação fiscal/bovina',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }
