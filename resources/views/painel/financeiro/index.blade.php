@@ -82,7 +82,7 @@
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')
-                            <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'tipo_movimentacao' => 'GB'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
+                            <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'status_movimentacao' => 'GB'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
                             @endcan
 
                             </td>
@@ -121,7 +121,7 @@
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')
-                                <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'tipo_movimentacao' => 'PG'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
+                                <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'status_movimentacao' => 'PG'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
                             @endcan
 
                             </td>
@@ -160,7 +160,7 @@
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')
-                            <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'tipo_movimentacao' => 'PD'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
+                            <a href="{{route('financeiro.list', ['mes_referencia' => $movimentacao->mes_referencia, 'status_movimentacao' => 'PD'])}}"><i class="fas fa-align-justify" style="color: goldenrod" title="Editar a Movimentação Fiscal do mês"></i></a>
                             @endcan
 
                             </td>
@@ -183,7 +183,6 @@
 </div> <!-- end row -->
 
 @endsection
-
 
 @section('script-js')
     <!-- Required datatable js -->

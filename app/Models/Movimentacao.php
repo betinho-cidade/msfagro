@@ -40,6 +40,30 @@ class Movimentacao extends Model
         return $this->belongsTo('App\Models\Categoria');
     }
 
+    public function getSegmentoTextoAttribute()
+    {
+        $segmento = '';
+
+        switch($this->segmento){
+            case 'MF' : {
+                $segmento = 'Movimento Fiscal';
+                break;
+            }
+            case 'MG' : {
+                $segmento = 'Movimentação Bovina';
+                break;
+            }
+            default : {
+                $segmento = '---';
+                break;
+            }
+        }
+
+        return $segmento;
+    }
+
+
+
     public function getTipoMovimentacaoTextoAttribute()
     {
         $tipo_movimentacao = '';

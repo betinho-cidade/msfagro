@@ -145,11 +145,11 @@ class FinanceiroController extends Controller
             return redirect()->route('painel');
         }
 
-        $tipo_movimentacao = ($request->has('tipo_movimentacao') ? $request->tipo_movimentacao : null);
+        $status_movimentacao = ($request->has('status_movimentacao') ? $request->status_movimentacao : null);
 
-        if(!$tipo_movimentacao || ($tipo_movimentacao != 'GB' && $tipo_movimentacao != 'PD' && $tipo_movimentacao != 'PG')){
+        if(!$status_movimentacao || ($status_movimentacao != 'GB' && $status_movimentacao != 'PD' && $status_movimentacao != 'PG')){
             $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível definir o tipo de movimentação solicitado.');
+            $request->session()->flash('message.content', 'Não foi possível definir o status de movimentação solicitado (Global, Efetiva ou Futura).');
 
             return redirect()->route('financeiro.index');
         }
@@ -169,7 +169,7 @@ class FinanceiroController extends Controller
         $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
         $texto_movimentacao = '';
-        switch($tipo_movimentacao) {
+        switch($status_movimentacao) {
             case 'GB' : {
                 $texto_movimentacao = 'Movimentação Global';
                 break;
@@ -185,9 +185,9 @@ class FinanceiroController extends Controller
         }
 
         $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where(function($query) use ($tipo_movimentacao){
-                                            if($tipo_movimentacao != 'GB'){
-                                                $query->where('situacao', $tipo_movimentacao);
+                                        ->where(function($query) use ($status_movimentacao){
+                                            if($status_movimentacao != 'GB'){
+                                                $query->where('situacao', $status_movimentacao);
                                             }
                                         })
                                         ->where(function($query) use ($user){
@@ -218,7 +218,7 @@ class FinanceiroController extends Controller
 
         $search = [];
 
-        return view('painel.financeiro.list', compact('user', 'movimentacaos', 'tipo_movimentacao', 'texto_movimentacao', 'data_programada', 'mes_referencia', 'empresas', 'produtors', 'forma_pagamentos', 'search'));
+        return view('painel.financeiro.list', compact('user', 'movimentacaos', 'status_movimentacao', 'texto_movimentacao', 'data_programada', 'mes_referencia', 'empresas', 'produtors', 'forma_pagamentos', 'search'));
     }
 
 
@@ -238,11 +238,11 @@ class FinanceiroController extends Controller
             return redirect()->route('painel');
         }
 
-        $tipo_movimentacao = ($request->has('tipo_movimentacao') ? $request->tipo_movimentacao : null);
+        $status_movimentacao = ($request->has('status_movimentacao') ? $request->status_movimentacao : null);
 
-        if(!$tipo_movimentacao || ($tipo_movimentacao != 'GB' && $tipo_movimentacao != 'PD' && $tipo_movimentacao != 'PG')){
+        if(!$status_movimentacao || ($status_movimentacao != 'GB' && $status_movimentacao != 'PD' && $status_movimentacao != 'PG')){
             $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível definir o tipo de movimentação solicitado.');
+            $request->session()->flash('message.content', 'Não foi possível definir o status de movimentação solicitado (Global, Efetiva ou Futura).');
 
             return redirect()->route('financeiro.index');
         }
@@ -262,7 +262,7 @@ class FinanceiroController extends Controller
         $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
         $texto_movimentacao = '';
-        switch($tipo_movimentacao) {
+        switch($status_movimentacao) {
             case 'GB' : {
                 $texto_movimentacao = 'Movimentação Global';
                 break;
@@ -277,65 +277,109 @@ class FinanceiroController extends Controller
             }
         }
 
-        if($request->has('tipo') ||
+        $tipo_movimentacao = '';
+        if($request->tipo_movimentacao){
+            switch($request->tipo_movimentacao){
+                case 'R' : {
+                    $tipo_movimentacao = 'Receita';
+                    break;
+                }
+                case 'D' : {
+                    $tipo_movimentacao = 'Despesa';
+                    break;
+                }
+                default : {
+                    $tipo_movimentacao = '---';
+                    break;
+                }
+            }
+        }
+
+        $segmento = '';
+        if($request->segmento){
+            switch($request->segmento){
+                case 'MG' : {
+                    $segmento = 'Movimentação Bovina';
+                    break;
+                }
+                case 'MF' : {
+                    $segmento = 'Movimentação Fiscal';
+                    break;
+                }
+                default : {
+                    $segmento = '---';
+                    break;
+                }
+            }
+        }
+
+        $empresa = '';
+        if($request->empresa){
+            $empresa = Empresa::where('cliente_id', $user->cliente->id)
+                            ->where('id', $request->empresa)
+                            ->first();
+        }
+
+        $produtor = '';
+        if($request->produtor){
+            $produtor = Produtor::where('cliente_id', $user->cliente->id)
+                            ->where('id', $request->produtor)
+                            ->first();
+        }
+
+        $forma_pagamento = '';
+        if($request->forma_pagamento){
+            $forma_pagamento = FormaPagamento::where('cliente_id', $user->cliente->id)
+                            ->where('id', $request->forma_pagamento)
+                            ->first();
+        }
+
+
+        if($request->has('tipo_movimentacao') ||
             $request->has('produtor') ||
             $request->has('forma_pagamento') ||
             $request->has('segmento') ||
             $request->has('empresa')
         ){
             $search = [
-                'tipo_cliente' => $user->cliente->tipo,
-                'tipo' => ($request->tipo) ? $request->tipo : '',
-                'produtor' => ($request->produtor) ? $request->produtor : '',
-                'forma_pagamento' => ($request->forma_pagamento) ? $request->forma_pagamento : '',
-                'segmento' => ($request->segmento) ? $request->segmento : '',
-                'empresa' => ($request->empresa) ? $request->empresa : '',
+                'tipo_cliente' => ['param_key' => $user->cliente->tipo, 'param_value' => $user->cliente->tipo_cliente],
+                'tipo_movimentacao' => ['param_key' => ($request->tipo_movimentacao) ? $request->tipo_movimentacao : '', 'param_value' => ($request->tipo_movimentacao) ? $tipo_movimentacao : ''],
+                'produtor' => ['param_key' => ($request->produtor) ? $request->produtor : '', 'param_value' => ($request->produtor) ? $produtor->nome_reduzido : ''],
+                'forma_pagamento' => ['param_key' => ($request->forma_pagamento) ? $request->forma_pagamento : '', 'param_value' => ($request->forma_pagamento) ? $forma_pagamento->forma : ''],
+                'segmento' => ['param_key' => ($request->segmento) ? $request->segmento : '', 'param_value' => ($request->segmento) ? $segmento : ''],
+                'empresa' => ['param_key' => ($request->empresa) ? $request->empresa : '', 'param_value' => ($request->empresa) ? $empresa->nome_reduzido : ''],
             ];
-        } else {
-            if ($request->has('search')){
-                $search_fields = $request->search;
-
-                $search = [
-                    'tipo_cliente' => $user->cliente->tipo,
-                    'tipo' => (array_key_exists('tipo', $search_fields)) ? $search_fields['tipo'] : '',
-                    'produtor' => (array_key_exists('produtor', $search_fields)) ? $search_fields['produtor'] : '',
-                    'forma_pagamento' => (array_key_exists('forma_pagamento', $search_fields)) ? $search_fields['forma_pagamento'] : '',
-                    'segmento' => (array_key_exists('segmento', $search_fields)) ? $search_fields['segmento'] : '',
-                    'empresa' => (array_key_exists('empresa', $search_fields)) ? $search_fields['empresa'] : '',
-                ];
-            } else {
-                $search = [];
-            }
+        } else{
+            $search = [];
         }
 
-
         $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where(function($query) use ($tipo_movimentacao){
-                                            if($tipo_movimentacao != 'GB'){
-                                                $query->where('situacao', $tipo_movimentacao);
+                                        ->where(function($query) use ($status_movimentacao){
+                                            if($status_movimentacao != 'GB'){
+                                                $query->where('situacao', $status_movimentacao);
                                             }
                                         })
                                         ->where(function($query) use ($search){
-                                            if($search['tipo_cliente'] == 'AG'){
+                                            if($search['tipo_cliente']['param_key'] == 'AG'){
                                                 $query->where('segmento', 'MF');
-                                            } else if($search['segmento']){
-                                                $query->where('segmento', $search['segmento']);
+                                            } else if($search['segmento']['param_key']){
+                                                $query->where('segmento', $search['segmento']['param_key']);
                                             }
 
-                                            if($search['tipo']){
-                                                $query->where('tipo', $search['tipo']);
+                                            if($search['tipo_movimentacao']['param_key']){
+                                                $query->where('tipo', $search['tipo_movimentacao']['param_key']);
                                             }
 
-                                            if($search['produtor']){
-                                                $query->where('produtor_id', $search['produtor']);
+                                            if($search['produtor']['param_key']){
+                                                $query->where('produtor_id', $search['produtor']['param_key']);
                                             }
 
-                                            if($search['empresa']){
-                                                $query->where('empresa_id', $search['empresa']);
+                                            if($search['empresa']['param_key']){
+                                                $query->where('empresa_id', $search['empresa']['param_key']);
                                             }
 
-                                            if($search['forma_pagamento']){
-                                                $query->where('forma_pagamento_id', $search['forma_pagamento']);
+                                            if($search['forma_pagamento']['param_key']){
+                                                $query->where('forma_pagamento_id', $search['forma_pagamento']['param_key']);
                                             }
                                         })
                                         ->whereYear('data_programada', $data_programada_vetor[1])
@@ -359,7 +403,7 @@ class FinanceiroController extends Controller
                                             ->orderBy('tipo_conta', 'asc')
                                             ->get();
 
-        return view('painel.financeiro.list', compact('user', 'movimentacaos', 'tipo_movimentacao', 'texto_movimentacao', 'data_programada', 'mes_referencia', 'empresas', 'produtors', 'forma_pagamentos', 'search'));
+        return view('painel.financeiro.list', compact('user', 'movimentacaos', 'status_movimentacao', 'texto_movimentacao', 'data_programada', 'mes_referencia', 'empresas', 'produtors', 'forma_pagamentos', 'search'));
     }
 
 

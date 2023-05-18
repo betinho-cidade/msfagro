@@ -28,12 +28,12 @@
                 <form id="search_cliente" action="{{route('financeiro.search')}}" method="GET">
                     @csrf
                     <input type="hidden" id="mes_referencia" name="mes_referencia" value="{{ $mes_referencia }}">
-                    <input type="hidden" id="tipo_movimentacao" name="tipo_movimentacao" value="{{ $tipo_movimentacao }}">
+                    <input type="hidden" id="status_movimentacao" name="status_movimentacao" value="{{ $status_movimentacao }}">
                     <span>
                     <div class="row" style="width: 100%;">
 
                         <div class="col-md-4"  style="padding-right: 0;">
-                            <select id="tipo" name="tipo" class="form-control select2">
+                            <select id="tipo_movimentacao" name="tipo_movimentacao" class="form-control select2">
                                 <option value="">Selecione: Tipo Movimentação</option>
                                 <option value="R">Receita</option>
                                 <option value="D">Despesa</option>
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="col-md-4"  style="padding-right: 0;">
-                            <select id="produtor" name="produtor" class="form-control select2">
+                            <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
                                 <option value="">Selecione: Forma Pagamento</option>
                                 @foreach($forma_pagamentos as $forma_pagamento)
                                     <option value="{{ $forma_pagamento->id }}">{{ $forma_pagamento->forma }}</option>
@@ -95,7 +95,9 @@
                             @if($count == 0)
                                 <code>Filtro:</code>
                             @endif
-                            <code>[{{ $param }}:{{ $value }}]&nbsp;</code>
+                            @if($value['param_key'])
+                                <code>[{{ $param }}: {{ $value['param_value'] }}]&nbsp;</code>
+                            @endif
                             @php $count = $count + 1; @endphp
                         @endif
                     @endforeach
@@ -128,6 +130,7 @@
                             <th>Ordenação</th>
                             <th>ID</th>
                             <th>Tipo</th>
+                            <th>Segmento</th>
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
                             <th>Valor</th>
@@ -143,6 +146,7 @@
                             <td>{{$movimentacao->data_programada_ordenacao}}</td>
                             <td>{{$movimentacao->id}}</td>
                             <td>{{$movimentacao->tipo_movimentacao_texto}}</td>
+                            <td>{{$movimentacao->segmento_texto}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
                             <td class="valor_mask">{{$movimentacao->valor}}</td>
@@ -151,18 +155,13 @@
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')
-                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação"></i></a>
-                            @endcan
-
-                            @can('delete_movimentacao')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$movimentacao->id}})"
-                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Movimentação"></i></a>
+                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}" target="_blank"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação"></i></a>
                             @endcan
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8">Nenhum registro encontrado</td>
+                            <td colspan="9">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -206,6 +205,9 @@
 
 @endsection
 
+@section('head-css')
+    <link href="{{asset('nazox/assets/libs/select2/css/select2.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+@endsection
 
 @section('script-js')
     <!-- Required datatable js -->
@@ -220,9 +222,12 @@
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
 
+    <script src="{{asset('nazox/assets/libs/select2/js/select2.min.js')}}"></script>
+
     <script>
 		$(document).ready(function(){
             $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
+            $('.select2').select2();
 		});
 	</script>
 
