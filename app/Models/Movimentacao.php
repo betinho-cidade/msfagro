@@ -46,11 +46,11 @@ class Movimentacao extends Model
 
         switch($this->segmento){
             case 'MF' : {
-                $segmento = 'Movimento Fiscal';
+                $segmento = 'Mov.Fiscal';
                 break;
             }
             case 'MG' : {
-                $segmento = 'Movimentação Bovina';
+                $segmento = 'Mov.Bovina';
                 break;
             }
             default : {
@@ -88,7 +88,7 @@ class Movimentacao extends Model
 
     public function getItemTextoReduzidoAttribute()
     {
-        $item_texto_reduzido =  Str::limit($this->item_texto, 30, '...');
+        $item_texto_reduzido =  Str::limit($this->item_texto, 15, '...');
 
         return $item_texto_reduzido;
     }

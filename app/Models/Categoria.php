@@ -42,7 +42,7 @@ class Categoria extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 30, '...');
+        $nome_reduzido =  Str::limit($this->nome, 15, '...');
 
         return $nome_reduzido;
     }

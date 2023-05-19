@@ -49,7 +49,7 @@ class Produtor extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 30, '...');
+        $nome_reduzido =  Str::limit($this->nome, 15, '...');
 
         return $nome_reduzido;
     }
@@ -64,14 +64,14 @@ class Produtor extends Model
 
     public function getNomeProdutorReduzidoAttribute()
     {
-        $nome_produtor_reduzido =  Str::limit($this->getNomeProdutorAttribute(), 30, '...');
+        $nome_produtor_reduzido =  Str::limit($this->getNomeProdutorAttribute(), 15, '...');
 
         return $nome_produtor_reduzido;
     }
 
     public function getEmailReduzidoAttribute()
     {
-        $email_reduzido =  Str::limit($this->email, 30, '...');
+        $email_reduzido =  Str::limit($this->email, 15, '...');
 
         return $email_reduzido;
     }

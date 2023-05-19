@@ -46,7 +46,7 @@ class Fazenda extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 30, '...');
+        $nome_reduzido =  Str::limit($this->nome, 15, '...');
 
         return $nome_reduzido;
     }
@@ -60,7 +60,7 @@ class Fazenda extends Model
 
     public function getNomeFazendaReduzidoAttribute()
     {
-        $nome_fazenda_reduzido =  Str::limit($this->getNomeFazendaAttribute(), 30, '...');
+        $nome_fazenda_reduzido =  Str::limit($this->getNomeFazendaAttribute(), 15, '...');
 
         return $nome_fazenda_reduzido;
     }

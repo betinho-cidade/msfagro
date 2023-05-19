@@ -95,7 +95,7 @@ class Cliente extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 30, '...');
+        $nome_reduzido =  Str::limit($this->nome, 15, '...');
 
         return $nome_reduzido;
     }
@@ -109,7 +109,7 @@ class Cliente extends Model
 
     public function getNomeClienteReduzidoAttribute()
     {
-        $nome_cliente_reduzido =  Str::limit($this->getNomeClienteAttribute(), 30, '...');
+        $nome_cliente_reduzido =  Str::limit($this->getNomeClienteAttribute(), 15, '...');
 
         return $nome_cliente_reduzido;
     }
