@@ -6,10 +6,6 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Formas de Pagamento do Cliente</h4>
-
-            <div class="page-title-right">
-                <a href="{{route("forma_pagamento.create")}}" class="btn btn-outline-secondary waves-effect">Nova Forma de Pagamento</a>
-            </div>
         </div>
     </div>
 </div>
@@ -37,7 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Formas de Pagamento Ativas ( <code class="highlighter-rouge">{{$forma_pagamentos_AT->count()}}</code> )</span>
+                            <span class="d-none d-sm-block">Formas de Pagamento Ativas ( <code class="highlighter-rouge">{{$forma_pagamentos_AT->count()}}</code> )
+                                @can('create_forma_pagamento')
+                                    <i class="fas fa-plus-circle" onclick="location.href='{{route('forma_pagamento.create')}}'" style="color: goldenrod" title="Nova Forma de Pagamento"></i>
+                                @endcan
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">

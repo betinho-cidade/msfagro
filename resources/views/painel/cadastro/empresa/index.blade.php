@@ -6,10 +6,6 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Empresas do Cliente</h4>
-
-            <div class="page-title-right">
-                <a href="{{route("empresa.create")}}" class="btn btn-outline-secondary waves-effect">Nova Empresa</a>
-            </div>
         </div>
     </div>
 </div>
@@ -37,7 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Empresas Ativas ( <code class="highlighter-rouge">{{$empresas_AT->count()}}</code> )</span>
+                            <span class="d-none d-sm-block">Empresas Ativas ( <code class="highlighter-rouge">{{$empresas_AT->count()}}</code> )
+                                @can('create_empresa')
+                                    <i class="fas fa-plus-circle" onclick="location.href='{{route('empresa.create')}}'" style="color: goldenrod" title="Nova Empresa"></i>
+                                @endcan
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">

@@ -6,10 +6,6 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Alíquotas do Sistema</h4>
-
-            <div class="page-title-right">
-                <a href="{{route("aliquota.create")}}" class="btn btn-outline-secondary waves-effect">Nova Alíquota</a>
-            </div>
         </div>
     </div>
 </div>
@@ -37,7 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Alíquotas ( <code class="highlighter-rouge">{{$aliquotas->count()}}</code> )</span>
+                            <span class="d-none d-sm-block">Alíquotas ( <code class="highlighter-rouge">{{$aliquotas->count()}}</code> )
+                                @can('create_aliquota')
+                                    <i class="fas fa-plus-circle" onclick="location.href='{{route('aliquota.create')}}'" style="color: goldenrod" title="Nova Alíquota"></i>
+                                @endcan
+                            </span>
                         </a>
                     </li>
                 </ul>

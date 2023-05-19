@@ -534,7 +534,7 @@ class EfetivoController extends Controller
 
             $efetivo->delete();
 
-            $this->destroy_files_MG($efetivo_arquivos);
+            $this->destroy_files($efetivo_arquivos);
 
             DB::commit();
 

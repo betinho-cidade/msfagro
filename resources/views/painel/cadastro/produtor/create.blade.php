@@ -81,7 +81,6 @@
                         <div class="form-group">
                             <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
                             <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
-                                <option value="">---</option>
                                 <option value="A" {{(old('situacao') == 'A') ? 'selected' : '' }}>Ativo</option>
                                 <option value="I" {{(old('situacao') == 'I') ? 'selected' : '' }}>Inativo</option>
                             </select>
