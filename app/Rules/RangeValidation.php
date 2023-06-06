@@ -46,7 +46,7 @@ class RangeValidation implements Rule
 
     public function message()
     {
-        return 'Comprovante de pagamento somente é permitido para data igual ou anterior a data atual';
+        return 'Comprovante de pagamento somente é permitido para a Data Programada sendo igual ou anterior a data atual';
     }
 
 }

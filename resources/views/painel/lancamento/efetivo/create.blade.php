@@ -192,11 +192,18 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <label for="data_programada">Data Programada</label>
                         <input type="date" class="form-control" id="data_programada" name="data_programada" value="{{old('data_programada')}}" placeholder="Data Programada" required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="data_pagamento" class="{{($errors->first('data_pagamento') ? 'form-error-label' : '')}}">Data Pagamento</label>
+                            <input type="date" id="data_pagamento" name="data_pagamento" value="{{old('data_pagamento')}}" placeholder="Data Pagamento" class="form-control {{($errors->first('data_pagamento') ? 'form-error-field' : '')}}" value="">
+                        </div>
                     </div>
 
                     <div class="col-md-8">
@@ -339,6 +346,7 @@
             let nota = document.getElementById('nota');
             let path_nota = document.getElementById('path_nota');
             let path_nota_lbl = document.getElementById('path_nota_lbl');
+            let data_pagamento = document.getElementById('data_pagamento');
 
             switch(tipo){
                 case 'CP':
@@ -362,6 +370,8 @@
                     path_nota.disabled = false;
                     path_comprovante_lbl.style.backgroundColor = 'white';
                     path_comprovante.disabled = false;
+                    data_pagamento.disabled = false;
+                    data_pagamento.style.backgroundColor = 'white';
                     break;
 
                 case 'VD':
@@ -385,6 +395,8 @@
                     path_nota.disabled = false;
                     path_comprovante_lbl.style.backgroundColor = 'white';
                     path_comprovante.disabled = false;
+                    data_pagamento.disabled = false;
+                    data_pagamento.style.backgroundColor = 'white';
                     break;
 
                 case 'EG':
@@ -427,6 +439,8 @@
                     path_comprovante.value = '';
                     path_comprovante.disabled = true;
                     path_comprovante.style.color = '#D3D3D3';
+                    data_pagamento.disabled = true;
+                    data_pagamento.style.backgroundColor = '#D3D3D3';
                     break;
             }
 

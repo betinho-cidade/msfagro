@@ -60,6 +60,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Segmento</th>
+                            <th>Tipo</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -70,7 +71,7 @@
                             <td>{{$categoria->id}}</td>
                             <td>{{$categoria->nome}}</td>
                             <td>{{$categoria->nome_segmento}}</td>
-                            <td style="text-align:center;">{{$categoria->perfil}}</td>
+                            <td>{{$categoria->tipo_categoria}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_categoria')
@@ -113,6 +114,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Segmento</th>
+                            <th>Tipo</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -123,6 +125,7 @@
                             <td>{{$categoria->id}}</td>
                             <td>{{$categoria->nome}}</td>
                             <td>{{$categoria->nome_segmento}}</td>
+                            <td>{{$categoria->tipo_categoria}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_categoria')

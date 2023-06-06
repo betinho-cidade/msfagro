@@ -82,6 +82,9 @@ class CategoriaController extends Controller
 
             $categoria->nome = $request->nome;
             $categoria->segmento = $request->segmento;
+            if($request->segmento = 'MF'){
+                $categoria->tipo = $request->tipo;
+            }
             $categoria->status = $request->situacao;
 
             $categoria->save();
@@ -139,6 +142,9 @@ class CategoriaController extends Controller
 
             $categoria->nome = $request->nome;
             $categoria->segmento = $request->segmento;
+            if($request->segmento = 'MF'){
+                $categoria->tipo = $request->tipo;
+            }            
             $categoria->status = $request->situacao;
 
             $categoria->save();

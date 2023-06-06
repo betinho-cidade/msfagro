@@ -21,6 +21,7 @@ class CreateRequest extends FormRequest
         return [
             'produtor' => 'required',
             'data_programada' => 'required|date',
+            'data_pagamento' => 'nullable|required_with:path_comprovante|date',
             'valor' => 'required',
             'forma_pagamento' => 'required',
             'empresa' => 'required',
@@ -28,7 +29,7 @@ class CreateRequest extends FormRequest
             'item_texto' => 'required|max:300',
             'observacao' => 'max:1000',
             'path_nota' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
-            'path_comprovante' => ['nullable','mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_programada)],
+            'path_comprovante' => ['nullable', 'required_with:data_pagamento', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_programada)],
         ];
     }
 
@@ -38,6 +39,8 @@ class CreateRequest extends FormRequest
             'produtor.required' => 'O Produtor é requerido',
             'data_programada.required' => 'A Data Programada é requerida',
             'data_programada.date' => 'A Data Programada é invalida',
+            'data_pagamento.date' => 'A Data Pagamento é invalida',
+            'data_pagamento.required_with' => 'A Data Pagamento é requerida com o Comprovante de Pagamento',
             'valor.required' => 'O Valor é requerido',
             'forma_pagamento.required' => 'A Forma de Pagamento é requerida',
             'empresa.required' => 'A Empresa é requerida',
@@ -51,6 +54,7 @@ class CreateRequest extends FormRequest
             'path_nota.max' => 'O tamanho máximo permitido para a Nota Fiscal é de 1Mb.',
             'path_comprovante.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para o comprovante de pagamento',
             'path_comprovante.max' => 'O tamanho máximo permitido para o Comprovante de Pagamento é de 1Mb.',
+            'path_comprovante.required_with' => 'O Comprovante de Pagamento é requerido com a Data de Pagamento.',
         ];
     }
 }

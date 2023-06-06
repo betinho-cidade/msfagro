@@ -54,7 +54,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="tipo" class="{{($errors->first('tipo') ? 'form-error-label' : '')}}">Tipo Movimentação</label>
-                            <select id="tipo" name="tipo" class="form-control {{($errors->first('tipo') ? 'form-error-field' : '')}} dynamic_tipo" required>
+                            <select id="tipo" name="tipo" class="form-control dynamic_tipo {{($errors->first('tipo') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
                                 <option value="R" {{(old('tipo') == 'R') ? 'selected' : '' }}>Receita</option>
                                 <option value="D" {{(old('tipo') == 'D') ? 'selected' : '' }}>Despesa</option>
@@ -66,6 +66,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="categoria" class="{{($errors->first('categoria') ? 'form-error-label' : '')}}">Categoria</label>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-categoria" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="categoria" name="categoria" class="form-control {{($errors->first('categoria') ? 'form-error-field' : '')}} select2 dynamic_categoria" required>
                                 <option value="">---</option>
                                 @foreach($categorias as $categoria)
@@ -100,7 +101,14 @@
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="data_pagamento" class="{{($errors->first('data_pagamento') ? 'form-error-label' : '')}}">Data Pagamento</label>
+                            <input type="date" id="data_pagamento" name="data_pagamento" value="{{old('data_pagamento')}}" placeholder="Data Pagamento" class="form-control {{($errors->first('data_pagamento') ? 'form-error-field' : '')}}" value="">
+                        </div>
+                    </div>                    
+
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="item_texto" class="{{($errors->first('item_texto') ? 'form-error-label' : '')}}">Item Fiscal</label>
                             <textarea class="form-control {{($errors->first('item_texto') ? 'form-error-field' : '')}}" id="item_texto" name="item_texto" placeholder="Item Fiscal" required>{{old('item_texto')}}</textarea>
@@ -109,7 +117,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label for="observacao">Observações</label>
                             <textarea class="form-control" id="observacao" name="observacao" placeholder="Observação">{{old('observacao')}}</textarea>
@@ -226,10 +234,9 @@
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
     <script src="{{asset('js/jquery.maskMoney.min.js')}}"></script>
 
+
     <script>
-
     $(document).ready(function(){
-
         $('.select2').select2();
 
         $('.mask_valor').maskMoney({
@@ -255,6 +262,20 @@
                 valor.value = valor_new;
             }
         });
+
+        $('.dynamic_tipo').change(function(){
+                console.log('entrou');   
+                let valor_tipo = document.getElementById('tipo').value;
+
+                console.log(valor_tipo);
+
+                if(valor_tipo == 'D'){
+                    refreshList('CD');
+
+                } else if(valor_tipo == 'R'){
+                    refreshList('CR');
+                }                
+        });   
     });
 
     function formatValorMoeda(field){
@@ -290,6 +311,16 @@
             objectName = 'produtor';
         }
 
+        if(tipo == 'CR'){
+            objectList = $('#categoria');
+            objectName = 'categoria';
+        }        
+
+        if(tipo == 'CD'){
+            objectList = $('#categoria');
+            objectName = 'categoria';
+        }                
+
         document.getElementById("img-loading-"+objectName).style.display = '';
 
         $.ajax({
@@ -300,6 +331,7 @@
             success:function(response){
 
                 var len = 0;
+
                 if (response.mensagem != null) {
                     len = response.mensagem.length;
                 }

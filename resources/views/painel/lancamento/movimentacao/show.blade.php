@@ -42,6 +42,7 @@
             <!-- FORMULÁRIO - INICIO -->
 
             <h4 class="card-title">Formulário de Atualização - Lançamento da Movimentação Fiscal</h4>
+            <span style="float: right"><a href="{{route('movimentacao.index', ['mes_referencia' => $movimentacao->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Movimentações Financeiras do mês: {{$movimentacao->mes_referencia_listagem}}"></i></a></span>
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
             <form name="edit_movimentacao" method="POST" action="{{route('movimentacao.update', compact('movimentacao'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
@@ -92,12 +93,12 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="data_pagamento">Data Pagamento</label>
-                                <input type="date" style="background-color: #D3D3D3;" class="form-control" value="{{$movimentacao->data_pagamento_ajustada}}" disabled>
+                                <label for="data_pagamento" class="{{($errors->first('data_pagamento') ? 'form-error-label' : '')}}">Data Pagamento</label>
+                                <input type="date" id="data_pagamento" name="data_pagamento" value="{{$movimentacao->data_pagamento_ajustada}}" placeholder="Data Pagamento" class="form-control {{($errors->first('data_pagamento') ? 'form-error-field' : '')}}">
                             </div>
-                        </div>
+                        </div>                        
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="item_texto" class="{{($errors->first('item_texto') ? 'form-error-label' : '')}}">Item Fiscal</label>
                                 <textarea class="form-control {{($errors->first('item_texto') ? 'form-error-field' : '')}}" id="item_texto" name="item_texto" placeholder="Item Fiscal" required>{{$movimentacao->item_texto}}</textarea>
@@ -106,7 +107,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="observacao">Observações</label>
                                 <textarea class="form-control" id="observacao" name="observacao" placeholder="Observação">{{$movimentacao->observacao}}</textarea>

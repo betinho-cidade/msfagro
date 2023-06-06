@@ -21,13 +21,14 @@ class UpdateRequest extends FormRequest
         return [
             'tipo' => 'required',
             'data_programada' => 'required|date',
+            'data_pagamento' => 'nullable|required_with:path_comprovante|date',
             'valor' => 'nullable|required_if:tipo,VD,CP',
             'nota' => 'nullable|required_if:tipo,VD,CP',
             'gta' => 'max:50',
             'observacao' => 'max:1000',
             'path_nota' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
             'path_gta' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
-            'path_comprovante' => ['nullable','mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_programada)],
+            'path_comprovante' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_programada)],
         ];
     }
 
@@ -37,6 +38,8 @@ class UpdateRequest extends FormRequest
             'tipo.required' => 'O Tipo de Movimentação é requerido',
             'data_programada.required' => 'A Data Programada é requerida',
             'data_programada.date' => 'A Data Programada é invalida',
+            'data_pagamento.date' => 'A Data Pagamento é invalida',
+            'data_pagamento.required_with' => 'A Data Pagamento é requerida com o Comprovante de Pagamento',
             'valor.required_if' => 'O Valor é requerido para Movimentações de Compra ou Venda',
             'nota.required_if' => 'O Número da Nota Fiscal é requerido para Movimentações de Compra ou Venda',
             'gta.max' => 'O tamanho máximo permitido para o Número da GTA é de 50 caracteres.',

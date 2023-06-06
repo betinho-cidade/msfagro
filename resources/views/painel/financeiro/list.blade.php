@@ -35,8 +35,8 @@
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="tipo_movimentacao" name="tipo_movimentacao" class="form-control select2">
                                 <option value="">Selecione: Tipo Movimentação</option>
-                                <option value="R">Receita</option>
-                                <option value="D">Despesa</option>
+                                <option value="R" {{($search && $search['tipo_movimentacao']['param_key'] == 'R') ? 'selected' : '' }}>Receita</option>
+                                <option value="D" {{($search && $search['tipo_movimentacao']['param_key'] == 'D') ? 'selected' : '' }}>Despesa</option>
                             </select>
                         </div>
 
@@ -44,7 +44,7 @@
                             <select id="produtor" name="produtor" class="form-control select2">
                                 <option value="">Selecione: Produtor</option>
                                 @foreach($produtors as $produtor)
-                                    <option value="{{ $produtor->id }}">{{ $produtor->nome_produtor }}</option>
+                                    <option value="{{ $produtor->id }}" {{($search && $search['produtor']['param_key'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -53,7 +53,7 @@
                             <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
                                 <option value="">Selecione: Forma Pagamento</option>
                                 @foreach($forma_pagamentos as $forma_pagamento)
-                                    <option value="{{ $forma_pagamento->id }}">{{ $forma_pagamento->forma }}</option>
+                                    <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento']['param_key'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,8 +65,8 @@
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="segmento" name="segmento" class="form-control select2">
                                 <option value="">Selecione: Segmento</option>
-                                <option value="MG">Movimentação Bovina</option>
-                                <option value="MF">Movimentação Fiscal</option>
+                                <option value="MG" {{($search && $search['segmento']['param_key'] == 'MG') ? 'selected' : '' }}>Movimentação Bovina</option>
+                                <option value="MF" {{($search && $search['segmento']['param_key'] == 'MF') ? 'selected' : '' }}>Movimentação Fiscal</option>
                             </select>
                         </div>
                         @endif
@@ -75,7 +75,7 @@
                             <select id="empresa" name="empresa" class="form-control select2">
                                 <option value="">Selecione: Empresa</option>
                                 @foreach($empresas as $empresa)
-                                    <option value="{{ $empresa->id }}">{{ $empresa->nome_empresa }}</option>
+                                    <option value="{{ $empresa->id }}" {{($search && $search['empresa']['param_key'] == $empresa->id) ? 'selected' : '' }}>{{ $empresa->nome_empresa }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -105,6 +105,7 @@
                 @endif
                 </span>
 
+                <span style="float: right"><a href="{{route('financeiro.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Financeiro / Movimentação Fiscal do Cliente"></i></a></span>
                 <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
                 <p class="card-title-desc"></p>
 
@@ -155,7 +156,11 @@
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')
-                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}" target="_blank"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação"></i></a>
+                                @if($movimentacao->segmento == 'MF')
+                                    <a href="{{route('movimentacao.show', compact('movimentacao'))}}" target="_blank"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação Financeira"></i></a>
+                                @else
+                                    <a href="{{route('efetivo.show', ['efetivo' => $movimentacao->efetivo->id])}}" target="_blank"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
+                                @endif
                             @endcan
                             </td>
                         </tr>

@@ -59,7 +59,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $data_programada_vetor = explode('-', $mes_referencia);
@@ -152,6 +152,23 @@ class EfetivoController extends Controller
             return redirect()->route('painel');
         }
 
+        if($request->has('data_pagamento')){
+            if($request->tipo == 'EG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não é permitida para movimentações de Engorda.');
+
+                return redirect()->route('painel');
+            }
+
+            $today = Carbon::today();
+            if($request->data_pagamento > $today){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
+    
+                return redirect()->back()->withInput();
+            }    
+        }        
+
         $message = '';
 
         $ano_mes = Carbon::createFromFormat('Y-m-d', $request->data_programada);
@@ -201,6 +218,7 @@ class EfetivoController extends Controller
                 $movimentacao->forma_pagamento_id = $request->forma_pagamento;
                 $movimentacao->categoria_id = $efetivo->categoria_id;
                 $movimentacao->data_programada = $efetivo->data_programada;
+                $movimentacao->data_pagamento = $request->data_pagamento;
                 $movimentacao->segmento = 'MG';
                 $movimentacao->tipo = $tipo;
                 $movimentacao->valor = $request->valor;
@@ -224,7 +242,7 @@ class EfetivoController extends Controller
 
                 DB::rollBack();
 
-                return redirect()->route('lancamento.index');
+                return redirect()->route('lancamento.index', ['aba' => 'EP']);
             }
 
             // =================================================================
@@ -282,7 +300,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.content', 'O Lançamento de Efetivo Pecuário ('.$efetivo->tipo_efetivo_texto.') com ID <span style="color: #af1e1e;">'. $efetivo->id .'</span> foi criado com sucesso');
         }
 
-        return redirect()->route('lancamento.index');
+        return redirect()->route('lancamento.index', ['aba' => 'EP']);
     }
 
     public function show(Efetivo $efetivo, Request $request)
@@ -312,7 +330,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         return view('painel.lancamento.efetivo.show', compact('user', 'efetivo'));
@@ -345,17 +363,50 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         if($efetivo->tipo != $request->tipo){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O tipo de Efetivo Pecuário não confere com o registrado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $today = Carbon::today();
+
+        if($request->has('data_pagamento')){
+            if($request->tipo == 'EG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não é permitida para movimentações de Engorda.');
+
+                return redirect()->route('painel');
+            }
+
+            if($request->data_pagamento > $today){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
+    
+                return redirect()->back()->withInput();
+            }    
+
+            if(!$request->has('path_comprovante') && $efetivo->movimentacao->situacao != 'PG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
+    
+                return redirect()->back()->withInput();
+            }                
+        }     
+
+
+        if(!$request->data_pagamento && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante) ){
+            if($request->tipo != 'EG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento é requerida com o Comprovante de Pagamento.');
+
+                return redirect()->route('efetivo.show', compact('efetivo'));
+            }
+        }        
 
         if($request->data_programada > $today && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante)){
             $request->session()->flash('message.level', 'warning');
@@ -386,6 +437,7 @@ class EfetivoController extends Controller
             if($efetivo->tipo == 'CP' || $efetivo->tipo == 'VD'){
 
                 $efetivo->movimentacao->data_programada = $efetivo->data_programada;
+                $efetivo->movimentacao->data_pagamento = $request->data_pagamento;
                 $efetivo->movimentacao->valor = $request->valor;
                 $efetivo->movimentacao->nota = $request->nota;
 
@@ -443,7 +495,6 @@ class EfetivoController extends Controller
                 $nome_arquivo = 'COMPROVANTE_'.$efetivo->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $efetivo->movimentacao->path_comprovante = $nome_arquivo;
                 $efetivo->movimentacao->situacao = 'PG';
-                $efetivo->movimentacao->data_pagamento = Carbon::now();
                 $efetivo->movimentacao->save();
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
@@ -495,7 +546,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
 
@@ -589,7 +640,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao tipo do Efetivo Pecuário.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
@@ -598,7 +649,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $texto_tipo = '';
@@ -642,7 +693,7 @@ class EfetivoController extends Controller
                     $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
                     DB::rollBack();
-                    return redirect()->route('lancamento.index');
+                    return redirect()->route('lancamento.index', ['aba' => 'EP']);
                 }
 
                 $retorno_estoque = $this->atualizaEstoque($efetivo, true);
@@ -752,7 +803,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $tipo_documento = ($request->has('tipo_documento') ? $request->tipo_documento : null);
@@ -761,7 +812,7 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível encontrar o tipo de documento solicitado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'EP']);
         }
 
         $path_documento = 'documentos/' . $user->cliente->id . '/';

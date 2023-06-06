@@ -45,6 +45,8 @@ class LancamentoController extends Controller
             return redirect()->route('painel');
         }
 
+        $aba = ($request->has('aba') ? $request->aba : 'MF');
+
         if($user->cliente->tipo != 'AG'){
             $efetivos = Efetivo::where('efetivos.cliente_id', $user->cliente->id)
                                         ->where('efetivos.segmento', 'MG')
@@ -72,7 +74,7 @@ class LancamentoController extends Controller
                                         ->orderBy('movimentacaos.data_programada', 'desc')
                                         ->get();
 
-        return view('painel.lancamento.index', compact('user', 'efetivos', 'movimentacaos'));
+        return view('painel.lancamento.index', compact('user', 'efetivos', 'movimentacaos', 'aba'));
     }
 
     public function refreshList(Request $request)
@@ -151,7 +153,41 @@ class LancamentoController extends Controller
                 break;
             }
 
-            case 'OR' || 'DT': {
+            case 'CR': {
+                $categorias = Categoria::where('tipo', 'R')
+                                        ->where('segmento', 'MF')
+                                        ->where('status', 'A')
+                                        ->orderBy('nome', 'asc')
+                                        ->get();
+
+                foreach($categorias as $categoria)
+                {
+                    $list['id'] = $categoria->id;
+                    $list['nome'] = $categoria->nome;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }            
+
+            case 'CD': {
+                $categorias = Categoria::where('tipo', 'D')
+                                        ->where('segmento', 'MF')
+                                        ->where('status', 'A')
+                                        ->orderBy('nome', 'asc')
+                                        ->get();
+
+                foreach($categorias as $categoria)
+                {
+                    $list['id'] = $categoria->id;
+                    $list['nome'] = $categoria->nome;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }                                    
+
+            case 'OR': {
                 $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
@@ -166,6 +202,22 @@ class LancamentoController extends Controller
 
                 break;
             }
+
+            case 'DT': {
+                $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                                    ->where('status', 'A')
+                                    ->orderBy('nome', 'asc')
+                                    ->get();
+
+                foreach($fazendas as $fazenda)
+                {
+                    $list['id'] = $fazenda->id;
+                    $list['nome'] = $fazenda->nome_fazenda;
+                    array_push($mensagem, $list);
+                }
+
+                break;
+            }            
         }
 
         return response()->json(['mensagem' => $mensagem]);

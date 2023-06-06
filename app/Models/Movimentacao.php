@@ -118,4 +118,12 @@ class Movimentacao extends Model
         return ($this->data_pagamento) ? date('Y-m-d', strtotime($this->data_pagamento)) : '';
     }
 
+    public function getMesReferenciaListagemAttribute (){
+
+        $mes_referencia =  Carbon::parse($this->data_programada); 
+
+        return Str::padLeft($mes_referencia->month, 2, '0') . '-' . $mes_referencia->year;
+
+    }    
+
 }

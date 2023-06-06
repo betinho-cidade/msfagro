@@ -42,6 +42,7 @@
             <!-- FORMULÁRIO - INICIO -->
 
             <h4 class="card-title">Formulário de Atualização - Lançamento de Efetivo Pecuário</h4>
+            <span style="float: right"><a href="{{route('efetivo.index', ['mes_referencia' => $efetivo->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Efetivos Pecuários do mês: {{$efetivo->mes_referencia_listagem}}"></i></a></span>
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
             <form name="edit_efetivo" method="POST" action="{{route('efetivo.update', compact('efetivo'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
@@ -155,8 +156,8 @@
                     @if($efetivo->tipo != 'EG')
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="data_programada">Data Pagamento</label>
-                            <input type="date" style="background-color: #D3D3D3;" class="form-control" value="{{$efetivo->movimentacao->data_pagamento_ajustada}}" disabled>
+                            <label for="data_pagamento" class="{{($errors->first('data_pagamento') ? 'form-error-label' : '')}}">Data Pagamento</label>
+                            <input type="date" id="data_pagamento" name="data_pagamento" value="{{$efetivo->movimentacao->data_pagamento_ajustada}}" placeholder="Data Pagamento" class="form-control {{($errors->first('data_pagamento') ? 'form-error-field' : '')}}">
                         </div>
                     </div>
                     @endif

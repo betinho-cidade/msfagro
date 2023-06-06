@@ -64,13 +64,12 @@
                                     <span>Lançamentos</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{ route('lancamento.index') }}">
                                     @if($user->cliente->tipo == 'AG')
-                                    Movimento Fiscal
+                                        <li><a href="{{ route('lancamento.index', ['aba' => 'MF']) }}">Movimento Financeiro</a></li>
                                     @else
-                                    Efetivo / Movimento Fiscal
+                                        <li><a href="{{ route('lancamento.index', ['aba' => 'EP']) }}">Efetivo Pecuário</a></li>
+                                        <li><a href="{{ route('lancamento.index', ['aba' => 'MF']) }}">Movimento Financeiro</a></li>
                                     @endif
-                                    </a></li>
                                 </ul>
                             </li>
 

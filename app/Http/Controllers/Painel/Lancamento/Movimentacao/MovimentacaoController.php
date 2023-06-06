@@ -43,7 +43,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
@@ -52,7 +52,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $data_programada_vetor = explode('-', $mes_referencia);
@@ -125,6 +125,18 @@ class MovimentacaoController extends Controller
             return redirect()->route('painel');
         }
 
+        if($request->has('data_pagamento')){
+
+            $today = Carbon::today();
+
+            if($request->data_pagamento > $today){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
+    
+                return redirect()->back()->withInput();
+            }    
+        }           
+
         $message = '';
 
         try {
@@ -139,7 +151,7 @@ class MovimentacaoController extends Controller
             $movimentacao->forma_pagamento_id = $request->forma_pagamento;
             $movimentacao->categoria_id = $request->categoria;
             $movimentacao->data_programada = $request->data_programada;
-            $movimentacao->data_pagamento = $request->path_comprovante ? Carbon::now() : null;
+            $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->segmento = 'MF';
             $movimentacao->tipo = $request->tipo;
             $movimentacao->valor = $request->valor;
@@ -194,7 +206,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.content', 'O Lançamento de Movimentação Fiscal ('.$movimentacao->tipo_movimentacao_texto.') com ID <span style="color: #af1e1e;">'. $movimentacao->id .'</span> foi criado com sucesso');
         }
 
-        return redirect()->route('lancamento.index');
+        return redirect()->route('lancamento.index', ['aba' => 'MF']);
     }
 
     public function show(Movimentacao $movimentacao, Request $request)
@@ -217,7 +229,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O movimentacao Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $empresas = Empresa::where('cliente_id', $user->cliente->id)
@@ -248,17 +260,43 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         if($movimentacao->tipo != $request->tipo){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O tipo de Movimentação não confere com o registrado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $today = Carbon::today();
+
+        if($request->has('data_pagamento')){
+
+            if($request->data_pagamento > $today){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
+    
+                return redirect()->back()->withInput();
+            }    
+
+            if(!$request->has('path_comprovante') && $movimentacao->situacao != 'PG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
+    
+                return redirect()->back()->withInput();
+            }                
+        }     
+
+        if(!$request->data_pagamento && ($request->path_comprovante || $movimentacao->path_comprovante) ){
+            if($request->tipo != 'EG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Data de Pagamento é requerida com o Comprovante de Pagamento.');
+
+                return redirect()->route('movimentacao.show', compact('movimentacao'));
+            }
+        }                
 
         if($request->data_programada > $today && ($request->path_comprovante || $movimentacao->path_comprovante)){
             $request->session()->flash('message.level', 'warning');
@@ -285,6 +323,7 @@ class MovimentacaoController extends Controller
             DB::beginTransaction();
 
             $movimentacao->data_programada = $request->data_programada;
+            $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->empresa_id = $request->empresa;
             $movimentacao->item_texto = $request->item_texto;
             $movimentacao->observacao = $request->observacao;
@@ -327,7 +366,6 @@ class MovimentacaoController extends Controller
                 $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $movimentacao->path_comprovante = $nome_arquivo;
                 $movimentacao->situacao = 'PG';
-                $movimentacao->data_pagamento = Carbon::now();
                 $movimentacao->save();
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
@@ -372,7 +410,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $message = '';
@@ -441,7 +479,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao tipo de Movimentação Fiscal.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $mes_referencia = ($request->has('mes_referencia') ? $request->mes_referencia : null);
@@ -450,7 +488,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente ao mês de referência informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $texto_tipo = '';
@@ -489,7 +527,7 @@ class MovimentacaoController extends Controller
                     $request->session()->flash('message.content', 'A Movimentação FIscal não pertence ao cliente informado.');
 
                     DB::rollBack();
-                    return redirect()->route('lancamento.index');
+                    return redirect()->route('lancamento.index', ['aba' => 'MF']);
                 }
 
                 $movimentacao_arquivos[$contArquivos]['cliente_id'] = $movimentacao->cliente_id;
@@ -567,7 +605,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $tipo_documento = ($request->has('tipo_documento') ? $request->tipo_documento : null);
@@ -576,7 +614,7 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível encontrar o tipo de documento solicitado.');
 
-            return redirect()->route('lancamento.index');
+            return redirect()->route('lancamento.index', ['aba' => 'MF']);
         }
 
         $path_documento = 'documentos/' . $user->cliente->id . '/';

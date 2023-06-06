@@ -17,6 +17,7 @@ class CreateCategoriasTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome', 300);
             $table->enum('segmento', ['MG', 'MF'])->default('MF');  //MG->Movimentação Bovina  MF->Movimentação Fiscal
+            $table->enum('tipo', ['R' ,'D'])->nullable(); //R->Receita  D->Despesa
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();
             $table->unique(['nome', 'segmento']);

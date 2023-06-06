@@ -19,6 +19,7 @@ class UpdateRequest extends FormRequest
 
         return [
             'data_programada' => 'required|date',
+            'data_pagamento' => 'nullable|required_with:path_comprovante|date',
             'valor' => 'required',
             'empresa' => 'required',
             'nota' => 'required|max:50',
@@ -34,6 +35,8 @@ class UpdateRequest extends FormRequest
         return [
             'data_programada.required' => 'A Data Programada é requerida',
             'data_programada.date' => 'A Data Programada é invalida',
+            'data_pagamento.date' => 'A Data Pagamento é invalida',
+            'data_pagamento.required_with' => 'A Data Pagamento é requerida com o Comprovante de Pagamento',
             'valor.required' => 'O Valor é requerido',
             'empresa.required' => 'A Empresa é requerida',
             'nota.required' => 'O Número da Nota Fiscal é requerida',

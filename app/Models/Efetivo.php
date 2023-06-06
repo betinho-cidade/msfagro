@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class Efetivo extends Model
@@ -186,6 +187,15 @@ class Efetivo extends Model
     public function getDataProgramadaAjustadaAttribute()
     {
         return ($this->data_programada) ? date('Y-m-d', strtotime($this->data_programada)) : '';
+    }
+
+
+    public function getMesReferenciaListagemAttribute (){
+
+        $mes_referencia =  Carbon::parse($this->data_programada); 
+
+        return Str::padLeft($mes_referencia->month, 2, '0') . '-' . $mes_referencia->year;
+
     }
 
 

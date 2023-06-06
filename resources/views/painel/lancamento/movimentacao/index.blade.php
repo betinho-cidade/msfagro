@@ -24,7 +24,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-
+                <span style="float: right"><a href="{{route('lancamento.index', ['aba' => 'MF'])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Lançamentos - Movimetações Financeiras"></i></a></span>
                 <h4 class="card-title">Listagem da Movimentação Fiscal registrada para o Cliente - Referência {!! strtoupper($data_programada) !!}</h4>
                 <p class="card-title-desc"></p>
 
@@ -89,12 +89,12 @@
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')
-                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação Fiscal"></i></a>
+                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação Financeira"></i></a>
                             @endcan
 
                             @can('delete_movimentacao')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$movimentacao->id}})"
-                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Movimentação Fiscal"></i></a>
+                                    data-target="#modal-delete-lancamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Movimentação Financeira"></i></a>
                             @endcan
                             </td>
                         </tr>

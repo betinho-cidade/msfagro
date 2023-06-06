@@ -47,5 +47,27 @@ class Categoria extends Model
         return $nome_reduzido;
     }
 
+    public function getTipoCategoriaAttribute()
+    {
+        $tipo = '';
+
+        switch($this->tipo){
+            case 'D' : {
+                $tipo = 'Despesa';
+                break;
+            }
+            case 'R' : {
+                $tipo = 'Receita';
+                break;
+            }
+            default : {
+                $tipo = '---';
+                break;
+            }
+        }
+
+        return $tipo;
+    }
+
 
 }
