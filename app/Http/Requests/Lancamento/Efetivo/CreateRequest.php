@@ -39,7 +39,7 @@ class CreateRequest extends FormRequest
             'observacao' => 'max:1000',
             'path_gta' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
             'path_nota' => 'nullable|required_if:tipo,VD,CP|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
-            'path_comprovante' => ['nullable', 'required_with:data_pagamento', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_programada)],
+            'path_comprovante' => ['nullable', 'required_with:data_pagamento', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_pagamento ?? '')],
         ];
     }
 

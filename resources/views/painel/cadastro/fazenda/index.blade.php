@@ -60,7 +60,8 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Cidade/UF</th>
-                            <th>Geolocalização</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
 
                             @if($user->cliente && $user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
@@ -77,7 +78,8 @@
                             <td>{{$fazenda->id}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{$fazenda->nome_reduzido}}</td>
                             <td>{{$fazenda->endereco}}</td>
-                            <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->latitude }}">{{Str::limit($fazenda->latitude, 50, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->longitude }}">{{Str::limit($fazenda->longitude, 50, '...')}}</td>
 
                             @if($user->cliente && $user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
@@ -109,7 +111,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '7' : '5' }}">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -126,7 +128,8 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Cidade/UF</th>
-                            <th>Geolocalização</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
 
                             @if($user->cliente && $user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
@@ -143,7 +146,8 @@
                             <td>{{$fazenda->id}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->nome }}">{{$fazenda->nome_reduzido}}</td>
                             <td>{{$fazenda->endereco}}</td>
-                            <td data-toggle="tooltip" title="{{ $fazenda->geolocalizacao }}">{{Str::limit($fazenda->geolocalizacao, 150, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->latitude }}">{{Str::limit($fazenda->latitude, 50, '...')}}</td>
+                            <td data-toggle="tooltip" title="{{ $fazenda->longitude }}">{{Str::limit($fazenda->longitude, 50, '...')}}</td>
 
                             @if($user->cliente && $user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
@@ -175,7 +179,7 @@
                           </tr>
                         @empty
                         <tr>
-                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '7' : '5' }}">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>

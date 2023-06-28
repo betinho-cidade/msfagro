@@ -42,7 +42,10 @@
             <!-- FORMULÁRIO - INICIO -->
 
             <h4 class="card-title">Formulário de Atualização - Lançamento da Movimentação Fiscal</h4>
-            <span style="float: right"><a href="{{route('movimentacao.index', ['mes_referencia' => $movimentacao->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Movimentações Financeiras do mês: {{$movimentacao->mes_referencia_listagem}}"></i></a></span>
+            <span style="float: right">
+                <a href="{{route('movimentacao.index', ['mes_referencia' => $movimentacao->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Movimentações Financeiras do mês: {{$movimentacao->mes_referencia_listagem}}"></i></a>
+                <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+            </span>
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
             <form name="edit_movimentacao" method="POST" action="{{route('movimentacao.update', compact('movimentacao'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf

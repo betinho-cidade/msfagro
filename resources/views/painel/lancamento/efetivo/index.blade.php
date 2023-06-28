@@ -24,7 +24,10 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <span style="float: right"><a href="{{route('lancamento.index', ['aba' => 'EP'])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Lançamentos: Efetivos Pecuários"></i></a></span>
+                <span style="float: right">
+                    <a href="{{route('lancamento.index', ['aba' => 'EP'])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Lançamentos: Efetivos Pecuários"></i></a>
+                    <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                </span>
                 <h4 class="card-title">Listagem do Efetivo Pecuário registrado para o Cliente - Referência {!! strtoupper($data_programada) !!}</h4>
                 <p class="card-title-desc"></p>
 

@@ -14,11 +14,11 @@ class RangeValidation implements Rule
      *
      * @return void
      */
-    protected $data_programada;
+    protected $data_pagamento;
 
-    public function __construct(String $data_programada)
+    public function __construct(String $data_pagamento)
     {
-        $this->data_programada = $data_programada;
+        $this->data_pagamento = $data_pagamento;
     }
     /**
      * Determine if the validation rule passes.
@@ -29,9 +29,11 @@ class RangeValidation implements Rule
      */
     public function passes($attribute, $value)
     {
+        if(!$this->data_pagamento) return true;
+        
         $today = Carbon::today();
 
-        if($this->data_programada > $today){
+        if($this->data_pagamento > $today){
             return false;
         } else{
             return true;
@@ -46,7 +48,7 @@ class RangeValidation implements Rule
 
     public function message()
     {
-        return 'Comprovante de pagamento somente é permitido para a Data Programada sendo igual ou anterior a data atual';
+        return 'Comprovante de pagamento somente é permitido para a Data de Pagamento sendo igual ou anterior a data atual';
     }
 
 }

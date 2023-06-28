@@ -87,9 +87,9 @@
                     </span>
                 </form>
 
-                @php $count = 0; @endphp
+                <!-- @php $count = 0; @endphp -->
                 <span style="font-size:12px;display: block;margin-top: 15px;">
-                @if($search)
+                <!-- @if($search)
                     @foreach ($search as $param=>$value )
                         @if($value)
                             @if($count == 0)
@@ -102,10 +102,13 @@
                         @endif
                     @endforeach
                     <p></p>
-                @endif
+                @endif -->
                 </span>
 
-                <span style="float: right"><a href="{{route('financeiro.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Financeiro / Movimentação Fiscal do Cliente"></i></a></span>
+                <span style="float: right">
+                    <a href="{{route('financeiro.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Financeiro / Movimentação Fiscal do Cliente"></i></a>
+                    <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                </span>
                 <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
                 <p class="card-title-desc"></p>
 

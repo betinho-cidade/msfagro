@@ -375,7 +375,7 @@ class EfetivoController extends Controller
 
         $today = Carbon::today();
 
-        if($request->has('data_pagamento')){
+        if($request->has('data_pagamento') && $request->data_pagamento){
             if($request->tipo == 'EG'){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'A Data de Pagamento não é permitida para movimentações de Engorda.');
@@ -390,7 +390,7 @@ class EfetivoController extends Controller
                 return redirect()->back()->withInput();
             }    
 
-            if(!$request->has('path_comprovante') && $efetivo->movimentacao->situacao != 'PG'){
+            if(!$request->has('path_comprovante') && !$efetivo->movimentacao->path_comprovante){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
     
@@ -407,13 +407,6 @@ class EfetivoController extends Controller
                 return redirect()->route('efetivo.show', compact('efetivo'));
             }
         }        
-
-        if($request->data_programada > $today && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante)){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'O Comprovante de Pagamento somente é permitido para data igual ou anterior a data atual.');
-
-            return redirect()->route('efetivo.show', compact('efetivo'));
-        }
 
         $message = '';
 

@@ -42,7 +42,10 @@
             <!-- FORMULÁRIO - INICIO -->
 
             <h4 class="card-title">Formulário de Atualização - Lançamento de Efetivo Pecuário</h4>
-            <span style="float: right"><a href="{{route('efetivo.index', ['mes_referencia' => $efetivo->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Efetivos Pecuários do mês: {{$efetivo->mes_referencia_listagem}}"></i></a></span>
+            <span style="float: right">
+                <a href="{{route('efetivo.index', ['mes_referencia' => $efetivo->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Efetivos Pecuários do mês: {{$efetivo->mes_referencia_listagem}}"></i></a>
+                <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+            </span>
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
             <form name="edit_efetivo" method="POST" action="{{route('efetivo.update', compact('efetivo'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf

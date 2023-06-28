@@ -272,7 +272,8 @@ class MovimentacaoController extends Controller
 
         $today = Carbon::today();
 
-        if($request->has('data_pagamento')){
+
+        if($request->has('data_pagamento') && $request->data_pagamento){
 
             if($request->data_pagamento > $today){
                 $request->session()->flash('message.level', 'warning');
@@ -281,7 +282,7 @@ class MovimentacaoController extends Controller
                 return redirect()->back()->withInput();
             }    
 
-            if(!$request->has('path_comprovante') && $movimentacao->situacao != 'PG'){
+            if(!$request->has('path_comprovante') && !$movimentacao->path_comprovante){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
     
@@ -297,13 +298,6 @@ class MovimentacaoController extends Controller
                 return redirect()->route('movimentacao.show', compact('movimentacao'));
             }
         }                
-
-        if($request->data_programada > $today && ($request->path_comprovante || $movimentacao->path_comprovante)){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'O Comprovante de Pagamento somente é permitido para data igual ou anterior a data atual.');
-
-            return redirect()->route('movimentacao.show', compact('movimentacao'));
-        }
 
         if(!$movimentacao->path_nota && !$request->path_nota){
             $request->session()->flash('message.level', 'warning');

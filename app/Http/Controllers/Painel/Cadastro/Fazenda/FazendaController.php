@@ -109,7 +109,8 @@ class FazendaController extends Controller
             $fazenda->end_cep = $request->end_cep;
             $fazenda->end_cidade = $request->end_cidade;
             $fazenda->end_uf = $request->end_uf;
-            $fazenda->geolocalizacao = $request->geolocalizacao;
+            $fazenda->latitude = $request->latitude;
+            $fazenda->longitude = $request->longitude;
             $fazenda->qtd_macho = $request->qtd_macho;
             $fazenda->qtd_femea = $request->qtd_femea;
             $fazenda->status = $request->situacao;
@@ -184,7 +185,8 @@ class FazendaController extends Controller
             $fazenda->end_cep = $request->end_cep;
             $fazenda->end_cidade = $request->end_cidade;
             $fazenda->end_uf = $request->end_uf;
-            $fazenda->geolocalizacao = $request->geolocalizacao;
+            $fazenda->latitude = $request->latitude;
+            $fazenda->longitude = $request->longitude;
             $fazenda->qtd_macho = $request->qtd_macho;
             $fazenda->qtd_femea = $request->qtd_femea;
             $fazenda->status = $request->situacao;
@@ -260,5 +262,32 @@ class FazendaController extends Controller
 
         return redirect()->route('fazenda.index');
     }
+
+
+    function buscarGeolocalizacao() {
+        //$endereco = "Rua Exemplo, Cidade, Estado, País";
+        $endereco = 'Londrina, Paraná';
+
+        //Formate a URL para fazer a solicitação à API de Geocodificação
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($endereco) . '&key=AIzaSyC1xG0um9W7Ck-NDpx9MejH6KK8YvQB7Ro';
+
+        // Faça a solicitação e obtenha a resposta em JSON
+        $resposta = file_get_contents($url);
+
+        // Analise a resposta JSON
+        $dados = json_decode($resposta, true);
+
+        // Verifique se houve um resultado válido
+        if ($dados['status'] === 'OK') {
+            // Obtenha a latitude e longitude do primeiro resultado
+            $latitude = $dados['results'][0]['geometry']['location']['lat'];
+            $longitude = $dados['results'][0]['geometry']['location']['lng'];
+
+            dd('Latitude: ' . $latitude, ' Longitude: ' . $longitude);
+        } else {
+            // Se não houver resultados ou ocorrer um erro, exiba uma mensagem de erro
+            dd('Erro: Não foi possível obter a latitude e longitude para o endereço especificado.');
+        }
+    }    
 
 }

@@ -114,15 +114,24 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="geolocalizacao" class="{{($errors->first('geolocalizacao') ? 'form-error-label' : '')}}">Geolocalização</label>
-                            <input type="text" class="form-control {{($errors->first('geolocalizacao') ? 'form-error-field' : '')}}" id="geolocalizacao" name="geolocalizacao" value="{{old('geolocalizacao')}}" placeholder="Geolocalização" required>
+                            <label for="latitude" class="{{($errors->first('latitude') ? 'form-error-label' : '')}}">Latitude</label>
+                            <input type="text" class="form-control {{($errors->first('latitude') ? 'form-error-field' : '')}}" id="latitude" name="latitude" value="{{old('latitude')}}" placeholder="Latitude" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="longitude" class="{{($errors->first('longitude') ? 'form-error-label' : '')}}">Longitude</label>
+                            <input type="text" class="form-control {{($errors->first('longitude') ? 'form-error-field' : '')}}" id="longitude" name="longitude" value="{{old('longitude')}}" placeholder="Longitude" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
 
                     @if($user->cliente && $user->cliente->tipo != 'AG')
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_macho" class="{{($errors->first('qtd_macho') ? 'form-error-label' : '')}}">Qtd. Machos</label>
                             <input type="text" class="form-control {{($errors->first('qtd_macho') ? 'form-error-field' : '')}}" id="qtd_macho" name="qtd_macho" value="{{old('qtd_macho')}}" placeholder="Qtd. Macho" required>
@@ -130,7 +139,7 @@
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_femea" class="{{($errors->first('qtd_femea') ? 'form-error-label' : '')}}">Qtd. Fêmeas</label>
                             <input type="text" class="form-control {{($errors->first('qtd_femea') ? 'form-error-field' : '')}}" id="qtd_femea" name="qtd_femea" value="{{old('qtd_femea')}}" placeholder="Qtd. Fêmea" required>
@@ -140,7 +149,7 @@
                     </div>
                     @endif
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
                             <select id="situacao" name="situacao" class="form-control {{($errors->first('situacao') ? 'form-error-field' : '')}}" required>
@@ -203,6 +212,8 @@
                             } else{
                                     $('#end_cidade').val(dados['localidade']);
                                     $('#end_uf').val(dados['uf']);
+                                    console.log('chamar buscarGeolocalizacao');
+                                    buscarGeolocalizacao();
                             }
                             document.getElementById("img-loading-cep").style.display = 'none';
                         },
@@ -213,6 +224,36 @@
                 }
             });
         });
+    </script>
+
+    <script type='text/javascript'>
+
+        function buscarGeolocalizacao() {
+            //$endereco = "Rua Exemplo, Cidade, Estado, País";
+            $endereco = urlencode('Londrina, Paraná');
+
+                    $.ajax({
+                        url: "{{route('painel.js_viacep')}}",
+                        method: "POST",
+                        data: {_token:_token, cep:cep},
+                        success:function(result){
+                            dados = JSON.parse(result);
+                            if(dados==null || dados['error'] == 'true'){
+                                    console.log(dados);
+                            } else{
+                                    $('#end_cidade').val(dados['localidade']);
+                                    $('#end_uf').val(dados['uf']);
+                                    console.log('chamar buscarGeolocalizacao');
+                                    buscarGeolocalizacao();
+                            }
+                            document.getElementById("img-loading-cep").style.display = 'none';
+                        },
+                        error:function(erro){
+                            document.getElementById("img-loading-cep").style.display = 'none';
+                        }
+                    })
+
+        }
     </script>
 
 
