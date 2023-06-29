@@ -269,7 +269,7 @@ class FazendaController extends Controller
         $endereco = 'Londrina, Paraná';
 
         //Formate a URL para fazer a solicitação à API de Geocodificação
-        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($endereco) . '&key=AIzaSyC1xG0um9W7Ck-NDpx9MejH6KK8YvQB7Ro';
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($endereco) . '&key=';
 
         // Faça a solicitação e obtenha a resposta em JSON
         $resposta = file_get_contents($url);
