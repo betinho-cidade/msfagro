@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0"><code style="color: #096e48;font-size: 18px;">{!! $texto_movimentacao !!} - {!! $data_programada !!}</code></h4>
+            <h4 class="mb-0"><code style="color: #096e48;font-size: 18px;"></code></h4>
         </div>
     </div>
 </div>
@@ -25,18 +25,33 @@
         <div class="card">
             <div class="card-body">
 
-                <form id="search_cliente" action="{{route('financeiro.search')}}" method="GET">
+                <form id="search_report" action="{{route('relatorio.search')}}" method="GET">
                     @csrf
-                    <input type="hidden" id="mes_referencia" name="mes_referencia" value="{{ $mes_referencia }}">
-                    <input type="hidden" id="status_movimentacao" name="status_movimentacao" value="{{ $status_movimentacao }}">
+                    <!-- <input type="hidden" id="mes_referencia" name="mes_referencia" value="">
+                    <input type="hidden" id="status_movimentacao" name="status_movimentacao" value=""> -->
                     <span>
+                    
                     <div class="row" style="width: 100%;">
+                        <div class="col-md-3"  style="padding-right: 0;">
+                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
+                        </div>  
+                    
+                        <div class="col-md-3"  style="padding-right: 0;">
+                            <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
+                        </div>                          
+
+                        <div class="col-md-6"  style="padding-right: 0;">
+                            <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
+                        </div>  
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;width: 100%;">
 
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="tipo_movimentacao" name="tipo_movimentacao" class="form-control select2">
                                 <option value="">Selecione: Tipo Movimentação</option>
-                                <option value="R" {{($search && $search['tipo_movimentacao']['param_key'] == 'R') ? 'selected' : '' }}>Receita</option>
-                                <option value="D" {{($search && $search['tipo_movimentacao']['param_key'] == 'D') ? 'selected' : '' }}>Despesa</option>
+                                <option value="R" {{($search && $search['tipo_movimentacao'] == 'R') ? 'selected' : '' }}>Receita</option>
+                                <option value="D" {{($search && $search['tipo_movimentacao'] == 'D') ? 'selected' : '' }}>Despesa</option>
                             </select>
                         </div>
 
@@ -44,7 +59,7 @@
                             <select id="produtor" name="produtor" class="form-control select2">
                                 <option value="">Selecione: Produtor</option>
                                 @foreach($produtors as $produtor)
-                                    <option value="{{ $produtor->id }}" {{($search && $search['produtor']['param_key'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                    <option value="{{ $produtor->id }}" {{($search && $search['produtor'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -53,7 +68,7 @@
                             <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
                                 <option value="">Selecione: Forma Pagamento</option>
                                 @foreach($forma_pagamentos as $forma_pagamento)
-                                    <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento']['param_key'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
+                                    <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,8 +80,8 @@
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="segmento" name="segmento" class="form-control select2">
                                 <option value="">Selecione: Segmento</option>
-                                <option value="MG" {{($search && $search['segmento']['param_key'] == 'MG') ? 'selected' : '' }}>Movimentação Bovina</option>
-                                <option value="MF" {{($search && $search['segmento']['param_key'] == 'MF') ? 'selected' : '' }}>Movimentação Fiscal</option>
+                                <option value="MG" {{($search && $search['segmento'] == 'MG') ? 'selected' : '' }}>Movimentação Bovina</option>
+                                <option value="MF" {{($search && $search['segmento'] == 'MF') ? 'selected' : '' }}>Movimentação Fiscal</option>
                             </select>
                         </div>
                         @endif
@@ -75,7 +90,7 @@
                             <select id="empresa" name="empresa" class="form-control select2">
                                 <option value="">Selecione: Empresa</option>
                                 @foreach($empresas as $empresa)
-                                    <option value="{{ $empresa->id }}" {{($search && $search['empresa']['param_key'] == $empresa->id) ? 'selected' : '' }}>{{ $empresa->nome_empresa }}</option>
+                                    <option value="{{ $empresa->id }}" {{($search && $search['empresa'] == $empresa->id) ? 'selected' : '' }}>{{ $empresa->nome_empresa }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -87,37 +102,23 @@
                     </span>
                 </form>
 
-                <!-- @php $count = 0; @endphp -->
-                <span style="font-size:12px;display: block;margin-top: 15px;">
-                <!-- @if($search)
-                    @foreach ($search as $param=>$value )
-                        @if($value)
-                            @if($count == 0)
-                                <code>Filtro:</code>
-                            @endif
-                            @if($value['param_key'])
-                                <code>[{{ $param }}: {{ $value['param_value'] }}]&nbsp;</code>
-                            @endif
-                            @php $count = $count + 1; @endphp
-                        @endif
-                    @endforeach
-                    <p></p>
-                @endif -->
-                </span>
-
-                <span style="float: right">
-                    <a href="{{route('financeiro.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Financeiro / Movimentação Fiscal do Cliente"></i></a>
-                    <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
-                </span>
-                <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
-                <p class="card-title-desc"></p>
+                <div class="titulo-com-icones" style="margin-top: 25px;">
+                    <span style="float: right">
+                        <a href="{{route('relatorio.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="relatorio / Movimentação Fiscal do Cliente"></i></a>
+                        <a href="{{route('relatorio.excell', compact('search'))}}"><i class="nav-icon fas fa-file-excel" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Excell"></i></a>
+                        <a href="{{route('relatorio.pdf', compact('search'))}}"><i class="nav-icon fas fa-file-pdf" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="PDF"></i></a>
+                        <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                    </span>
+                    <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
+                    <p class="card-title-desc"></p>
+                </div>    
 
                 <!-- Nav tabs - LISTA lancamento - INI -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#lancamento" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">{!! $texto_movimentacao !!} - {!! ucfirst($data_programada) !!} ( <code class="highlighter-rouge">{{$movimentacaos->count()}}</code> )</span>
+                            <span class="d-none d-sm-block">Total ( <code class="highlighter-rouge">{{($movimentacaos) ? $movimentacaos->count() : 0}}</code> )</span>
                         </a>
                     </li>
                 </ul>
@@ -183,34 +184,6 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-
-<!-- Cityinbag - Modal Info INI-->
-<form action="" id="deleteForm" method="post">
-    @csrf
-    @method('DELETE')
-</form>
-
-<div class="modal fade" id="modal-delete-lancamento" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Deseja excluir o registro da Movimentação Fiscal ? </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>O registro selecionado será excluído definitivamente. Deseja Continuar ?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Fechar </button>
-                <button type="button" onclick="formSubmit();" class="btn btn-primary waves-effect waves-light">Excluir </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Cityinbag - Modal Info FIM-->
-
 @endsection
 
 @section('head-css')
@@ -239,7 +212,7 @@
 		});
 	</script>
 
-    @if($movimentacaos->count() > 0)
+    @if($movimentacaos && $movimentacaos->count() > 0)
         <script>
             var table = $('#dt_lancamentos').DataTable({
                 language: {
@@ -255,21 +228,5 @@
             });
         </script>
     @endif
-
-
-    <script>
-       function deleteData(id)
-       {
-           var id = id;
-           var url = '{{ route("movimentacao.destroy", ":id") }}';
-           url = url.replace(':id', id);
-           $("#deleteForm").attr('action', url);
-       }
-
-       function formSubmit()
-       {
-           $("#deleteForm").submit();
-       }
-    </script>
 
 @endsection

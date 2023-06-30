@@ -80,6 +80,13 @@
                                 </a>
                             </li>
 
+                            <li>
+                                <a href="{{ route('relatorio.index') }}">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>Relatório</span>
+                                </a>
+                            </li>                            
+
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
                             @endif
 

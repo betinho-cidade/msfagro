@@ -158,6 +158,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/financeiro/search', 'FinanceiroController@search')->name('financeiro.search');
         });
 
+        Route::group(['namespace' => 'Relatorio'], function(){
+
+            Route::get('/relatorio', 'RelatorioController@index')->name('relatorio.index');
+            Route::get('/relatorio/search', 'RelatorioController@search')->name('relatorio.search');
+            Route::get('/relatorio/excell', 'RelatorioController@excell')->name('relatorio.excell');
+            Route::get('/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio.pdf');
+        });        
+
     });
 
 });
