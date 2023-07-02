@@ -156,6 +156,30 @@
                     <p></p>
                 <!-- Dados Endereço - FIM -->
 
+                <!-- Dados GoogleMaps - INI -->
+                <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados GoogleMaps</h5>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="qtd_apimaps" class="{{($errors->first('qtd_apimaps') ? 'form-error-label' : '')}}">Qtd. API Maps <i class="fas fa-info-circle" data-toggle="tooltip" title="Quantidade de visualizações por mês relacionados ao Mapa que o cliente pode obter."></i></label>
+                            <input type="text" class="form-control {{($errors->first('qtd_apimaps') ? 'form-error-field' : '')}}" id="qtd_apimaps" name="qtd_apimaps" value="{{old('qtd_apimaps')}}" placeholder="Qtd. API Maps" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="qtd_geolocation" class="{{($errors->first('qtd_geolocation') ? 'form-error-label' : '')}}">Qtd. Geolocation <i class="fas fa-info-circle" data-toggle="tooltip" title="Quantidade de solicitações para busca da Latitude/Longitude que o cliente pode solicitar."></i></label>
+                            <input type="text" class="form-control {{($errors->first('qtd_geolocation') ? 'form-error-field' : '')}}" id="qtd_geolocation" name="qtd_geolocation" value="{{old('qtd_geolocation')}}" placeholder="Qtd. Geolocation" required>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dados GoogleMaps - FIM -->
 
                 <!-- Dados Acesso - INI -->
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">

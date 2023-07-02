@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/fazenda/{fazenda}', 'FazendaController@show')->name('fazenda.show');
                 Route::put('/fazenda/{fazenda}/update', 'FazendaController@update')->name('fazenda.update');
                 Route::delete('/fazenda/{fazenda}/destroy', 'FazendaController@destroy')->name('fazenda.destroy');
+                Route::post('/fazenda/{fazenda}/geomaps', 'FazendaController@geomaps')->name('fazenda.geomaps');
             });
 
             Route::group(['namespace' => 'Empresa'], function(){
@@ -117,6 +118,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/produtor/{produtor}/update', 'ProdutorController@update')->name('produtor.update');
                 Route::delete('/produtor/{produtor}/destroy', 'ProdutorController@destroy')->name('produtor.destroy');
             });
+
+            Route::group(['namespace' => 'Googlemap'], function(){
+                Route::get('/googlemap', 'GooglemapController@index')->name('googlemap.index');
+                Route::get('/googlemap/list', 'GooglemapController@list')->name('googlemap.list');
+                Route::get('/googlemap/{googlemap}', 'GooglemapController@show')->name('googlemap.show');
+                Route::put('/googlemap/{googlemap}/update', 'GooglemapController@update')->name('googlemap.update');
+            });            
 
         });
 
@@ -164,6 +172,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/search', 'RelatorioController@search')->name('relatorio.search');
             Route::get('/relatorio/excell', 'RelatorioController@excell')->name('relatorio.excell');
             Route::get('/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio.pdf');
+            Route::get('/relatorio/geomaps', 'RelatorioController@geomaps')->name('relatorio.geomaps');
         });        
 
     });

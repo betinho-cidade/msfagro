@@ -44,6 +44,11 @@ class Cliente extends Model
         return $this->hasMany('App\Models\Movimentacao');
     }
 
+    public function cliente_googlemaps(){
+
+        return $this->hasMany('App\Models\ClienteGooglemap');
+    }    
+
     public function getTipoClienteAttribute()
     {
         $tipo = '';

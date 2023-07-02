@@ -212,8 +212,6 @@
                             } else{
                                     $('#end_cidade').val(dados['localidade']);
                                     $('#end_uf').val(dados['uf']);
-                                    console.log('chamar buscarGeolocalizacao');
-                                    buscarGeolocalizacao();
                             }
                             document.getElementById("img-loading-cep").style.display = 'none';
                         },
@@ -224,36 +222,6 @@
                 }
             });
         });
-    </script>
-
-    <script type='text/javascript'>
-
-        function buscarGeolocalizacao() {
-            //$endereco = "Rua Exemplo, Cidade, Estado, País";
-            $endereco = urlencode('Londrina, Paraná');
-
-                    $.ajax({
-                        url: "{{route('painel.js_viacep')}}",
-                        method: "POST",
-                        data: {_token:_token, cep:cep},
-                        success:function(result){
-                            dados = JSON.parse(result);
-                            if(dados==null || dados['error'] == 'true'){
-                                    console.log(dados);
-                            } else{
-                                    $('#end_cidade').val(dados['localidade']);
-                                    $('#end_uf').val(dados['uf']);
-                                    console.log('chamar buscarGeolocalizacao');
-                                    buscarGeolocalizacao();
-                            }
-                            document.getElementById("img-loading-cep").style.display = 'none';
-                        },
-                        error:function(erro){
-                            document.getElementById("img-loading-cep").style.display = 'none';
-                        }
-                    })
-
-        }
     </script>
 
 

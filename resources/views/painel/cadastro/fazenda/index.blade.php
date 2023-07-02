@@ -25,7 +25,8 @@
         <div class="card">
             <div class="card-body">
 
-                <h4 class="card-title">Listagem das Fazendas Registradas para o Cliente</h4>
+                <h4 class="card-title">Listagem das Fazendas Registradas para o Cliente 
+                    <span style="float:right;"><code>Limite Mensal:  Maps({{$cliente_googlemap->qtd_apimaps ?? 0}} de {{$qtd_apimaps}})  Lat/Long({{$cliente_googlemap->qtd_geolocation ?? 0}} de {{$qtd_geolocation}})</code></span></h4>
                 <p class="card-title-desc"></p>
 
                 <!-- Nav tabs - LISTA fazenda - INI -->
@@ -90,6 +91,7 @@
 
                             @can('edit_fazenda')
                                 <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Fazenda"></i></a>
+                                <i onclick="geoMapsData({{$fazenda->id}})" class="fas fa-map-marker-alt" style="color: goldenrod" data-toggle="tooltip" title="Atualizar a Geolocalização (Latitude/Longitude)"></i>
                             @endcan
 
                             @can('delete_fazenda')
@@ -194,6 +196,10 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
+<form action="" id="geoMapsForm" method="post">
+@csrf
+</form>    
+
 @endsection
 
 
@@ -241,6 +247,16 @@
        function formSubmit()
        {
            $("#deleteForm").submit();
+       }
+
+       function geoMapsData(id)
+       {
+        console.log(id);
+           var id = id;
+           var url = '{{ route("fazenda.geomaps", ":id") }}';
+           url = url.replace(':id', id);
+           $("#geoMapsForm").attr('action', url);
+           $("#geoMapsForm").submit();
        }
     </script>
 

@@ -25,6 +25,8 @@ class CreateClientesTable extends Migration
             $table->string('end_numero', 20)->nullable();
             $table->string('end_bairro', 60)->nullable();
             $table->string('end_complemento', 40)->nullable();
+            $table->integer('qtd_apimaps')->default(0);
+            $table->integer('qtd_geolocation')->default(0);
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');

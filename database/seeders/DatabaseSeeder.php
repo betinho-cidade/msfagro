@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionRoleSeeder::class);
         $this->call(CategoriaSeeder::class);
         $this->call(ClienteSeeder::class);
+        $this->call(GooglemapSeeder::class);
     }
 }

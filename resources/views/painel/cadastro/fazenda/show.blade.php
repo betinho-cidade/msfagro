@@ -120,6 +120,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="latitude" class="{{($errors->first('latitude') ? 'form-error-label' : '')}}">Latitude</label>
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-geolocalizacao" style="display:none;max-width: 17%; margin-left: 26px;">                            
                             <input type="text" class="form-control {{($errors->first('latitude') ? 'form-error-field' : '')}}" id="latitude" name="latitude" value="{{$fazenda->latitude}}" placeholder="Latitude" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -172,7 +173,6 @@
 
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>
             </form>
-
 
             <!-- FORMULÁRIO - FIM -->
             </div>

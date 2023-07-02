@@ -25,12 +25,10 @@
         </div>
     </div>
     <!-- end page title -->
-
 @endsection
 
 @section('head-css')
 @endsection
-
 
 @section('script-js')
 @endsection

@@ -11,6 +11,8 @@ use App\Models\Efetivo;
 use App\Models\Movimentacao;
 use App\Models\FormaPagamento;
 use App\Models\Fazenda;
+use App\Models\Cliente;
+use App\Models\ClienteGooglemap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Exception;
@@ -259,5 +261,91 @@ class RelatorioController extends Controller
         return Excel::download(new MovimentacaosExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }        
 
+
+    public function geomaps(Request $request)
+    {
+        if(Gate::denies('view_relatorio')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Visualização permitida somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        } 
+        
+        $anomes_referencia = Carbon::now();
+        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
+                                             ->whereYear('anomes_referencia', $anomes_referencia->year)
+                                             ->whereMonth('anomes_referencia', $anomes_referencia->month)
+                                             ->first();       
+
+        $cliente = Cliente::where('id', $user->cliente->id)                                     
+                           ->first();        
+                
+        if( (!$cliente_googlemap && $cliente->qtd_apimaps == 0) ||
+            ($cliente_googlemap && ($cliente->qtd_apimaps <= $cliente_googlemap->qtd_apimaps))){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O limite mensal ('.$cliente->qtd_apimaps.') de visualizações do Mapa foi atingido. Favor aguardar o próximo mês.');
+
+            return redirect()->route('painel');
+        }               
+
+        $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                                    ->where('status', 'A')
+                                    ->where('latitude', '<>', '0')
+                                    ->where('longitude', '<>', '0')
+                                    ->orderBy('nome', 'asc')
+                                    ->get();
+        $message = '';
+
+        try {
+
+            DB::beginTransaction();
+    
+            if($cliente_googlemap){
+                $cliente_googlemap->qtd_apimaps = $cliente_googlemap->qtd_apimaps + 1;
+                    
+                $cliente_googlemap->save();
+            } else {
+                $new_cliente_googlemap = new ClienteGooglemap();
+
+                $new_cliente_googlemap->cliente_id = $user->cliente->id;
+                $new_cliente_googlemap->anomes_referencia = $anomes_referencia;
+                $new_cliente_googlemap->qtd_apimaps = 1;
+                $new_cliente_googlemap->qtd_geolocation = 0;
+
+                $new_cliente_googlemap->save();                    
+            }
+    
+            DB::commit();
+    
+        } catch (Exception $ex){
+    
+            DB::rollBack();
+    
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+        }                                    
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+            
+            return redirect()->route('painel');
+        }
+
+        return view('painel.relatorio.geomaps', compact('user', 'fazendas'));        
+    }
 
 }

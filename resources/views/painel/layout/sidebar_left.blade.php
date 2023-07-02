@@ -37,6 +37,18 @@
                                     <li><a href="{{ route('cliente.index') }}">Clientes</a></li>
                                 </ul>
                             </li>
+
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>Google Maps</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{ route('googlemap.show', ['googlemap' => 1]) }}">Parametrização</a></li>
+                                    <li><a href="{{ route('googlemap.index') }}">Resumo Mensal</a></li>
+                                </ul>
+                            </li>
+
                             <!-- Menus Relacioandos a administração - Acesso somente para GESTOR - FIM-->
                             @endif
 
@@ -53,7 +65,9 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ route('produtor.index') }}">Produtores</a></li>
                                     <li><a href="{{ route('forma_pagamento.index') }}">Formas de Pagamento</a></li>
-                                    <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
+                                    @if($user->cliente->tipo !== 'AG')                                                              
+                                        <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
+                                    @endif
                                     <li><a href="{{ route('empresa.index') }}">Empresas</a></li>
                                 </ul>
                             </li>
@@ -85,7 +99,16 @@
                                     <i class="ri-store-2-line"></i>
                                     <span>Relatório</span>
                                 </a>
-                            </li>                            
+                            </li>   
+                            
+                            @if($user->cliente->tipo !== 'AG')                                    
+                            <li>
+                                <a href="{{ route('relatorio.geomaps') }}">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Maps</span>
+                                </a>
+                            </li>   
+                            @endif
 
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
                             @endif

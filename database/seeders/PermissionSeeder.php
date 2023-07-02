@@ -369,6 +369,20 @@ class PermissionSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'id' => 52,
+                    'name' => 'view_googlemap',
+                    'description' => 'Visualizar as informações dos limites do GoogleMaps',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 53,
+                    'name' => 'edit_googlemap',
+                    'description' => 'Editar as informações dos limites do GoogleMaps',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],   
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

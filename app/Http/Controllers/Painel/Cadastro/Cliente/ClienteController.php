@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Cliente;
+use App\Models\Googlemap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Exception;
@@ -82,6 +83,21 @@ class ClienteController extends Controller
 
         $user = Auth()->User();
 
+        $googlemap = Googlemap::first();
+
+        $qtd_apimaps = Cliente::sum('qtd_apimaps') + $request->qtd_apimaps;
+        $qtd_geolocation = Cliente::sum('qtd_geolocation') + $request->qtd_geolocation;
+
+        if($qtd_apimaps > $googlemap->qtd_apimaps || $qtd_geolocation > $googlemap->qtd_geolocation){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'As quantidades informadas tanto para a API Maps quanto para o Geolocation extrapolam o total permitido.<br>
+            <br>Parametrização: Api Maps('.$googlemap->qtd_apimaps.') Geolocation ('.$googlemap->qtd_geolocation.')
+            <br>Total Clientes: Api Maps('.$qtd_apimaps.') Geolocation ('.$qtd_geolocation.')'
+            );
+
+            return redirect()->route('cliente.show', compact('cliente'));
+        }             
+
         $message = '';
 
         try {
@@ -104,6 +120,8 @@ class ClienteController extends Controller
             $cliente->end_logradouro = $request->end_logradouro;
             $cliente->end_numero = $request->end_numero;
             $cliente->end_complemento = $request->end_complemento;
+            $cliente->qtd_apimaps = $request->qtd_apimaps;
+            $cliente->qtd_geolocation = $request->qtd_geolocation;
             $cliente->status = $request->situacao;
 
             $cliente->save();
@@ -166,6 +184,21 @@ class ClienteController extends Controller
 
         $user = Auth()->User();
 
+        $googlemap = Googlemap::first();
+
+        $qtd_apimaps = Cliente::sum('qtd_apimaps') - $cliente->qtd_apimaps + $request->qtd_apimaps;
+        $qtd_geolocation = Cliente::sum('qtd_geolocation') - $cliente->qtd_geolocation + $request->qtd_geolocation;
+
+        if($qtd_apimaps > $googlemap->qtd_apimaps || $qtd_geolocation > $googlemap->qtd_geolocation){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'As quantidades informadas tanto para a API Maps quanto para o Geolocation extrapolam o total permitido.<br>
+            <br>Parametrização: Api Maps('.$googlemap->qtd_apimaps.') Geolocation ('.$googlemap->qtd_geolocation.')
+            <br>Total Clientes: Api Maps('.$qtd_apimaps.') Geolocation ('.$qtd_geolocation.')'
+            );
+
+            return redirect()->route('cliente.show', compact('cliente'));
+        }        
+
         $message = '';
 
         try {
@@ -186,6 +219,8 @@ class ClienteController extends Controller
             $cliente->end_logradouro = $request->end_logradouro;
             $cliente->end_numero = $request->end_numero;
             $cliente->end_complemento = $request->end_complemento;
+            $cliente->qtd_apimaps = $request->qtd_apimaps;
+            $cliente->qtd_geolocation = $request->qtd_geolocation;            
             $cliente->status = $request->situacao;
 
             $cliente->save();

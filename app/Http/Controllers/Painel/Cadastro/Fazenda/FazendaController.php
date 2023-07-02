@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Fazenda;
 use App\Models\Cliente;
+use App\Models\ClienteGooglemap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Exception;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Cadastro\Fazenda\CreateRequest;
 use App\Http\Requests\Cadastro\Fazenda\UpdateRequest;
 use Image;
+use Carbon\Carbon;
 
 
 
@@ -43,6 +45,26 @@ class FazendaController extends Controller
             return redirect()->route('painel');
         }
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }
+
+        $anomes_referencia = Carbon::now();
+        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
+                                             ->whereYear('anomes_referencia', $anomes_referencia->year)
+                                             ->whereMonth('anomes_referencia', $anomes_referencia->month)
+                                             ->first();       
+
+        $cliente = Cliente::where('id', $user->cliente->id)                                     
+                           ->first();    
+        
+        $qtd_apimaps = $cliente->qtd_apimaps;
+        $qtd_geolocation = $cliente->qtd_geolocation;
+
+
         $fazendas_AT = Fazenda::where('status','A')
                             ->where('cliente_id', $user->cliente->id)
                             ->orderBy('nome', 'asc')
@@ -55,7 +77,7 @@ class FazendaController extends Controller
                             ->get();
 
 
-        return view('painel.cadastro.fazenda.index', compact('user', 'fazendas_AT', 'fazendas_IN'));
+        return view('painel.cadastro.fazenda.index', compact('user', 'fazendas_AT', 'fazendas_IN', 'cliente_googlemap', 'qtd_apimaps', 'qtd_geolocation'));
     }
 
 
@@ -76,6 +98,13 @@ class FazendaController extends Controller
             return redirect()->route('painel');
         }
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }        
+
         return view('painel.cadastro.fazenda.create', compact('user'));
     }
 
@@ -95,6 +124,13 @@ class FazendaController extends Controller
 
             return redirect()->route('painel');
         }
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }        
 
         $message = '';
 
@@ -148,6 +184,13 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }             
+
         if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
@@ -167,6 +210,13 @@ class FazendaController extends Controller
         }
 
         $user = Auth()->User();
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }             
 
         if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
@@ -223,6 +273,13 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }             
+
         if(!$user->cliente ||($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
@@ -264,30 +321,121 @@ class FazendaController extends Controller
     }
 
 
-    function buscarGeolocalizacao() {
-        //$endereco = "Rua Exemplo, Cidade, Estado, País";
-        $endereco = 'Londrina, Paraná';
+    function geomaps(Fazenda $fazenda, Request $request) {
 
-        //Formate a URL para fazer a solicitação à API de Geocodificação
-        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($endereco) . '&key=';
-
-        // Faça a solicitação e obtenha a resposta em JSON
-        $resposta = file_get_contents($url);
-
-        // Analise a resposta JSON
-        $dados = json_decode($resposta, true);
-
-        // Verifique se houve um resultado válido
-        if ($dados['status'] === 'OK') {
-            // Obtenha a latitude e longitude do primeiro resultado
-            $latitude = $dados['results'][0]['geometry']['location']['lat'];
-            $longitude = $dados['results'][0]['geometry']['location']['lng'];
-
-            dd('Latitude: ' . $latitude, ' Longitude: ' . $longitude);
-        } else {
-            // Se não houver resultados ou ocorrer um erro, exiba uma mensagem de erro
-            dd('Erro: Não foi possível obter a latitude e longitude para o endereço especificado.');
+        if(Gate::denies('view_fazenda')){
+            abort('403', 'Página não disponível');
         }
+
+        $user = Auth()->User();
+
+        if($user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }        
+
+        if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
+
+            return redirect()->route('fazenda.index');
+        }
+
+        $anomes_referencia = Carbon::now();
+        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
+                                             ->whereYear('anomes_referencia', $anomes_referencia->year)
+                                             ->whereMonth('anomes_referencia', $anomes_referencia->month)
+                                             ->first();       
+
+        $cliente = Cliente::where('id', $user->cliente->id)                                     
+                           ->first();        
+                
+        if( (!$cliente_googlemap && $cliente->qtd_geolocation == 0) ||
+            ($cliente_googlemap && ($cliente->qtd_geolocation <= $cliente_googlemap->qtd_geolocation))){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O limite mensal ('.$cliente->qtd_geolocation.') de busca de Latitude/Longitude foi atingido. Favor aguardar o próximo mês.');
+
+            return redirect()->route('fazenda.index');
+        }       
+
+        if(!$fazenda->end_uf && (!$fazenda->end_cidade || !$fazenda->end_uf)){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'É necessário que o CEP ou a Cidade/UF estejam com valores armazenados.');
+
+            return redirect()->route('fazenda.index');
+        }        
+
+        $endereco = urlencode($fazenda->end_cep . ',' . $fazenda->end_cidade . ',' . $fazenda->end_uf);
+
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $endereco . '&key='. env('API_KEY_GOOGLE');        
+
+        $message = '';
+        $latitude = '0';
+        $longitude = '0';
+
+        try {
+            $resposta = file_get_contents($url);
+
+            $dados = json_decode($resposta,true);
+
+            if ($dados['status'] === 'OK') {
+                $latitude = $dados['results'][0]['geometry']['location']['lat'];
+                $longitude = $dados['results'][0]['geometry']['location']['lng'];
+            } else {
+                $message = 'Não foi possível obter a latitude e longitude para o endereço especificado.';
+            } 
+        } catch(Exception $ex){
+            $message = 'Não foi possível obter a latitude e longitude para o endereço especificado. ' . $ex->getMessage();
+        }
+
+        if ($message == '' && $latitude != '0' && $longitude != '0') {
+            try {
+
+                DB::beginTransaction();
+    
+                $fazenda->latitude = $latitude;
+                $fazenda->longitude = $longitude;
+    
+                $fazenda->save();
+
+                if($cliente_googlemap){
+                    $cliente_googlemap->qtd_geolocation = $cliente_googlemap->qtd_geolocation + 1;
+                    
+                    $cliente_googlemap->save();
+                } else {
+                    $new_cliente_googlemap = new ClienteGooglemap();
+
+                    $new_cliente_googlemap->cliente_id = $user->cliente->id;
+                    $new_cliente_googlemap->anomes_referencia = $anomes_referencia;
+                    $new_cliente_googlemap->qtd_apimaps = 0;
+                    $new_cliente_googlemap->qtd_geolocation = 1;
+
+                    $new_cliente_googlemap->save();                    
+                }
+    
+                DB::commit();
+    
+            } catch (Exception $ex){
+    
+                DB::rollBack();
+    
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+            }
+        } else {
+            $message = "Erro desconhecido, não foi possível buscar a geolocalização";
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Latitude ('. $fazenda->latitude .') e Longitude ('. $fazenda->longitude .') da Fazenda <code class="highlighter-rouge">'. $fazenda->nome .'</code> foi alterada com sucesso.');
+        }
+        
+        return redirect()->route('fazenda.index');
     }    
 
 }

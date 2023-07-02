@@ -44,6 +44,8 @@ class CreateRequest extends FormRequest
             'end_logradouro' => 'required|max:80',
             'end_numero' => 'required|max:20',
             'end_complemento' => 'max:40',
+            'qtd_apimaps' => 'required|integer',
+            'qtd_geolocation' => 'required|integer',
             'situacao' => 'required',
         ];
     }
@@ -81,6 +83,8 @@ class CreateRequest extends FormRequest
             'end_uf.required' => 'O Estado é requerido',
             'end_uf.max' => 'O tamanho permitido para o Estado é de 2 caracteres',
             'end_uf.min' => 'O tamanho permitido para o Estado é de 2 caracteres',
+            'qtd_apimaps.required' => 'A quantidade de visualizações do Maps é requerida',
+            'qtd_apimaps.integer' => 'A quantidade de buscas de geolocalização é requerida',
             'situacao.required' => 'A situação é requerida',
         ];
     }
