@@ -33,14 +33,17 @@
                     
                     <div class="row" style="width: 100%;">
                         <div class="col-md-3"  style="padding-right: 0;">
+                            <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
                             <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
                         </div>  
                     
                         <div class="col-md-3"  style="padding-right: 0;">
+                            <label for="data_fim" style="margin: 0 0 0 2px;">Data Final</label>
                             <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
                         </div>                          
 
                         <div class="col-md-6"  style="padding-right: 0;">
+                            <label for="item_texto" style="margin: 0 0 0 2px;">Item Fiscal</label>
                             <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
                         </div>  
                     </div>
@@ -104,10 +107,10 @@
 
                 <div class="titulo-com-icones" style="margin-top: 25px;">
                     <span style="float: right">
-                        <a href="{{route('relatorio.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="relatorio / Movimentação Fiscal do Cliente"></i></a>
+                        <!-- <a href="{{route('relatorio.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="relatorio / Movimentação Fiscal do Cliente"></i></a> -->
                         <a href="{{route('relatorio.excell', compact('search'))}}"><i class="nav-icon fas fa-file-excel" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Excell"></i></a>
                         <a href="{{route('relatorio.pdf', compact('search'))}}"><i class="nav-icon fas fa-file-pdf" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="PDF"></i></a>
-                        <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                        <a href="{{route('painel')}}"><i class="nav-icon fas fa-sync-alt" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Limpar pesquisa"></i></a>
                     </span>
                     <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
                     <p class="card-title-desc"></p>
@@ -170,7 +173,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="9">Nenhum registro encontrado</td>
+                            <td colspan="10">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
