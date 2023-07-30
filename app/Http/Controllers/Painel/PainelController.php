@@ -36,7 +36,7 @@ class PainelController extends Controller
         if($role == 'Gestor') {
             return redirect()->route('dashboard.index');
         }else{
-            return redirect()->route('relatorio.index');
+            return redirect()->route('dashboard.index');
         }
     }
 

@@ -17,10 +17,10 @@ class UpdateRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'base_inicio' => str_replace(',', '.', str_replace('.', '', $this->base_inicio)),
-            'base_fim' => str_replace(',', '.', str_replace('.', '', $this->base_fim)),
-            'aliquota' => str_replace(',', '.', str_replace('.', '', $this->aliquota)),
-            'parcela_deducao' => str_replace(',', '.', str_replace('.', '', $this->parcela_deducao)),
+            'base_inicio' => (str_replace(',', '.', str_replace('.', '', $this->base_inicio)) == null) ? 0 : str_replace(',', '.', str_replace('.', '', $this->base_inicio)),
+            'base_fim' => (str_replace(',', '.', str_replace('.', '', $this->base_fim)) == null) ? 0 : str_replace(',', '.', str_replace('.', '', $this->base_fim)),
+            'aliquota' => (str_replace(',', '.', str_replace('.', '', $this->aliquota)) == null) ? 0 : str_replace(',', '.', str_replace('.', '', $this->aliquota)),
+            'parcela_deducao' => (str_replace(',', '.', str_replace('.', '', $this->parcela_deducao)) == null) ? 0 : str_replace(',', '.', str_replace('.', '', $this->parcela_deducao)),
         ]);
     }
 

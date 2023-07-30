@@ -32,9 +32,9 @@ class SendResetPassword extends Mailable
     {
         $view = 'emails.reset_password.verify_link';
 
-        return $this->from('naoresponda@msfagro.com.br')
+        return $this->from('naoresponda@mfsagro.com.br')
                 //->bcc('naoresponda@aapomil.com.br')
-                ->subject('MSFAGRO - Link para troca de Senha')
+                ->subject('MFSAGRO - Link para troca de Senha')
                 ->markdown($view);
     }
 }

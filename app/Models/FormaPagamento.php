@@ -38,8 +38,8 @@ class FormaPagamento extends Model
                 $tipo_conta = 'Conta Poupança';
                 break;
             }
-            case 'NT' : {
-                $tipo_conta = 'Numerário em Trânsito';
+            case 'CT' : {
+                $tipo_conta = 'Cessão de Crédito';
                 break;
             }
             case 'BL' : {

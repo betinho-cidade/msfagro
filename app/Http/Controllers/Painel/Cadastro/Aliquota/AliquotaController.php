@@ -35,7 +35,7 @@ class AliquotaController extends Controller
 
         $user = Auth()->User();
 
-        $aliquotas = aliquota::orderBy('aliquota', 'asc')
+        $aliquotas = aliquota::orderBy('base_inicio', 'asc')
                             ->get();
 
 

@@ -17,14 +17,14 @@ class RoleSeeder extends Seeder
                 [
                     'id' => 1,
                     'name' => 'Gestor',
-                    'description' => 'Gestor do sistema MSFagro',
+                    'description' => 'Gestor do sistema MFSagro',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
                 [
                     'id' => 2,
                     'name' => 'Cliente',
-                    'description' => 'Cliente do sistema MSFagro',
+                    'description' => 'Cliente do sistema MFSagro',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]

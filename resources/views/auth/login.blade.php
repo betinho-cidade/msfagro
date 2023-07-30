@@ -4,9 +4,9 @@
     <head>
 
         <meta charset="utf-8" />
-        <title>MSF Agro - Sistema de Controle Financeiro</title>
+        <title>MFS Agro - Sistema de Controle Financeiro</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="MSF Agro - Sistema de Controle Financeiro" name="msfagro" />
+        <meta content="MFS Agro - Sistema de Controle Financeiro" name="mfsagro" />
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{asset('nazox/assets/images/favicon.png')}}">
 
@@ -77,7 +77,7 @@
                                             </div>
 
                                             <div class="mt-5 text-center">
-                                                <p>© 2023 MSF Agro. <br>Desenvolvido por <a href="https://cityinbag.com.br/" target="_blank">Cityinbag</a>.</p>
+                                                <p>© 2023 MFS Agro. <br>Desenvolvido por <a href="https://cityinbag.com.br/" target="_blank">Cityinbag</a>.</p>
                                             </div>
                                         </div>
 
