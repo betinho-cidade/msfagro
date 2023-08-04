@@ -164,7 +164,7 @@ class DashboardController extends Controller
 
         $lucro_real = ($total_credito >= $total_debito) ? ($total_credito - $total_debito) : ($total_debito - $total_credito);
         $prejuizo = ($total_credito >= $total_debito) ? 'N' : 'S';
-        $lucro_presumido = $total_credito;
+        $lucro_presumido = $total_credito*0.2;
         $imposto_real = 0;
         $imposto_presumido = 0;
         
@@ -180,8 +180,6 @@ class DashboardController extends Controller
             }
 
             if(($lucro_presumido >= $aliquota->base_inicio) && ($lucro_presumido <= $aliquota->base_fim || $aliquota->base_fim == 0)){
-                $imposto_presumido = ($lucro_presumido * $aliquota->aliquota) - $aliquota->parcela_deducao;
-
                 if($aliquota->aliquota > 0){
                     $imposto_presumido = $lucro_presumido * ($aliquota->aliquota/100);    
                 }

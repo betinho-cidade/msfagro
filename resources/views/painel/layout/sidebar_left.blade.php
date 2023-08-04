@@ -17,17 +17,21 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="ri-bar-chart-2-line"></i>
                                     <span>Gestão</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
+                                    <li><a href="{{ route('relatorio_gestao.index') }}">Relatório</a></i>
+                                </a>
+                            </li>   
+
                                 </ul>
                             </li>
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="ri-database-line"></i>
                                     <span>Cadastros Base</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
@@ -40,7 +44,7 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="ri-map-pin-line"></i>
                                     <span>Google Maps</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
@@ -59,7 +63,7 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="ri-database-line"></i>
                                     <span>Cadastros</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
@@ -74,7 +78,7 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="mdi mdi-database-plus"></i>
                                     <span>Lançamentos</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
@@ -89,14 +93,14 @@
 
                             <li>
                                 <a href="{{ route('financeiro.index') }}">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="fas fa-money-bill"></i>
                                     <span>Financeiro</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a href="{{ route('relatorio.index') }}">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="far fa-chart-bar"></i>
                                     <span>Relatório</span>
                                 </a>
                             </li>   

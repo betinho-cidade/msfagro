@@ -42,14 +42,19 @@
             <!-- FORMULÁRIO - INICIO -->
 
             <h4 class="card-title">Formulário de Atualização - Lançamento da Movimentação Fiscal</h4>
-            <span style="float: right">
-                <a href="{{route('movimentacao.index', ['mes_referencia' => $movimentacao->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Movimentações Financeiras do mês: {{$movimentacao->mes_referencia_listagem}}"></i></a>
-                <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
-            </span>
+            @if($user->roles->contains('name', 'Cliente'))
+                <span style="float: right">
+                    <a href="{{route('movimentacao.index', ['mes_referencia' => $movimentacao->mes_referencia_listagem])}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Movimentações Financeiras do mês: {{$movimentacao->mes_referencia_listagem}}"></i></a>
+                    <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                </span>
+            @endif
+
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
-            <form name="edit_movimentacao" method="POST" action="{{route('movimentacao.update', compact('movimentacao'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
-                @csrf
-                @method('PUT')
+            @if($user->roles->contains('name', 'Cliente'))
+                <form name="edit_movimentacao" method="POST" action="{{route('movimentacao.update', compact('movimentacao'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
+                    @csrf
+                    @method('PUT')
+            @endif
 
                 <input type="hidden" id="tipo" name="tipo" value="{{ $movimentacao->tipo }}">
 
@@ -72,8 +77,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="empresa" class="{{($errors->first('empresa') ? 'form-error-label' : '')}}">Empresa <a href="{{ route('empresa.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Empresa"></i></a> <i onclick="refreshList('EP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Empresas"></i></label>
-                                <img src="{{asset('images/loading.gif')}}" id="img-loading-empresa" style="display:none;max-width: 20px; margin-left: 12px;">
+                                <label for="empresa" class="{{($errors->first('empresa') ? 'form-error-label' : '')}}">Empresa 
+                                @if($user->roles->contains('name', 'Cliente'))
+                                    <a href="{{ route('empresa.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Empresa"></i></a> <i onclick="refreshList('EP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Empresas"></i>
+                                    <img src="{{asset('images/loading.gif')}}" id="img-loading-empresa" style="display:none;max-width: 20px; margin-left: 12px;">
+                                @endif
+                                </label>
                                 <select id="empresa" name="empresa" class="form-control {{($errors->first('empresa') ? 'form-error-field' : '')}} select2" required>
                                     <option value="">---</option>
                                     @foreach($empresas as $empresa)
@@ -197,9 +206,10 @@
                     </div>
 
                 <!-- Dados Pessoais -- FIM -->
-
-                <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
-            </form>
+            @if($user->roles->contains('name', 'Cliente'))
+                    <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
+                </form>
+            @endif
 
             <!-- FORMULÁRIO - FIM -->
             </div>
@@ -260,60 +270,62 @@
         }
     }
 
-    function refreshList(tipo) {
+    @if($user->roles->contains('name', 'Cliente'))
+        function refreshList(tipo) {
 
-        var _token = $('input[name="_token"]').val();
-        var _tipo = tipo;
-        var objectList;
-        var objectName;
+            var _token = $('input[name="_token"]').val();
+            var _tipo = tipo;
+            var objectList;
+            var objectName;
 
-        if(tipo == 'EP'){
-            objectList = $('#empresa');
-            objectName = 'empresa';
-        }
-
-        if(tipo == 'FP'){
-            objectList = $('#forma_pagamento');
-            objectName = 'forma_pagamento';
-        }
-
-        if(tipo == 'PT'){
-            objectList = $('#produtor');
-            objectName = 'produtor';
-        }
-
-        document.getElementById("img-loading-"+objectName).style.display = '';
-
-        $.ajax({
-            url: "{{route('lancamento.refreshList')}}",
-            method: "POST",
-            dataType: "json",
-            data: {_token:_token, tipo:_tipo},
-            success:function(response){
-
-                var len = 0;
-                if (response.mensagem != null) {
-                    len = response.mensagem.length;
-                }
-
-                if (len>0) {
-                    objectList.find('option').not(':first').remove();
-                    for (var i = 0; i<len; i++) {
-                        var id = response.mensagem[i].id;
-                        var nome = response.mensagem[i].nome;
-                        var option = "<option value='"+id+"'>"+nome+"</option>";
-                        objectList.append(option);
-                    }
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                } else {
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                }
-            },
-            error:function(erro){
-                document.getElementById("img-loading-"+objectName).style.display = 'none';
+            if(tipo == 'EP'){
+                objectList = $('#empresa');
+                objectName = 'empresa';
             }
-        })
-    }
+
+            if(tipo == 'FP'){
+                objectList = $('#forma_pagamento');
+                objectName = 'forma_pagamento';
+            }
+
+            if(tipo == 'PT'){
+                objectList = $('#produtor');
+                objectName = 'produtor';
+            }
+
+            document.getElementById("img-loading-"+objectName).style.display = '';
+
+            $.ajax({
+                url: "{{route('lancamento.refreshList')}}",
+                method: "POST",
+                dataType: "json",
+                data: {_token:_token, tipo:_tipo},
+                success:function(response){
+
+                    var len = 0;
+                    if (response.mensagem != null) {
+                        len = response.mensagem.length;
+                    }
+
+                    if (len>0) {
+                        objectList.find('option').not(':first').remove();
+                        for (var i = 0; i<len; i++) {
+                            var id = response.mensagem[i].id;
+                            var nome = response.mensagem[i].nome;
+                            var option = "<option value='"+id+"'>"+nome+"</option>";
+                            objectList.append(option);
+                        }
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    } else {
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    }
+                },
+                error:function(erro){
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                }
+            })
+        }
+    @endif
 
     </script>
 

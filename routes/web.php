@@ -37,6 +37,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/dashboard', 'DashboardController@index')->name('dashboard.index');
             });
 
+            Route::group(['namespace' => 'Relatorio'], function(){
+                Route::get('/gestao/relatorio', 'RelatorioController@index')->name('relatorio_gestao.index');
+                Route::get('/gestao/relatorio/search', 'RelatorioController@search')->name('relatorio_gestao.search');
+                Route::get('/gestao/relatorio/excell', 'RelatorioController@excell')->name('relatorio_gestao.excell');
+                Route::get('/gestao/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio_gestao.pdf');
+            });            
+
         });
 
         Route::group(['namespace' => 'Cadastro'], function(){

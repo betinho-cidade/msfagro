@@ -212,30 +212,41 @@ class MovimentacaoController extends Controller
     public function show(Movimentacao $movimentacao, Request $request)
     {
 
-        if(Gate::denies('edit_movimentacao')){
+        if(Gate::denies('edit_movimentacao') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if(!$user->cliente){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-            return redirect()->route('painel');
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->id != $movimentacao->cliente_id){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'O movimentacao Pecuário não pertence ao cliente informado.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->id != $movimentacao->cliente_id){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'O movimentacao Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'MF']);
+                return redirect()->route('lancamento.index', ['aba' => 'MF']);
+            }
         }
 
-        $empresas = Empresa::where('cliente_id', $user->cliente->id)
-                                            ->where('status', 'A')
-                                            ->orderBy('nome', 'asc')
-                                            ->get();
+        if((Gate::denies('view_relatorio_gestao'))){
+            $empresas = Empresa::where('cliente_id', $user->cliente->id)
+                                                ->where('status', 'A')
+                                                ->orderBy('nome', 'asc')
+                                                ->get();
+        } else {
+            $empresas = Empresa::where('cliente_id', $movimentacao->cliente->id)
+                                                ->where('status', 'A')
+                                                ->orderBy('nome', 'asc')
+                                                ->get();            
+        }
 
         return view('painel.lancamento.movimentacao.show', compact('user', 'movimentacao', 'empresas'));
     }
@@ -582,24 +593,28 @@ class MovimentacaoController extends Controller
 
     public function download(Movimentacao $movimentacao, Request $request){
 
-        if(Gate::denies('view_movimentacao')){
+        if(Gate::denies('view_movimentacao') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-
-            return redirect()->route('painel');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if(!$user->cliente){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+    
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->id != $movimentacao->cliente_id){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->id != $movimentacao->cliente_id){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'MF']);
+                return redirect()->route('lancamento.index', ['aba' => 'MF']);
+            }
         }
 
         $tipo_documento = ($request->has('tipo_documento') ? $request->tipo_documento : null);
@@ -608,10 +623,19 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível encontrar o tipo de documento solicitado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'MF']);
+            if((Gate::denies('view_relatorio_gestao'))){
+                return redirect()->route('lancamento.index', ['aba' => 'MF']);
+            } else{
+                return redirect()->route('painel');
+            }
         }
 
-        $path_documento = 'documentos/' . $user->cliente->id . '/';
+        if((Gate::denies('view_relatorio_gestao'))){
+            $path_documento = 'documentos/' . $user->cliente->id . '/';
+        } else {
+            $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
+        }
+            
 
         switch($tipo_documento){
             case 'CP':{

@@ -152,27 +152,27 @@
                              <th style="text-align: center;  background: #f0f0f0;">PRODUTOR<br/><small class="badge badge-soft-success" style="font-size: 10px;">Receita</small> <small class="badge badge-soft-danger" style="font-size: 10px;">Despesa</small></th>
                              <th class="text-center">
                                  JAN<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
                              <th class="text-center">
                                  FEV<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
                              <th class="text-center">
                                  MAR<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>														
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>														
                              </th>
                              <th class="text-center">
                                  ABR<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>													
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>													
                              </th>	
                              <th class="text-center">
                                  MAI<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
                              <th class="text-center">
                                  JUN<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
                          </tr>
                          </thead>
@@ -199,27 +199,27 @@
                          <tr>                                                    
 							<th class="text-center">
                                  JUL<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
 							<th class="text-center">
                                  AGO<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
 							<th class="text-center">
                                  SET<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
 							<th class="text-center">
                                  OUT<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
 							<th class="text-center">
                                  NOV<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
 							<th class="text-center">
                                  DEZ<br>
-								<span style="display: block; margin-top: -5px;"><i class="ri-arrow-down-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-arrow-up-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
+								<span style="display: block; margin-top: -5px;"><i class="ri-add-circle-line font-size-12" style="color: #4CAF50;font-weight: 500;"></i> <i class="ri-indeterminate-circle-line font-size-12" style="color: #F44336;font-weight: 500;"></i></span>
                              </th>
                              <th class="text-center" style="vertical-align: middle; background: #f0f0f0;">
                                  TOT. ANUAL
@@ -351,15 +351,15 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawStuff);
+        google.charts.load('current', {packages: ['corechart','bar']});
+        google.charts.setOnLoadCallback(receita_despesa);
+        google.charts.setOnLoadCallback(resumo_tributario);
 
-        function drawStuff() {
+        function receita_despesa() {
 
-            var button = document.getElementById('change-chart');
-            var chartDiv = document.getElementById('chart_div');
+            var chartDivRD = document.getElementById('chart_div');
 
-            var data = google.visualization.arrayToDataTable([
+            var dataRD = new google.visualization.arrayToDataTable([
             ['', 'Receita', 'Despesa'],
             ['Janeiro',   @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['debito']}} @else 0 @endif],
             ['Fevereiro', @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['debito']}} @else 0 @endif],
@@ -375,87 +375,82 @@
             ['Dezembro',  @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['debito']}} @else 0 @endif],
             ]);
 
-            var materialOptions = {
+            var formatterRD = new google.visualization.NumberFormat({
+                            decimalSymbol: ',',
+                            groupingSymbol: '.',
+                            prefix: 'R$ ',
+                        });
+                        formatterRD.format(dataRD, 1);
+                        formatterRD.format(dataRD, 2);
+
+            var viewRD = new google.visualization.DataView(dataRD);
+
+            var optionsRD = {
             width: 1020,
+            vAxis: { 
+            //   title: "Percentage Uptime", 
+              minValue: 1,
+              viewWindowMode:'explicit',
+              viewWindow:{
+                min: 1
+              }
+            },
+            legend: { position: 'none' },
             chart: {
                 title: '',
                 subtitle: ''
             },
-            series: {
-                0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-                1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
-            },
-            axes: {
-                y: {
-                distance: {label: ''}, // Left y-axis.
-                brightness: {side: 'right', label: ''} // Right y-axis.
-                }
-            }
+            bar: { groupWidth: "45%" },
             };
 
-            var classicOptions = {
-            width: 1020,
-            series: {
-                0: {targetAxisIndex: 0},
-                1: {targetAxisIndex: 1}
-            },
-            title: 'Nearby galaxies - distance on the left, brightness on the right',
-            vAxes: {
-                // Adds titles to each axis.
-                0: {title: ''},
-                1: {title: ''}
-            }
-            };
+            var chartRD = new google.visualization.ColumnChart(chartDivRD);
+            chartRD.draw(viewRD, optionsRD);
 
-            function drawMaterialChart() {
-            var materialChart = new google.charts.Bar(chartDiv);
-            materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
-            button.innerText = 'Change to Classic';
-            button.onclick = drawClassicChart;
-            }
-
-            function drawClassicChart() {
-            var classicChart = new google.visualization.ColumnChart(chartDiv);
-            classicChart.draw(data, classicOptions);
-            button.innerText = 'Change to Material';
-            button.onclick = drawMaterialChart;
-            }
-
-            drawMaterialChart();
         };
-    </script>
-    
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawStuff_02);
 
-
-        function drawStuff_02() {
-            var data = new google.visualization.arrayToDataTable([
-            ['Move', 'Percentage'],
-            ["Ded. - Lucro R.",{{($resumo_pecuario['prejuizo'] == 'S') ? $resumo_pecuario['lucro_real_graph'] : 0}}],
-            ["IR - Lucro R.", {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real_graph'] : 0}}],
-            ["IR - Lucro P.", {{$resumo_pecuario['imposto_presumido_graph']}}]
+        function resumo_tributario() {
+            var chartDivRT = document.getElementById('top_x_div');
+            
+            var datRT = new google.visualization.arrayToDataTable([
+            ["", "", { role: "style" } ],
+            ["Ded. - Lucro R.", {{($resumo_pecuario['prejuizo'] == 'S') ? $resumo_pecuario['lucro_real_graph'] : 0}}, "red"],
+            ["IR - Lucro R.", {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real_graph'] : 0}}, "blue"],
+            ["IR - Lucro P.", {{$resumo_pecuario['imposto_presumido_graph']}}, "blue"],
             ]);
 
-            var options = {
-            width: 300,
+            var formatterRT = new google.visualization.NumberFormat({
+                            decimalSymbol: ',',
+                            groupingSymbol: '.',
+                            prefix: 'R$ ',
+                        });
+                        formatterRT.format(datRT, 1);
+                        
+            var viewRT = new google.visualization.DataView(datRT);
+       
+
+            var optionsRT = {
+            width: 315,   
+            vAxis: { 
+            //   title: "Percentage Uptime", 
+              minValue: 1,
+              viewWindowMode:'explicit',
+              viewWindow:{
+                min: 1
+              }
+            },            
             legend: { position: 'none' },
             chart: {
                 title: '',
-                subtitle: '' },
-            axes: {
-                x: {
-                0: { side: 'top', label: ''} // Top x-axis.
-                }
+                subtitle: '' 
             },
-            bar: { groupWidth: "90%" }
+            bar: { groupWidth: "30%" }
             };
 
-            var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-                // Convert the Classic options to Material options.
-            chart.draw(data, google.charts.Bar.convertOptions(options));
+            var chartRT = new google.visualization.ColumnChart(chartDivRT);
+            chartRT.draw(viewRT, optionsRT);
+
         };   
+
     </script>
 
 @endsection

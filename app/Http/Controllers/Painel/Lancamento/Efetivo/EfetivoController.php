@@ -306,31 +306,37 @@ class EfetivoController extends Controller
     public function show(Efetivo $efetivo, Request $request)
     {
 
-        if(Gate::denies('edit_efetivo')){
+        if(Gate::denies('edit_efetivo') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if(!$user->cliente){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-            return redirect()->route('painel');
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->tipo == 'AG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->id != $efetivo->cliente_id){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->id != $efetivo->cliente_id){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'EP']);
+                return redirect()->route('lancamento.index', ['aba' => 'EP']);
+            }
         }
 
         return view('painel.lancamento.efetivo.show', compact('user', 'efetivo'));
@@ -772,31 +778,37 @@ class EfetivoController extends Controller
 
     public function download(Efetivo $efetivo, Request $request){
 
-        if(Gate::denies('view_efetivo')){
+        if(Gate::denies('view_efetivo') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if(!$user->cliente){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
-            return redirect()->route('painel');
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->tipo == 'AG'){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
+                return redirect()->route('painel');
+            }
         }
 
-        if($user->cliente->id != $efetivo->cliente_id){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
+        if((Gate::denies('view_relatorio_gestao'))){
+            if($user->cliente->id != $efetivo->cliente_id){
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'EP']);
+                return redirect()->route('lancamento.index', ['aba' => 'EP']);
+            }
         }
 
         $tipo_documento = ($request->has('tipo_documento') ? $request->tipo_documento : null);
@@ -805,10 +817,19 @@ class EfetivoController extends Controller
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível encontrar o tipo de documento solicitado.');
 
-            return redirect()->route('lancamento.index', ['aba' => 'EP']);
+            if((Gate::denies('view_relatorio_gestao'))){
+                return redirect()->route('lancamento.index', ['aba' => 'EP']);
+            } else{
+                return redirect()->route('painel');
+            }            
         }
+       
 
-        $path_documento = 'documentos/' . $user->cliente->id . '/';
+        if((Gate::denies('view_relatorio_gestao'))){
+            $path_documento = 'documentos/' . $user->cliente->id . '/';
+        } else {
+            $path_documento = 'documentos/' . $efetivo->movimentacao->cliente_id . '/';
+        }        
 
         switch($tipo_documento){
             case 'CP':{
