@@ -108,3 +108,7 @@
 .tag-cliente{ font-size: 11px; padding: 5px 10px;}
 
 }
+
+/* AJUSTE ICONES RELATORIO MFSAGRO */
+.mdi-18px.mdi-set, .mdi-18px.mdi:before {    font-size: 18px;    top: 2px !important;}
+/* AJUSTE ICONES RELATORIO MFSAGRO */
