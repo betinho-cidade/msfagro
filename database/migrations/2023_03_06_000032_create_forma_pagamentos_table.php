@@ -13,7 +13,7 @@ class CreateFormaPagamentosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('produtor_id')->nullable();
-            $table->enum('tipo_conta', ['CC', 'CP', 'NT', 'BL', 'ES'])->default('CC');  //CC->Conta Corrente  CP->Conta Poupança  NT->Numerário em Trânsito  BL->Boleto  ES->spécie (dinheiro)
+            $table->enum('tipo_conta', ['CC', 'CP', 'CT', 'BL', 'ES'])->default('CC');  //CC->Conta Corrente  CP->Conta Poupança  CT->Cessão de Crédito  BL->Boleto  ES->spécie (dinheiro)
             $table->string('banco', 200)->nullable();
             $table->string('agencia', 50)->nullable();
             $table->string('conta', 50)->nullable();

@@ -58,11 +58,11 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Tipo Pessoa</th>
-                            <th>CPF/CNPJ</th>
-                            <th>Nome</th>
+                            <th style="width:30px;">Tipo Pessoa</th>
+                            <th style="width:30px;">CPF/CNPJ</th>
+                            <th style="width:150px;">Nome</th>
                             <th>E-mail</th>
-                            <th>Telefone</th>
+                            <th style="width:30px;">Telefone</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -71,11 +71,11 @@
                         @forelse($produtors_AT as $produtor)
                         <tr>
                             <td>{{$produtor->id}}</td>
-                            <td>{{$produtor->tipo_pessoa_texto}}</td>
-                            <td class="{{($produtor->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$produtor->cpf_cnpj}}</td>
-                            <td data-toggle="tooltip" title="{{ $produtor->nome }}">{{$produtor->nome_reduzido}}</td>
+                            <td style="width:30px;">{{$produtor->tipo_pessoa_texto}}</td>
+                            <td style="width:30px;" class="{{($produtor->tipo_pessoa) == 'PF' ? 'mask_cpf' : 'mask_cnpj'}}">{{$produtor->cpf_cnpj}}</td>
+                            <td  style="width:150px;" data-toggle="tooltip" title="{{ $produtor->nome }}">{{$produtor->nome_reduzido}}</td>
                             <td data-toggle="tooltip" title="{{ $produtor->email }}">{{$produtor->email_reduzido}}</td>
-                            <td class="mask_telefone">{{$produtor->telefone}}</td>
+                            <td  style="width:30px;" class="mask_telefone">{{$produtor->telefone}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_produtor')

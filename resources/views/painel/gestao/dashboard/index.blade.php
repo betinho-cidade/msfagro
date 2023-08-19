@@ -276,8 +276,8 @@
                     <div class="card-body" style="padding: 25px 20px !important;">
                         <div class="media">
                             <div class="media-body overflow-hidden" style="text-align:center;">
-								<h4 class="font-size-24" style="color: {{$cor_financeiro}};padding-top: 7px;margin-bottom:2px;">R$ {{$resumo_pecuario['lucro_real']}}</h4>
-                                <h5 class="mb-0" style="">@if($resumo_pecuario['prejuizo'] == 'S') Prejuízo Real @else Lucro Real @endif</h5>
+								<h4 class="font-size-24" style="color: {{$cor_financeiro}};padding-top: 7px;margin-bottom:2px;">R$ {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['lucro_real'] : ' - ' . $resumo_pecuario['lucro_real']}}</h4>
+                                <h5 class="mb-0" style="">Lucro Real</h5>
                                 <span class="badge badge-soft-success" style="font-size: 12px;padding: 3px 8px !important;background: #f5efe1;color: #957c49;margin-top: 10px;">Imposto: R$ {{$resumo_pecuario['imposto_real']}}</span>
 
                             </div>
@@ -316,6 +316,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body" style="padding: 10px 20px !important;">
@@ -328,11 +329,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body border-top py-3">
-					    <div id="top_x_div" style="width: 300px; height: 200px;"></div>
-                    </div>  
+
+                    <div class="card-body border-top py-3" style="padding-bottom: 30px !important;padding-top: 30px !important;">
+                        <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
+                            <span class="text-muted" style="font-size:15px;color: #000 !important;">IR - Lucro Real</span>
+							<span class="badge badge-soft-success" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real'] : 0}}</span>	
+                        </div>
+                        <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
+                            <span class="text-muted" style="font-size:15px;color: #000 !important;">IR - Lucro Presumido</span>
+							<span class="badge badge-soft-success" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{$resumo_pecuario['imposto_presumido']}}</span>	
+                        </div>
+                        <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
+                            <span class="text-muted" style="font-size:15px;color: #000 !important;">Dedução - Lucro Real</span>
+							<span class="badge badge-soft-danger" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{($resumo_pecuario['prejuizo'] == 'S') ? ' - ' . $resumo_pecuario['lucro_real'] : 0}}</span>	
+                        </div>                                                                        
+                    </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 </div>
@@ -351,28 +364,27 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
-        google.charts.load('current', {packages: ['corechart','bar']});
+        google.charts.load('current', {packages: ['corechart','bar'], 'language': 'pt'});
         google.charts.setOnLoadCallback(receita_despesa);
-        google.charts.setOnLoadCallback(resumo_tributario);
 
         function receita_despesa() {
 
             var chartDivRD = document.getElementById('chart_div');
 
             var dataRD = new google.visualization.arrayToDataTable([
-            ['', 'Receita', 'Despesa'],
-            ['Janeiro',   @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['debito']}} @else 0 @endif],
-            ['Fevereiro', @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['debito']}} @else 0 @endif],
-            ['Março',     @if(Arr::has($resumo_financeiro, '03')) {{$resumo_financeiro['03']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '03')) {{$resumo_financeiro['03']['debito']}} @else 0 @endif],
-            ['Abril',     @if(Arr::has($resumo_financeiro, '04')) {{$resumo_financeiro['04']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '04')) {{$resumo_financeiro['04']['debito']}} @else 0 @endif],
-            ['Maio',      @if(Arr::has($resumo_financeiro, '05')) {{$resumo_financeiro['05']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '05')) {{$resumo_financeiro['05']['debito']}} @else 0 @endif],
-            ['Junho',     @if(Arr::has($resumo_financeiro, '06')) {{$resumo_financeiro['06']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '06')) {{$resumo_financeiro['06']['debito']}} @else 0 @endif],
-            ['Julho',     @if(Arr::has($resumo_financeiro, '07')) {{$resumo_financeiro['07']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '07')) {{$resumo_financeiro['07']['debito']}} @else 0 @endif],
-            ['Agosto',    @if(Arr::has($resumo_financeiro, '08')) {{$resumo_financeiro['08']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '08')) {{$resumo_financeiro['08']['debito']}} @else 0 @endif],
-            ['Setembro',  @if(Arr::has($resumo_financeiro, '09')) {{$resumo_financeiro['09']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '09')) {{$resumo_financeiro['09']['debito']}} @else 0 @endif],
-            ['Outubro',   @if(Arr::has($resumo_financeiro, '10')) {{$resumo_financeiro['10']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '10')) {{$resumo_financeiro['10']['debito']}} @else 0 @endif],
-            ['Novembro',  @if(Arr::has($resumo_financeiro, '11')) {{$resumo_financeiro['11']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '11')) {{$resumo_financeiro['11']['debito']}} @else 0 @endif],
-            ['Dezembro',  @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['credito']}} @else 0 @endif, @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['debito']}} @else 0 @endif],
+            ['', 'Receita', { role: "style" }, 'Despesa', { role: "style" }],
+            ['Janeiro',   @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '01')) {{$resumo_financeiro['01']['debito']}} @else 0 @endif, "red"],
+            ['Fevereiro', @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '02')) {{$resumo_financeiro['02']['debito']}} @else 0 @endif, "red"],
+            ['Março',     @if(Arr::has($resumo_financeiro, '03')) {{$resumo_financeiro['03']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '03')) {{$resumo_financeiro['03']['debito']}} @else 0 @endif, "red"],
+            ['Abril',     @if(Arr::has($resumo_financeiro, '04')) {{$resumo_financeiro['04']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '04')) {{$resumo_financeiro['04']['debito']}} @else 0 @endif, "red"],
+            ['Maio',      @if(Arr::has($resumo_financeiro, '05')) {{$resumo_financeiro['05']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '05')) {{$resumo_financeiro['05']['debito']}} @else 0 @endif, "red"],
+            ['Junho',     @if(Arr::has($resumo_financeiro, '06')) {{$resumo_financeiro['06']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '06')) {{$resumo_financeiro['06']['debito']}} @else 0 @endif, "red"],
+            ['Julho',     @if(Arr::has($resumo_financeiro, '07')) {{$resumo_financeiro['07']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '07')) {{$resumo_financeiro['07']['debito']}} @else 0 @endif, "red"],
+            ['Agosto',    @if(Arr::has($resumo_financeiro, '08')) {{$resumo_financeiro['08']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '08')) {{$resumo_financeiro['08']['debito']}} @else 0 @endif, "red"],
+            ['Setembro',  @if(Arr::has($resumo_financeiro, '09')) {{$resumo_financeiro['09']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '09')) {{$resumo_financeiro['09']['debito']}} @else 0 @endif, "red"],
+            ['Outubro',   @if(Arr::has($resumo_financeiro, '10')) {{$resumo_financeiro['10']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '10')) {{$resumo_financeiro['10']['debito']}} @else 0 @endif, "red"],
+            ['Novembro',  @if(Arr::has($resumo_financeiro, '11')) {{$resumo_financeiro['11']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '11')) {{$resumo_financeiro['11']['debito']}} @else 0 @endif, "red"],
+            ['Dezembro',  @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['credito']}} @else 0 @endif, "green", @if(Arr::has($resumo_financeiro, '12')) {{$resumo_financeiro['12']['debito']}} @else 0 @endif, "red"],
             ]);
 
             var formatterRD = new google.visualization.NumberFormat({
@@ -381,12 +393,12 @@
                             prefix: 'R$ ',
                         });
                         formatterRD.format(dataRD, 1);
-                        formatterRD.format(dataRD, 2);
+                        formatterRD.format(dataRD, 3);
 
             var viewRD = new google.visualization.DataView(dataRD);
 
             var optionsRD = {
-            width: 1020,
+            width: 1040,
             vAxis: { 
             //   title: "Percentage Uptime", 
               minValue: 1,
@@ -396,10 +408,10 @@
               }
             },
             legend: { position: 'none' },
-            chart: {
-                title: '',
-                subtitle: ''
-            },
+            // chart: {
+            //     title: '',
+            //     subtitle: ''
+            // },
             bar: { groupWidth: "45%" },
             };
 
@@ -407,49 +419,6 @@
             chartRD.draw(viewRD, optionsRD);
 
         };
-
-        function resumo_tributario() {
-            var chartDivRT = document.getElementById('top_x_div');
-            
-            var datRT = new google.visualization.arrayToDataTable([
-            ["", "", { role: "style" } ],
-            ["Ded. - Lucro R.", {{($resumo_pecuario['prejuizo'] == 'S') ? $resumo_pecuario['lucro_real_graph'] : 0}}, "red"],
-            ["IR - Lucro R.", {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real_graph'] : 0}}, "blue"],
-            ["IR - Lucro P.", {{$resumo_pecuario['imposto_presumido_graph']}}, "blue"],
-            ]);
-
-            var formatterRT = new google.visualization.NumberFormat({
-                            decimalSymbol: ',',
-                            groupingSymbol: '.',
-                            prefix: 'R$ ',
-                        });
-                        formatterRT.format(datRT, 1);
-                        
-            var viewRT = new google.visualization.DataView(datRT);
-       
-
-            var optionsRT = {
-            width: 315,   
-            vAxis: { 
-            //   title: "Percentage Uptime", 
-              minValue: 1,
-              viewWindowMode:'explicit',
-              viewWindow:{
-                min: 1
-              }
-            },            
-            legend: { position: 'none' },
-            chart: {
-                title: '',
-                subtitle: '' 
-            },
-            bar: { groupWidth: "30%" }
-            };
-
-            var chartRT = new google.visualization.ColumnChart(chartDivRT);
-            chartRT.draw(viewRT, optionsRT);
-
-        };   
 
     </script>
 

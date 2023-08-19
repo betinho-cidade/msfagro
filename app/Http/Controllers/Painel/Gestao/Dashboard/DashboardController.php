@@ -191,12 +191,12 @@ class DashboardController extends Controller
             'total_credito' => number_format($total_credito,2,',','.'),
             'total_debito' => number_format($total_debito,2,',','.'),
             'lucro_real' => number_format($lucro_real,2,',','.'),
-            'lucro_real_graph' => $lucro_real,
+            //'lucro_real_graph' => $lucro_real,
             'lucro_presumido' => number_format($lucro_presumido,2,',','.'),
             'imposto_real' => number_format($imposto_real,2,',','.'),
-            'imposto_real_graph' => $imposto_real,
+            //'imposto_real_graph' => $imposto_real,
             'imposto_presumido' => number_format($imposto_presumido,2,',','.'),     
-            'imposto_presumido_graph' => $imposto_presumido,     
+            //'imposto_presumido_graph' => $imposto_presumido,     
             'prejuizo' => $prejuizo,       
         ];     
 

@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
             'nota' => 'required|max:50',
             'item_texto' => 'required|max:300',
             'observacao' => 'max:1000',
-            'path_nota' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
+            'path_nota' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:5120',
             'path_comprovante' => ['nullable','mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_pagamento ?? '')],
         ];
     }
@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
             'item_texto.max' => 'O tamanho máximo permitido para o Item Fiscal é de 300 caracteres.',
             'observacao.max' => 'O tamanho máximo permitido para a Observação é de 1.000 caracteres.',
             'path_nota.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para a Nota Fiscal',
-            'path_nota.max' => 'O tamanho máximo permitido para a Nota Fiscal é de 1Mb.',
+            'path_nota.max' => 'O tamanho máximo permitido para a Nota Fiscal é de 5Mb.',
             'path_comprovante.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para o comprovante de pagamento',
             'path_comprovante.max' => 'O tamanho máximo permitido para o Comprovante de Pagamento é de 1Mb.',
         ];

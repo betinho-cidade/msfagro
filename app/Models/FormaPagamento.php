@@ -75,11 +75,29 @@ class FormaPagamento extends Model
 
     public function getFormaAttribute()
     {
-        $forma = (($this->produtor) ? Str::limit($this->produtor->nome, 20, '...') : 'Sem Produtor') . ' [' . $this->tipo_conta_texto . '] ';
 
-        $forma = $forma . (($this->banco) ? ' [' . Str::limit($this->banco, 20, '...'). ']' : '');
-        $forma = $forma . (($this->agencia) ? ' [age: ' . $this->agencia . ']' : '');
-        $forma = $forma . (($this->conta) ? ' [cta: ' . $this->conta . ']' : '');
+        $forma = (($this->produtor) ? Str::of($this->produtor->nome)->explode(' ')[0] : '') . ' [' . $this->tipo_conta_texto . '] ';
+
+        $banco = (($this->banco) ? Str::limit($this->banco, 20, '...') : '');
+        $agencia = (($this->agencia) ? $this->agencia : '');
+        $conta = (($this->conta) ? $this->conta : '');
+
+        if($banco && $agencia && $conta){
+            $forma = $forma . '[' . $banco . ': ' . $agencia . '/' . $conta . ']';
+        } else if($banco && $agencia && !$conta){
+            $forma = $forma . '[' . $banco . ': ' . $agencia . ']';
+        } else if($banco && !$agencia && $conta){
+            $forma = $forma . '[' . $banco . ': ' . $conta . ']';
+        } else if(!$banco && $agencia && $conta){
+            $forma = $forma . '[' . $agencia . '/' . $conta . ']';
+        } else if($banco && !$agencia && !$conta){
+            $forma = $forma . '[' . $banco . ']';
+        } else if(!$banco && $agencia && !$conta){
+            $forma = $forma . '[ag: ' . $agencia . ']';
+        } else if(!$banco && !$agencia && $conta){
+            $forma = $forma . '[conta: ' . $conta . ']';
+        }          
+
         $forma = $forma . (($this->pix) ? ' [pix: ' . $this->pix . ']' : '');
 
         return $forma;

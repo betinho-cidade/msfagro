@@ -49,7 +49,7 @@ class Produtor extends Model
 
     public function getNomeReduzidoAttribute()
     {
-        $nome_reduzido =  Str::limit($this->nome, 15, '...');
+        $nome_reduzido =  Str::limit($this->nome, 37, '...');
 
         return $nome_reduzido;
     }

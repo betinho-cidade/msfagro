@@ -17,6 +17,7 @@ class CreateEmpresasTable extends Migration
             $table->string('cpf_cnpj', 14);
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();
+            $table->unique(['cliente_id', 'cpf_cnpj'], 'empresa_uk');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });
     }

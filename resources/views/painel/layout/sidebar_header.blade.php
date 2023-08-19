@@ -2,10 +2,10 @@
                 <div class="navbar-header">
                     <div class="d-flex">
                         <!-- LOGO -->
-                        <div class="navbar-brand-box" style="text-align: center;">
+                        <div class="navbar-brand-box" style="text-align: center;padding:0;">
                             <a href="{{route('painel')}}" class="logo logo-dark">
-                                <span class="logo-sm">
-                                    <img src="{{asset('nazox/assets/images/logo-sm-dark.png')}}" alt="" height="28">
+                                <span class="logo-sm" style="color: #fff;">
+                                        AGRO
                                 </span>
                                 <span class="logo-lg">
                                     <img style="max-width: 120px;" src="{{asset('nazox/assets/images/logo-dark.png')}}" alt="" height="">
@@ -13,8 +13,8 @@
                             </a>
 
                             <a href="{{route('painel')}}" class="logo logo-light">
-                                <span class="logo-sm">
-                                    <img src="{{asset('nazox/assets/images/logo-sm-light.png')}}" alt="" height="28">
+                                <span class="logo-sm" style="color: #fff;">
+                                        AGRO
                                 </span>
                                 <span class="logo-lg">
                                     <img style="max-width: 120px;" src="{{asset('nazox/assets/images/logo-light.png')}}" alt="" height="">

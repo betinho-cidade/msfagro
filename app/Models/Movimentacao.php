@@ -126,4 +126,9 @@ class Movimentacao extends Model
 
     }    
 
+    public function getLinkNotaAttribute()
+    {
+        return ($this->path_nota) ? route('movimentacao.download', ['movimentacao' => $this->id, 'tipo_documento' => 'NT']) : '';
+    }
+
 }
