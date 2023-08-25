@@ -20,6 +20,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 
 class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize, WithStyles, WithEvents
@@ -31,6 +32,11 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
     public function __construct(Array $params)
     {
+        if(Gate::denies('view_relatorio')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
         $this->search = $params;
         $this->contHeader = 1;
         $this->contRows = 0;

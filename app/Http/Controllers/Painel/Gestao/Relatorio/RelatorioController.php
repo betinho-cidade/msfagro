@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Excel;
 use App\Exports\MovimentacaosGestaoExport;
+use App\Exports\MovimentacaosGestaoPdfExport;
 
 
 class RelatorioController extends Controller
@@ -165,13 +166,6 @@ class RelatorioController extends Controller
 
         $user = Auth()->User();
 
-        // if(!$user->cliente){
-        //     $request->session()->flash('message.level', 'warning');
-        //     $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-
-        //     return redirect()->route('painel');
-        // }
-
         if(!$request->search){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Necessário realizar uma busca inicialmente.');
@@ -179,7 +173,7 @@ class RelatorioController extends Controller
             return redirect()->route('relatorio_gestao.index');
         }
 
-        return Excel::download(new MovimentacaosGestaoExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return Excel::download(new MovimentacaosGestaoPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }        
 
 }

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Excel;
 use App\Exports\MovimentacaosExport;
+use App\Exports\MovimentacaosPdfExport;
 
 
 class RelatorioController extends Controller
@@ -258,7 +259,7 @@ class RelatorioController extends Controller
             return redirect()->route('relatorio.index');
         }
 
-        return Excel::download(new MovimentacaosExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return Excel::download(new MovimentacaosPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }        
 
 

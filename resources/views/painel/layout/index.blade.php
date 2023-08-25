@@ -5,7 +5,7 @@
     @includeif('painel.layout.head')
 	<!-- Cityinbag - Head FIM-->
 
-    <body data-sidebar="dark">
+    <body data-sidebar="dark" class="sidebar-enable vertical-collpsed">
 
         <!-- Loader -->
         {{-- <div id="preloader">

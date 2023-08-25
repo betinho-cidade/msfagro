@@ -253,10 +253,10 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="overflow-x: auto;">
                     <h4 class="card-title" style="padding-top: 5px; margin-bottom: 0; font-size: 16px;">Receitas x Despesas</h4>
                     <div class="grafico-receitas-despesas"> 
-                        <div id="chart_div" style="width: 100%; height: 350px;"></div>
+                        <div id="chart_div"></div>
                     </div>
                 </div>
             </div>
@@ -332,6 +332,10 @@
 
                     <div class="card-body border-top py-3" style="padding-bottom: 30px !important;padding-top: 30px !important;">
                         <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
+                            <span class="text-muted" style="font-size:15px;color: #000 !important;">Dedução - Lucro Real</span>
+							<span class="badge badge-soft-danger" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{($resumo_pecuario['prejuizo'] == 'S') ? ' - ' . $resumo_pecuario['lucro_real'] : 0}}</span>	
+                        </div>                       
+                        <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
                             <span class="text-muted" style="font-size:15px;color: #000 !important;">IR - Lucro Real</span>
 							<span class="badge badge-soft-success" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real'] : 0}}</span>	
                         </div>
@@ -339,14 +343,30 @@
                             <span class="text-muted" style="font-size:15px;color: #000 !important;">IR - Lucro Presumido</span>
 							<span class="badge badge-soft-success" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{$resumo_pecuario['imposto_presumido']}}</span>	
                         </div>
-                        <div class="text-truncate" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #eff2f7;">
-                            <span class="text-muted" style="font-size:15px;color: #000 !important;">Dedução - Lucro Real</span>
-							<span class="badge badge-soft-danger" style="font-size: 14px; padding: 5px 10px !important; float: right;">R$ {{($resumo_pecuario['prejuizo'] == 'S') ? ' - ' . $resumo_pecuario['lucro_real'] : 0}}</span>	
-                        </div>                                                                        
                     </div>
                 </div>
             </div>            
         </div>
+        <div class="row">
+        <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body" style="padding: 10px 20px !important;">
+                        <div class="media">
+                            <div class="media-body overflow-hidden">
+                                <h4 class="mb-0" style="padding-top: 7px;">Qual melhor?</h4>
+                            </div>
+                            <div class="text-primary">
+                                <i class="ri-line-chart-fill font-size-24" style="color: #957c49;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body border-top py-3" style="overflow-x: auto;">
+					    <div id="top_x_div"></div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 <!-- end row -->	
@@ -366,6 +386,7 @@
     <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart','bar'], 'language': 'pt'});
         google.charts.setOnLoadCallback(receita_despesa);
+        google.charts.setOnLoadCallback(resumo_tributario);        
 
         function receita_despesa() {
 
@@ -398,7 +419,10 @@
             var viewRD = new google.visualization.DataView(dataRD);
 
             var optionsRD = {
-            width: 1040,
+            chartArea: {
+                width: '90%'
+            },                
+            width: '100%',
             vAxis: { 
             //   title: "Percentage Uptime", 
               minValue: 1,
@@ -412,13 +436,59 @@
             //     title: '',
             //     subtitle: ''
             // },
-            bar: { groupWidth: "45%" },
+            bar: { groupWidth: "65%" },
             };
 
             var chartRD = new google.visualization.ColumnChart(chartDivRD);
             chartRD.draw(viewRD, optionsRD);
 
         };
+
+        function resumo_tributario() {
+            var chartDivRT = document.getElementById('top_x_div');
+            
+            var datRT = new google.visualization.arrayToDataTable([
+            ["", "", { role: "style" } ],
+            ["Dedução - Lucro Real", {{($resumo_pecuario['prejuizo'] == 'S') ? $resumo_pecuario['lucro_real_graph'] : 0}}, "red"],
+            ["IR - Lucro Real", {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['imposto_real_graph'] : 0}}, "blue"],
+            ["IR - Lucro Presumido", {{$resumo_pecuario['imposto_presumido_graph']}}, "blue"],
+            ]);
+
+            var formatterRT = new google.visualization.NumberFormat({
+                            decimalSymbol: ',',
+                            groupingSymbol: '.',
+                            prefix: 'R$ ',
+                        });
+                        formatterRT.format(datRT, 1);
+                        
+            var viewRT = new google.visualization.DataView(datRT);
+       
+
+            var optionsRT = {
+            chartArea: {
+                width: '90%'
+            },                
+            width: '100%',
+            vAxis: { 
+            //   title: "Percentage Uptime", 
+              minValue: 1,
+            //   viewWindowMode:'explicit',
+            //   viewWindow:{
+            //     min: 1
+            //   }
+            },            
+            legend: { position: 'none' },
+            chart: {
+                title: '',
+                subtitle: '' 
+            },
+            bar: { groupWidth: "30%" }
+            };
+
+            var chartRT = new google.visualization.ColumnChart(chartDivRT);
+            chartRT.draw(viewRT, optionsRT);
+
+        };           
 
     </script>
 
