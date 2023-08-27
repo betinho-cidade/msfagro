@@ -271,7 +271,7 @@
     <div class="col-xl-12" style="padding:0;">
 	    <h4 style="text-align:center;margin-bottom:12px;">Resumo Tributário</h4>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card" style="min-height: 255px;">
                     <div class="card-body" style="padding: 25px 20px !important;">
                         <div class="media">
@@ -296,7 +296,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card" style="min-height: 255px;">
                     <div class="card-body" style="padding: 25px 20px !important;">
                         <div class="media">
@@ -317,7 +317,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card">
                     <div class="card-body" style="padding: 10px 20px !important;">
                         <div class="media">
@@ -345,7 +345,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>             -->
+
         </div>
         <div class="row">
         <div class="col-md-12">
