@@ -24,6 +24,8 @@ use Excel;
 use App\Exports\MovimentacaosGestaoExport;
 use App\Exports\MovimentacaosGestaoPdfExport;
 
+use PDF;
+
 
 class RelatorioController extends Controller
 {
@@ -156,6 +158,24 @@ class RelatorioController extends Controller
         return Excel::download(new MovimentacaosGestaoExport($request->search), 'movimentos.xlsx');
     }    
 
+    // public function pdf(Request $request)
+    // {
+    //     if(Gate::denies('view_relatorio_gestao')){
+    //         abort('403', 'Página não disponível');
+    //         //return redirect()->back();
+    //     }
+
+    //     $user = Auth()->User();
+
+    //     if(!$request->search){
+    //         $request->session()->flash('message.level', 'warning');
+    //         $request->session()->flash('message.content', 'Necessário realizar uma busca inicialmente.');
+
+    //         return redirect()->route('relatorio_gestao.index');
+    //     }
+
+    //     return Excel::download(new MovimentacaosGestaoPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    // }        
 
     public function pdf(Request $request)
     {
@@ -173,7 +193,57 @@ class RelatorioController extends Controller
             return redirect()->route('relatorio_gestao.index');
         }
 
-        return Excel::download(new MovimentacaosGestaoPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
-    }        
+        $search = $request->search;
+
+        $movimentacaos = Movimentacao::where(function($query) use ($search){
+                                            if($search['segmento']){
+                                                $query->where('segmento', $search['segmento']);
+                                            }
+
+                                            if($search['tipo_movimentacao']){
+                                                $query->where('tipo', $search['tipo_movimentacao']);
+                                            }
+
+                                            if($search['cliente']){
+                                                $query->where('cliente_id', $search['cliente']);
+                                            }
+
+                                            if($search['item_texto']){
+                                                $query->where('item_texto', 'like', '%' . $search['item_texto'] . '%');
+                                            }                                            
+
+                                            if($search['data_inicio'] && $search['data_fim']){
+                                                $query->where('data_programada', '>=', $search['data_inicio']);
+                                                $query->where('data_programada', '<=', $search['data_fim']);
+                                            } elseif($search['data_inicio']){
+                                                $query->where('data_programada', '>=', $search['data_inicio']);
+                                            } elseif($search['data_fim']){
+                                                $query->where('data_programada', '<=', $search['data_fim']);
+                                            }
+                                        })
+                                        ->orderBy('movimentacaos.tipo', 'desc') // primeiro por Despesa, depois por Receita
+                                        ->orderBy('movimentacaos.data_programada', 'asc')
+                                        ->get();        
+    
+        $receita = $movimentacaos->where('tipo', '=', 'R')->sum('valor');
+        $despesa = $movimentacaos->where('tipo', '=', 'D')->sum('valor');
+        $total = $receita - $despesa;
+        $saldo = ($total >= 0) ? 'P' : 'N';
+
+        $resultado_final = [
+            'receita' => $receita,
+            'despesa' => $despesa,
+            'total' => $total,
+            'saldo' => $saldo,
+        ];
+
+        $download = '';
+        $dompdf = PDF::loadView('painel.gestao.relatorio.relatorio', compact('movimentacaos','resultado_final','user'));
+        $dompdf->setPaper('a4', 'landscape');
+        
+        return $dompdf->download('movimentacoes.pdf');
+        //return Excel::download(new MovimentacaosGestaoPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }            
+
 
 }
