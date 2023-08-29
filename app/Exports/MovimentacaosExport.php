@@ -290,7 +290,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                 $event->sheet->getDelegate()->getColumnDimension('O')->setWidth(40);
 
                 // Cabeçalho
-                $event->sheet->getDelegate()->getStyle('A'.$this->contHeader.':M'.$this->contHeader)
+                $event->sheet->getDelegate()->getStyle('A'.$this->contHeader.':O'.$this->contHeader)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -298,7 +298,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
                 // Linhas Despesas
                 if($this->contDespesa > 0) {
-                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + 1).':M'.($this->contHeader + $this->contDespesa))
+                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + 1).':O'.($this->contHeader + $this->contDespesa))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -307,7 +307,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
                 // Linhas Receitas
                 if($this->contReceita > 0) {
-                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + $this->contDespesa + 1).':M'.($this->contHeader + $this->contDespesa + $this->contReceita))
+                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + $this->contDespesa + 1).':O'.($this->contHeader + $this->contDespesa + $this->contReceita))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
