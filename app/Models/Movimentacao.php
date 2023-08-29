@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 
 class Movimentacao extends Model
@@ -131,4 +132,18 @@ class Movimentacao extends Model
         return ($this->path_nota) ? route('movimentacao.download', ['movimentacao' => $this->id, 'tipo_documento' => 'NT']) : '';
     }
 
+    public function getLinkNotaGuestAttribute()
+    {
+        if($this->path_nota){
+
+            $link = route('download', ['nota' => Crypt::encryptString($this->id)]);
+
+            return $link;            
+
+        } else {
+            return '';
+        }
+    }    
+
 }
+

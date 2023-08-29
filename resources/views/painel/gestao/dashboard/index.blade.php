@@ -421,7 +421,7 @@
 
             var optionsRD = {
             chartArea: {
-                width: '90%'
+                width: '100%'
             },                
             width: '100%',
             vAxis: { 
@@ -467,7 +467,7 @@
 
             var optionsRT = {
             chartArea: {
-                width: '90%'
+                width: '100%'
             },                
             width: '100%',
             vAxis: { 

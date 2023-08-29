@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -23,7 +24,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 
 
-class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize, WithStyles, WithEvents
+class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, WithStyles, WithEvents
 {
 
     use Exportable;
@@ -52,10 +53,13 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
             'ID',
             'Data Programada',
             'Data Pagamento',            
+            'Categoria',
             'Tipo Movimentação',
             'Valor',            
             'Segmento',
             'Produtor',
+            'Qtd.Machos',
+            'Qtd.Fêmeas',            
             'Empresa',
             'Item',
             'Forma Pagamento',
@@ -69,10 +73,10 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
         if(!($movimentacao instanceof Movimentacao) && isset($movimentacao['is_summary']) && $movimentacao['is_summary']===true){
             return [
                 [],
-                ['','','','Total Despesa', $movimentacao['total_despesa']],
-                ['','','','Total Receita', $movimentacao['total_receita']],                
+                ['','','','','Total Despesa', $movimentacao['total_despesa']],
+                ['','','','','Total Receita', $movimentacao['total_receita'],'','Mov: Machos/Fêmeas', $movimentacao['total_machos'], $movimentacao['total_femeas']],                               
                 [],
-                ['','','','Resultado', $movimentacao['total_geral']],
+                ['','','','','Resultado', $movimentacao['total_geral'],'','Total Bovinos', $movimentacao['total_bovinos']],
             ];
           }else{
             if ($movimentacao instanceof Movimentacao){
@@ -80,15 +84,18 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                     $movimentacao->id,
                     Date::stringToExcel($movimentacao->data_programada_formatada),
                     Date::stringToExcel($movimentacao->data_pagamento_formatada),                                    
+                    $movimentacao->categoria->nome,
                     $movimentacao->tipo_movimentacao_texto,
                     $movimentacao->valor ?? 0,
                     $movimentacao->segmento_texto,
                     $movimentacao->produtor->nome_produtor ?? '...',
+                    ($movimentacao->segmento == 'MG' && ($movimentacao->efetivo->tipo == 'CP' || $movimentacao->efetivo->tipo == 'VD')) ? $movimentacao->efetivo->qtd_macho : '',
+                    ($movimentacao->segmento == 'MG' && ($movimentacao->efetivo->tipo == 'CP' || $movimentacao->efetivo->tipo == 'VD')) ? $movimentacao->efetivo->qtd_femea : '',
                     $movimentacao->empresa->nome_empresa ?? '...',
                     $movimentacao->item_texto,
                     $movimentacao->forma_pagamento->forma,
                     $movimentacao->nota,
-                    $movimentacao->link_nota
+                    $movimentacao->link_nota_guest
                 ];
             }
           }
@@ -108,6 +115,14 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                                             } else if($search['segmento']){
                                                 $query->where('segmento', $search['segmento']);
                                             }
+
+                                            if($search['movimentacao']){
+                                                if($search['movimentacao'] == 'F'){
+                                                    $query->whereNull('data_pagamento');
+                                                }else if($search['movimentacao'] == 'E'){
+                                                    $query->whereNotNull('data_pagamento');
+                                                }
+                                            }                                            
 
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
@@ -149,6 +164,9 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
         $total_despesa = 0;
         $total_receita = 0;
         $total_geral = 0;
+
+        $total_machos = 0;
+        $total_femeas = 0;        
       
         foreach($movimentacaos as $row){
 
@@ -162,6 +180,16 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
             if($row->tipo == 'R'){
                 $total_receita+=$row->valor;
                 $this->contReceita += 1;
+            }    
+            
+            if($row->segmento == 'MG'){
+                if($row->efetivo->tipo == 'CP'){
+                    $total_machos = $total_machos + ($row->efetivo->qtd_macho ?? 0);
+                    $total_femeas = $total_femeas + ($row->efetivo->qtd_femea ?? 0);
+                } else if($row->efetivo->tipo == 'VD'){
+                    $total_machos = $total_machos - ($row->efetivo->qtd_macho ?? 0);
+                    $total_femeas = $total_femeas - ($row->efetivo->qtd_femea ?? 0);
+                }
             }            
         }
 
@@ -169,7 +197,10 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
           'is_summary'=>true,
           'total_despesa'=>$total_despesa,
           'total_receita'=>$total_receita,
-          'total_geral'=> ($total_receita - $total_despesa)
+          'total_geral'=> ($total_receita - $total_despesa),
+          'total_machos'=>$total_machos,
+          'total_femeas'=>$total_femeas,
+          'total_bovinos'=>($total_machos+ $total_femeas),          
         ];
 
         $this->resultado = $total_receita - $total_despesa;
@@ -180,7 +211,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
     public function columnFormats(): array
     {
         return [
-            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'B' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
@@ -188,8 +219,15 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
     public function styles(Worksheet $sheet)
     {
-        $cel_resultado = 'D' . ($this->contHeader + $this->contRows + 5);
-        $celula_valor  = 'E' . ($this->contHeader + $this->contRows + 5);
+        $cel_resultado = 'E' . ($this->contHeader + $this->contRows + 5);
+        $celula_valor  = 'F' . ($this->contHeader + $this->contRows + 5);
+
+        $celula_texto  = 'H' . ($this->contHeader + $this->contRows + 3); 
+        $celula_macho  = 'I' . ($this->contHeader + $this->contRows + 3);    
+        $celula_femea  = 'J' . ($this->contHeader + $this->contRows + 3);    
+
+        $cel_quantidade = 'H' . ($this->contHeader + $this->contRows + 5);
+        $celula_total  = 'I' . ($this->contHeader + $this->contRows + 5);         
 
         return [
             // Style the first row as bold text.
@@ -200,13 +238,31 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
             'B' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                    
             'C' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                    
             'D' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                            
-            'F' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                                        
+            'E' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                            
+            'G' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                                        
+            'I' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                                        
+            'J' => ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]],                                                                    
             $cel_resultado => ['font' => ['bold' => true, 'size' => 14],
                     'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
                     ],                    
             $celula_valor => ['font' => ['bold' => true, 'size' => 14],
                     'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
-                    ],                     
+                    ],  
+                    $celula_texto => ['font' => ['bold' => true, 'size' => 12],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+                    ],                        
+            $celula_macho => ['font' => ['bold' => true, 'size' => 12],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+                    ],    
+            $celula_femea => ['font' => ['bold' => true, 'size' => 12],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+                    ],    
+            $cel_quantidade => ['font' => ['bold' => true, 'size' => 14],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+                    ],    
+            $celula_total => ['font' => ['bold' => true, 'size' => 14],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+                    ],                                                               
         ];
     }
 
@@ -214,8 +270,27 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
     {
         return [
             AfterSheet::class=> function(AfterSheet $event) {
+
+                $event->sheet->setAutoFilter('A1:O1');
+
+                $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(5);
+                $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(15);
+                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(15);
+                $event->sheet->getDelegate()->getColumnDimension('D')->setWidth(20);
+                $event->sheet->getDelegate()->getColumnDimension('E')->setWidth(20);
+                $event->sheet->getDelegate()->getColumnDimension('F')->setWidth(25);
+                $event->sheet->getDelegate()->getColumnDimension('G')->setWidth(20);
+                $event->sheet->getDelegate()->getColumnDimension('H')->setWidth(40);
+                $event->sheet->getDelegate()->getColumnDimension('I')->setWidth(20);
+                $event->sheet->getDelegate()->getColumnDimension('J')->setWidth(20);
+                $event->sheet->getDelegate()->getColumnDimension('K')->setWidth(40);
+                $event->sheet->getDelegate()->getColumnDimension('L')->setWidth(40);
+                $event->sheet->getDelegate()->getColumnDimension('M')->setWidth(40);
+                $event->sheet->getDelegate()->getColumnDimension('N')->setWidth(40);
+                $event->sheet->getDelegate()->getColumnDimension('O')->setWidth(40);
+
                 // Cabeçalho
-                $event->sheet->getDelegate()->getStyle('A'.$this->contHeader.':L'.$this->contHeader)
+                $event->sheet->getDelegate()->getStyle('A'.$this->contHeader.':M'.$this->contHeader)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -223,7 +298,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
                 // Linhas Despesas
                 if($this->contDespesa > 0) {
-                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + 1).':L'.($this->contHeader + $this->contDespesa))
+                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + 1).':M'.($this->contHeader + $this->contDespesa))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -232,7 +307,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
                 // Linhas Receitas
                 if($this->contReceita > 0) {
-                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + $this->contDespesa + 1).':L'.($this->contHeader + $this->contDespesa + $this->contReceita))
+                    $event->sheet->getDelegate()->getStyle('A'.($this->contHeader + $this->contDespesa + 1).':M'.($this->contHeader + $this->contDespesa + $this->contReceita))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -240,7 +315,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                 }   
 
                 // Total de Despesas
-                $event->sheet->getDelegate()->getStyle('D'.($this->contHeader + $this->contRows + 2).':E'.($this->contHeader + $this->contRows + 2))
+                $event->sheet->getDelegate()->getStyle('E'.($this->contHeader + $this->contRows + 2).':F'.($this->contHeader + $this->contRows + 2))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
@@ -248,18 +323,56 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
 
                 // Total de Receitas
-                $event->sheet->getDelegate()->getStyle('D'.($this->contHeader + $this->contRows + 3).':E'.($this->contHeader + $this->contRows + 3))
+                $event->sheet->getDelegate()->getStyle('E'.($this->contHeader + $this->contRows + 3).':F'.($this->contHeader + $this->contRows + 3))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('C4E59F');    
                         
                 // Total Geral
-                $event->sheet->getDelegate()->getStyle('E'.($this->contHeader + $this->contRows + 5).':E'.($this->contHeader + $this->contRows + 5))
+                $event->sheet->getDelegate()->getStyle('F'.($this->contHeader + $this->contRows + 5).':F'.($this->contHeader + $this->contRows + 5))
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
-                        ->setARGB(($this->resultado >=0 ? 'C4E59F' : 'FF9B9B'));                                                
+                        ->setARGB(($this->resultado >=0 ? 'C4E59F' : 'FF9B9B'));   
+
+                // Total de Machos
+                $event->sheet->getDelegate()->getStyle('I'.($this->contHeader + $this->contRows + 3).':I'.($this->contHeader + $this->contRows + 3))
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('D9D9D9');       
+                        
+                // Total de Fêmeas
+                $event->sheet->getDelegate()->getStyle('J'.($this->contHeader + $this->contRows + 3).':J'.($this->contHeader + $this->contRows + 3))
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('D9D9D9');                                                    
+
+                // Quantidade Bovinos
+                $event->sheet->getDelegate()->getStyle('I'.($this->contHeader + $this->contRows + 5).':I'.($this->contHeader + $this->contRows + 5))
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('D9D9D9');                         
+
+                        
+                foreach ($event->sheet->getColumnIterator('M') as $row) {
+                    foreach ($row->getCellIterator() as $cell) {
+                        if (str_contains($cell->getValue() ?? '', '://')) {
+                            $cell->setHyperlink(new Hyperlink($cell->getValue(), 'Read'));
+
+                             // Upd: Link styling added
+                             $event->sheet->getStyle($cell->getCoordinate())->applyFromArray([
+                                'font' => [
+                                    'color' => ['rgb' => '0000FF'],
+                                    'underline' => 'single'
+                                ]
+                            ]);
+                        }
+                    }
+                };                        
   
             },
         ];

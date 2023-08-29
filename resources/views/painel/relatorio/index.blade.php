@@ -42,10 +42,19 @@
                             <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
                         </div>                          
 
-                        <div class="col-md-6"  style="padding-right: 0;">
+                        <div class="col-md-4"  style="padding-right: 0;">
                             <label for="item_texto" style="margin: 0 0 0 2px;">Item Fiscal</label>
                             <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
                         </div>  
+
+                        <div class="col-md-2"  style="padding-right: 0;">
+                            <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
+                            <select id="movimentacao" name="movimentacao" class="form-control">
+                                <option value="">---</option>
+                                <option value="E" {{($search && $search['movimentacao'] == 'E') ? 'selected' : '' }}>Efetiva</option>
+                                <option value="F" {{($search && $search['movimentacao'] == 'F') ? 'selected' : '' }}>Futura</option>
+                            </select>
+                        </div>                           
                     </div>
 
                     <div class="row" style="margin-top: 10px;width: 100%;">

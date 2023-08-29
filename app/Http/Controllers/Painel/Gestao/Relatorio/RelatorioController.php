@@ -84,6 +84,7 @@ class RelatorioController extends Controller
         if($request->has('data_inicio') ||
             $request->has('data_fim') ||
             $request->has('item_texto') ||
+            $request->has('movimentacao') ||
             $request->has('tipo_movimentacao') ||
             $request->has('segmento') ||
             $request->has('cliente')
@@ -92,6 +93,7 @@ class RelatorioController extends Controller
                 'data_inicio' => ($request->data_inicio) ? $request->data_inicio : '',
                 'data_fim' => ($request->data_fim) ? $request->data_fim : '',
                 'item_texto' => ($request->item_texto) ? $request->item_texto : '',
+                'movimentacao' => ($request->movimentacao) ? $request->movimentacao : '',
                 'tipo_movimentacao' => ($request->tipo_movimentacao) ? $request->tipo_movimentacao : '',
                 'segmento' => ($request->segmento) ? $request->segmento : '',
                 'cliente' => ($request->cliente) ? $request->cliente : '',
@@ -105,9 +107,17 @@ class RelatorioController extends Controller
                                                 $query->where('segmento', $search['segmento']);
                                             }
 
+                                            if($search['movimentacao']){
+                                                if($search['movimentacao'] == 'F'){
+                                                    $query->whereNull('data_pagamento');
+                                                }else if($search['movimentacao'] == 'E'){
+                                                    $query->whereNotNull('data_pagamento');
+                                                }
+                                            }
+
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
-                                            }
+                                            }                                            
 
                                             if($search['cliente']){
                                                 $query->where('cliente_id', $search['cliente']);
@@ -200,9 +210,17 @@ class RelatorioController extends Controller
                                                 $query->where('segmento', $search['segmento']);
                                             }
 
+                                            if($search['movimentacao']){
+                                                if($search['movimentacao'] == 'F'){
+                                                    $query->whereNull('data_pagamento');
+                                                }else if($search['movimentacao'] == 'E'){
+                                                    $query->whereNotNull('data_pagamento');
+                                                }
+                                            }
+
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
-                                            }
+                                            }                                            
 
                                             if($search['cliente']){
                                                 $query->where('cliente_id', $search['cliente']);

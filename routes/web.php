@@ -189,6 +189,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::group(['namespace' => 'Guest'], function(){
 
+    Route::get('/download', 'DownloadController@download')->name('download');
+
     Route::group(['namespace' => 'ResetPassword'], function(){
         Route::get('/forget-password', 'ForgotPasswordController@getEmail')->name('forgot.password');
         Route::post('/forget-password', 'ForgotPasswordController@postEmail')->name('forgot.reset');

@@ -175,11 +175,13 @@
                             <th style="align:center">Data</th>
                             <th style="align:center">Cliente</th>
                             <th style="align:center">Tipo</th>
+                            <th style="align:center">Categoria</th>
                             <th style="align:center">Valor</th>
                             <th style="align:center">Item</th>
                             <th style="align:center">Empresa</th>
                             <th style="align:center">Forma Pagamento</th>
                             <th style="align:center">Produtor</th>
+                            <th style="align:center">Nota</th>
                         </tr>
                         </thead>
 
@@ -189,11 +191,17 @@
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->cliente->nome_cliente ?? '...' }}</td>
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->tipo_movimentacao_texto}}</td>                            
+                            <td style="text-align:center;font-size:12px;">{{$movimentacao->categoria->nome ?? '...'}}</td>                                                        
                             <td style="text-align:center;font-size:12px;">R$ {{number_format($movimentacao->valor, 2, ',', '.')}}</td>                            
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->item_texto}}</td>
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->empresa->nome_empresa ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->forma_pagamento->forma ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->produtor->nome_produtor ?? '...' }}</td>
+                            <td style="text-align:center;font-size:12px;">
+                              @if($movimentacao->link_nota)
+                                <a href="{{$movimentacao->link_nota_guest}}"><img src="https://adm.mfsagro.com.br/images/clips.png"></a>
+                              @endif
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>
