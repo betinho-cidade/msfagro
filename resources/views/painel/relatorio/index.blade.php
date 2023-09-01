@@ -49,7 +49,7 @@
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
-                            <select id="movimentacao" name="movimentacao" class="form-control">
+                            <select id="movimentacao" name="movimentacao" class="form-control"> 
                                 <option value="">---</option>
                                 <option value="E" {{($search && $search['movimentacao'] == 'E') ? 'selected' : '' }}>Efetiva</option>
                                 <option value="F" {{($search && $search['movimentacao'] == 'F') ? 'selected' : '' }}>Futura</option>
@@ -115,12 +115,15 @@
                 </form>
 
                 <div class="titulo-com-icones" style="margin-top: 25px;">
-                    <span style="float: right">
+                    <div class="exportar-titulo-e-icones" style="padding-bottom: 10px; margin-top: -10px;">
+                        <span style="float: right">
+                            <span style="display: block;">Exportar para</span>
                         <!-- <a href="{{route('relatorio.index')}}"><i class="nav-icon fas fa-arrow-left" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="relatorio / Movimentação Fiscal do Cliente"></i></a> -->
                         <a href="{{route('relatorio.excell', compact('search'))}}" style="font-size: 20px;border-right: 1px solid #e1e1e1; margin-right: 5px; padding-right: 5px;"><i class="nav-icon fas fa-file-excel" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="Excell"></i></a>
                         <a href="{{route('relatorio.pdf', compact('search'))}}" style="font-size: 20px;border-right: 1px solid #e1e1e1; margin-right: 5px; padding-right: 5px;"><i class="nav-icon fas fa-file-pdf" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="PDF"></i></a>
                         <a href="{{route('painel')}}"><i class="nav-icon fas fa-sync-alt" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="Limpar pesquisa"></i></a>
-                    </span>
+                        </span>
+                    </div>
                     <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
                     <p class="card-title-desc"></p>
                 </div>    

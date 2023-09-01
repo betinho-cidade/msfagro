@@ -168,6 +168,10 @@
 
   <body translate="no">
 
+    <div style="width:100%; text-align:center; margin-bottom:20px;">
+      <img src="https://mfsagro.com.br/wp-content/uploads/2022/06/logo_maior.png" style="max-width:200px;">
+    </div>
+
     <div class="tab-pane active" id="lancamento" role="tabpanel">
                     <table id="dt_lancamentos" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -197,7 +201,7 @@
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->produtor->nome_produtor ?? '...' }}</td>
                             <td style="text-align:center;font-size:12px;">
                               @if($movimentacao->link_nota_guest)
-                                <a href="{{$movimentacao->link_nota_guest}}"><img src="https://adm.mfsagro.com.br/images/clips.png"></a>
+                                <a href="{{$movimentacao->link_nota_guest}}"><img src="https://adm.mfsagro.com.br/images/clips.png" style="max-width:17px;"></a>
                               @endif
                             </td>                            
                         </tr>

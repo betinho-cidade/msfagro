@@ -5,7 +5,7 @@
                         <div class="navbar-brand-box" style="text-align: center;padding:0;">
                             <a href="{{route('painel')}}" class="logo logo-dark">
                                 <span class="logo-sm" style="color: #fff;">
-                                        AGRO
+                                    <img style="max-width: 50px;" src="{{asset('nazox/assets/images/logo-sm-light.png')}}" alt="" height="">
                                 </span>
                                 <span class="logo-lg">
                                     <img style="max-width: 120px;" src="{{asset('nazox/assets/images/logo-dark.png')}}" alt="" height="">
@@ -14,7 +14,7 @@
 
                             <a href="{{route('painel')}}" class="logo logo-light">
                                 <span class="logo-sm" style="color: #fff;">
-                                        AGRO
+                                    <img style="max-width: 50px;" src="{{asset('nazox/assets/images/logo-sm-light.png')}}" alt="" height="">
                                 </span>
                                 <span class="logo-lg">
                                     <img style="max-width: 120px;" src="{{asset('nazox/assets/images/logo-light.png')}}" alt="" height="">
