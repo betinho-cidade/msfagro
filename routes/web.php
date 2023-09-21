@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/', 'PainelController@index')->name('painel');
         Route::post('/js_viacep', 'PainelController@js_viacep')->name('painel.js_viacep');
+        Route::post('/js_menu_aberto', 'PainelController@js_menu_aberto')->name('painel.js_menu_aberto');
+        Route::post('/js_cnpj', 'PainelController@js_cnpj')->name('painel.js_cnpj');
 
         Route::group(['namespace' => 'Gestao'], function(){
 
@@ -42,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/gestao/relatorio/search', 'RelatorioController@search')->name('relatorio_gestao.search');
                 Route::get('/gestao/relatorio/excell', 'RelatorioController@excell')->name('relatorio_gestao.excell');
                 Route::get('/gestao/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio_gestao.pdf');
-            });            
+            });   
 
         });
 
@@ -132,6 +134,18 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/googlemap/{googlemap}', 'GooglemapController@show')->name('googlemap.show');
                 Route::put('/googlemap/{googlemap}/update', 'GooglemapController@update')->name('googlemap.update');
             });            
+
+            Route::group(['namespace' => 'Notificacao'], function(){
+                Route::get('/notificacao', 'NotificacaoController@index')->name('notificacao.index');
+                Route::get('/notificacao/create', 'NotificacaoController@create')->name('notificacao.create');
+                Route::post('/notificacao/store', 'NotificacaoController@store')->name('notificacao.store');
+                Route::get('/notificacao/{notificacao}', 'NotificacaoController@show')->name('notificacao.show');
+                Route::put('/notificacao/{notificacao}/update', 'NotificacaoController@update')->name('notificacao.update');
+                Route::get('/notificacao/{notificacao}/cliente_create', 'NotificacaoController@cliente_create')->name('notificacao.cliente_create');
+                Route::put('/notificacao/{notificacao}/cliente_store', 'NotificacaoController@cliente_store')->name('notificacao.cliente_store');    
+                Route::delete('/notificacao/{notificacao}/cliente_destroy/{cliente_notificacao}', 'NotificacaoController@cliente_destroy')->name('notificacao.cliente_destroy');  
+                Route::delete('/notificacao/{notificacao}/destroy', 'NotificacaoController@destroy')->name('notificacao.destroy');
+            });                    
 
         });
 

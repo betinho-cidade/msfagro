@@ -39,6 +39,7 @@
                                     <li><a href="{{ route('aliquota.index') }}">Alíquotas</a></li>
                                     <li><a href="{{ route('categoria.index') }}">Categorias</a></li>
                                     <li><a href="{{ route('cliente.index') }}">Clientes</a></li>
+                                    <li><a href="{{ route('notificacao.index') }}">Notificações</a></li>
                                 </ul>
                             </li>
 
@@ -91,19 +92,11 @@
                                 </ul>
                             </li>
 
-                            <li>
-                                <a href="{{ route('financeiro.index') }}">
-                                    <i class="fas fa-money-bill"></i>
-                                    <span>Financeiro</span>
-                                </a>
-                            </li>
+                            <li><a href="{{ route('financeiro.index') }}"><i class="fas fa-money-bill"></i><span> Financeiro</span></a></li>
 
-                            <li>
-                                <a href="{{ route('relatorio.index') }}">
-                                    <i class="far fa-chart-bar"></i>
-                                    <span>Relatório</span>
-                                </a>
-                            </li>   
+                            <li><a href="{{ route('relatorio.index') }}"><i class="far fa-chart-bar"></i><span>Relatório</span></a></li>   
+
+                            <li><a href="{{ route('notificacao.index') }}"><i class="ri-notification-3-line"></i><span>Notificações</span></a></li>   
                             
                             @if($user->cliente->tipo !== 'AG')                                    
                             <li>

@@ -10,12 +10,12 @@ class Categoria extends Model
 
     public function efetivos()
     {
-        return $this->belongsTo('App\Models\Efetivo');
+        return $this->hasMany('App\Models\Efetivo');
     }
 
     public function movimentacaos()
     {
-        return $this->belongsTo('App\Models\Movimentacao');
+        return $this->hasMany('App\Models\Movimentacao');
     }
 
     public function getNomeSegmentoAttribute()

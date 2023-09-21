@@ -17,12 +17,12 @@ class Empresa extends Model
 
     public function efetivos()
     {
-        return $this->belongsTo('App\Models\Efetivos');
+        return $this->hasMany('App\Models\Efetivos');
     }
 
     public function movimentacaos()
     {
-        return $this->belongsTo('App\Models\Movimentacao');
+        return $this->hasMany('App\Models\Movimentacao');
     }
 
     public function getTipoPessoaTextoAttribute()

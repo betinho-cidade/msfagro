@@ -6,7 +6,11 @@
 	<!-- Cityinbag - Head FIM-->
 
     <!-- <body data-sidebar="dark" class="sidebar-enable vertical-collpsed"> -->
-    <body data-sidebar="dark">
+    <body data-sidebar="dark" 
+        @if($user && $user->cliente) 
+            class="{{($user->cliente->menu_aberto == 'S') ? 'sidebar-enable vertical-collpsed' : ''}}"
+        @endif
+    >
 
         <!-- Loader -->
         {{-- <div id="preloader">

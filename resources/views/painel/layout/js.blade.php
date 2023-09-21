@@ -16,3 +16,24 @@
         {{-- <script src="{{asset('nazox/assets/js/pages/dashboard.init.js')}}"></script> --}}
 
         <script src="{{asset('nazox/assets/js/app.js')}}"></script>
+
+        <script>function goUrl(url){window.open(url,"_blank");}</script>
+
+        <script type='text/javascript'>
+        
+        function menu_aberto(){
+
+                var _token = $('input[name="_token"]').val();
+
+                $.ajax({
+                        url: "{{route('painel.js_menu_aberto')}}",
+                        method: "POST",
+                        data: {_token:_token},
+                        success:function(result){
+                            dados = JSON.parse(result);
+                        },
+                        error:function(erro){
+                        }
+                    });
+        }
+    </script>

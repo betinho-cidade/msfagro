@@ -41,6 +41,11 @@ class Movimentacao extends Model
         return $this->belongsTo('App\Models\Categoria');
     }
 
+    public function notificacaos()
+    {
+        return $this->hasMany('App\Models\Notificacaos');
+    }    
+
     public function getSegmentoTextoAttribute()
     {
         $segmento = '';

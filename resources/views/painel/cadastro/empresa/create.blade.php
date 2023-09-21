@@ -65,7 +65,8 @@
                     </div>
                     <div class="col-md-3">
                         <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
+                        <img src="{{asset('images/loading.gif')}}" id="img-loading-cnpj" style="display:none;max-width: 10%; margin-left: 26px;">
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} dynamic_cnpj mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
@@ -132,6 +133,39 @@
                     if (tipo == 'PJ'){
                         $('.mask_cpf_cnpj').inputmask('99.999.999/9999-99');
                         $('.mask_cpf_cnpj').attr('placeholder', 'Informe o CNPJ');
+                    }
+                }
+            });
+
+            $('.dynamic_cnpj').change(function(){
+
+                if ($(this).val() != ''){
+                    var tipo_pessoa = $('#tipo_pessoa').val();
+                    var cnpj = $('#cpf_cnpj').val();
+                    var _token = $('input[name="_token"]').val();
+
+                    $('#nome').val('');
+
+                    if(tipo_pessoa && tipo_pessoa == 'PJ') {                    
+                        document.getElementById("img-loading-cnpj").style.display = '';
+
+                        $.ajax({
+                            url: "{{route('painel.js_cnpj')}}",
+                            method: "POST",
+                            data: {_token:_token, cnpj:cnpj},
+                            success:function(result){
+                                dados = JSON.parse(result);
+                                if(dados==null || dados['error'] == 'true'){
+                                        console.log(dados);
+                                } else{
+                                        $('#nome').val(dados['nome']);
+                                }
+                                document.getElementById("img-loading-cnpj").style.display = 'none';
+                            },
+                            error:function(erro){
+                                document.getElementById("img-loading-cnpj").style.display = 'none';
+                            }
+                        });
                     }
                 }
             });

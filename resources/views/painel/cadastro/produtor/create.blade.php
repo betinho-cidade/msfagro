@@ -65,7 +65,8 @@
                     </div>
                     <div class="col-md-3">
                         <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
+                        <img src="{{asset('images/loading.gif')}}" id="img-loading-cnpj" style="display:none;max-width: 10%; margin-left: 26px;">
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} dynamic_cnpj mask_cpf_cnpj" value="{{old('cpf_cnpj')}}" placeholder="---" required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
@@ -267,6 +268,66 @@
                     }
                 }
             });
+
+            $('.dynamic_cnpj').change(function(){
+
+                if ($(this).val() != ''){
+                    var tipo_pessoa = $('#tipo_pessoa').val();
+                    var cnpj = $('#cpf_cnpj').val();
+                    var _token = $('input[name="_token"]').val();
+
+                    $('#nome').val('');
+                    $('#email').val('');
+                    $('#telefone').val('');
+                    $('#end_cep').val('');                    
+                    $('#end_cidade').val('');      
+                    $('#end_uf').val('');    
+                    $('#end_bairro').val('');    
+                    $('#end_logradouro').val('');    
+                    $('#end_numero').val('');  
+                    $('#end_complemento').val('');    
+
+                    if(tipo_pessoa && tipo_pessoa == 'PJ') {                    
+                        document.getElementById("img-loading-cnpj").style.display = '';
+
+                        $.ajax({
+                            url: "{{route('painel.js_cnpj')}}",
+                            method: "POST",
+                            data: {_token:_token, cnpj:cnpj},
+                            success:function(result){
+                                dados = JSON.parse(result);
+                                if(dados==null || dados['error'] == 'true'){
+                                        console.log(dados);
+                                } else{
+                                        $('#nome').val(dados['nome']);
+                                        $('#email').val(dados['email']);
+
+                                        telefone = dados['telefone'];
+
+                                        if(telefone.includes("/")){
+                                            telefone = telefone.substring(0, telefone.indexOf("/"));
+                                            $('#telefone').val(telefone.replace(/[^0-9]+/g, ""));    
+                                        }else{
+                                            $('#telefone').val(telefone.replace(/[^0-9]+/g, ""));    
+                                        }
+
+                                        $('#end_cep').val(dados['cep'].replace(/[^0-9]+/g, ""));
+                                        $('#end_cidade').val(dados['municipio']);
+                                        $('#end_uf').val(dados['uf']);
+                                        $('#end_bairro').val(dados['bairro']);
+                                        $('#end_logradouro').val(dados['logradouro']);
+                                        $('#end_numero').val(dados['numero']);
+                                        $('#end_complemento').val(dados['complemento']);
+                                }
+                                document.getElementById("img-loading-cnpj").style.display = 'none';
+                            },
+                            error:function(erro){
+                                document.getElementById("img-loading-cnpj").style.display = 'none';
+                            }
+                        });
+                    }
+                }
+            });                      
         });
     </script>
 

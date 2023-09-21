@@ -389,7 +389,42 @@ class PermissionSeeder extends Seeder
                     'description' => 'Visualizar as informações do relatório pela gestão',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ],                
+                ],                   
+                [
+                    'id' => 55,
+                    'name' => 'view_notificacao',
+                    'description' => 'Visualizar as informações das Notificações',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 56,
+                    'name' => 'edit_notificacao',
+                    'description' => 'Editar as informações das Notificações',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 57,
+                    'name' => 'create_notificacao',
+                    'description' => 'Criar uma nova Notificação',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 58,
+                    'name' => 'delete_notificacao',
+                    'description' => 'Excluir uma Notificação',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],          
+                [
+                    'id' => 59,
+                    'name' => 'cliente_notificacao',
+                    'description' => 'Possibilidade do cliente visualizar suas notificações',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],                                
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }
