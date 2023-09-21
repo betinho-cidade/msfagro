@@ -47,6 +47,11 @@ class Notificacao extends Model
         return ($this->data_fim) ? date('Y-m-d', strtotime($this->data_fim)): '';
     }
 
+    public function getDataFimReduzidaAttribute()
+    {
+        return ($this->data_fim) ? date('d/m/Y', strtotime($this->data_fim)) : '';
+    }       
+
     public function getHoraFimAjustadaAttribute()
     {
         return ($this->data_fim) ? date('H:i', strtotime($this->data_fim)): '';

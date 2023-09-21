@@ -33,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/js_menu_aberto', 'PainelController@js_menu_aberto')->name('painel.js_menu_aberto');
         Route::post('/js_cnpj', 'PainelController@js_cnpj')->name('painel.js_cnpj');
 
+        Route::get('/notificacao_cliente', 'PainelController@notificacao')->name('painel.notificacao');
+
         Route::group(['namespace' => 'Gestao'], function(){
 
             Route::group(['namespace' => 'Dashboard'], function(){

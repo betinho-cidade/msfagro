@@ -96,7 +96,7 @@
 
                             <li><a href="{{ route('relatorio.index') }}"><i class="far fa-chart-bar"></i><span>Relatório</span></a></li>   
 
-                            <li><a href="{{ route('notificacao.index') }}"><i class="ri-notification-3-line"></i><span>Notificações</span></a></li>   
+                            <li><a href="{{ route('painel.notificacao') }}"><i class="ri-notification-3-line"></i><span>Notificações</span></a></li>   
                             
                             @if($user->cliente->tipo !== 'AG')                                    
                             <li>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use App\Models\Solicitacao;
 use App\Models\Cliente;
+use App\Models\Notificacao;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -137,6 +138,31 @@ class PainelController extends Controller
 
         echo json_encode($mensagem);
     }  
+
+    public function notificacao()
+    {
+        if(Gate::denies('cliente_notificacao')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $notificacaos = Notificacao::leftJoin('cliente_notificacaos', 'cliente_notificacaos.notificacao_id', '=', 'notificacaos.id')
+                                    ->select('notificacaos.*')
+                                    ->whereNull('notificacaos.movimentacao_id')
+                                    ->where('notificacaos.status', 'A')
+                                    ->whereRaw('(notificacaos.data_inicio <= now())')
+                                    ->where(function($query) use ($user)
+                                    {
+                                        $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente->id);
+                                        $query->orWhere('notificacaos.todos', 'S');
+                                    })
+                                    ->orderBy('notificacaos.data_fim', 'desc')
+                                    ->latest()->paginate(16);                                
+
+        return view('painel.notificacao', compact('user', 'notificacaos'));
+    }   
 
 
 }
