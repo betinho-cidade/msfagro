@@ -29,16 +29,16 @@
                         </button>
                         </form>
 
-                    </div>
+                    </div> 
 
                     @if($user->roles->contains('name', 'Cliente') && $user->cliente)
-                        <div>
+                        <div style="text-align: center;">
                             <span class="tag-cliente">{{ $user->cliente->nome ?? '...'}}</span>
+                            
+                            <!-- Notificação Destaque - INI -->
+                            @includeif('painel.layout.sub_path.path_notificacao_destaque')
+                            <!-- Notificação Destaque - FIM -->
                         </div>
-
-                        <!-- Notificação Destaque - INI -->
-                        @includeif('painel.layout.sub_path.path_notificacao_destaque')    
-                        <!-- Notificação Destaque - FIM -->
                     @endif
                     <div class="d-flex">
 

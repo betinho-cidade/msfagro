@@ -15,10 +15,16 @@
 
 @if($notificacao_destaque)
     @if($notificacao_destaque->url_notificacao)
-        <a href="javascript:goUrl('{{ $notificacao_destaque->url_notificacao }}');">
-            {{$notificacao_destaque->nome_reduzido}}
+        <a href="javascript:goUrl('{{ $notificacao_destaque->url_notificacao }}');" style=" color: #252b3b !important;">
+            <div style="margin-bottom: -6px; background: #252b3b38; padding: 0 20px 0 15px; margin-top: 8px; color: #252b3b; border-radius: 5px; font-size: 13px;">
+                <div class="spinner-grow text-primary m-1" role="status" style=" color: #252b3b !important;    width: 13px;  height: 13px; "> <span class="sr-only">Loading...</span></div>     
+                {{$notificacao_destaque->nome_reduzido}}
+            </div>
         </a>
     @else
-        {{$notificacao_destaque->nome_reduzido}}
+        <div style="margin-bottom: -6px; background: #252b3b38; padding: 0 20px 0 15px; margin-top: 8px; color: #252b3b; border-radius: 5px; font-size: 13px;">
+            <div class="spinner-grow text-primary m-1" role="status" style=" color: #252b3b !important;    width: 13px;  height: 13px; "> <span class="sr-only">Loading...</span></div>     
+            {{$notificacao_destaque->nome_reduzido}}
+        </div>
     @endif
 @endif

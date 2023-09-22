@@ -32,12 +32,12 @@
         </div>
         @endforeach
 
-        <div class="d-flex">{!! $notificacaos->links() !!}</div>
+        <div class="d-block paginacao-notificacoes">{!! $notificacaos->links() !!}</div>
 
     @else
         <div class="col-md-6 col-xl-3">
             Nenhuma notificação encontrada
-        </div>
+        </div> 
     @endif
     </div>
 

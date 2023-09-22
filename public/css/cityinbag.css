@@ -16,6 +16,8 @@
 .bg-soft-primary{background-color: #f5efe1!important;}
 .bg-soft-primary .text-primary {  color: #957c49!important;}
 .tag-cliente{text-transform: uppercase;background: #e2c68b; color: #c64930; font-weight: 900; font-size: 14px; padding: 6px 16px; border-radius: 13px;}
+.paginacao-notificacoes{width: 100%; margin-top: 29px; padding: 0 20px; float: right !important;}
+.paginacao-notificacoes .pagination{float:right;}
 
 /* mostrar campo com borda de erro ao retornar validação */
 .form-error-field {border: 1px solid #e74c3c;}
