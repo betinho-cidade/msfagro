@@ -43,7 +43,9 @@
                     <div class="d-flex">
 
                         <!-- Notificações do Site - INI -->
-                        @includeif('painel.layout.sub_path.path_notificacaos')    
+                        @if($user && $user->cliente)
+                            @includeif('painel.layout.sub_path.path_notificacaos')    
+                        @endif
                         <!-- Notificações do Site - FIM -->
 
                         <div class="dropdown d-inline-block user-dropdown">

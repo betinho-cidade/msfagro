@@ -267,7 +267,7 @@
 
     <!-- INICIO - PARTE 04 -->
 
-    <div class="row col-xl-12" style="margin: 40px 0 80px 0;   padding: 0;">
+    <div class="row col-xl-12" style="margin: 40px 0 40px 0;   padding: 0;">
     <div class="col-xl-12" style="padding:0;">
 	    <h4 style="text-align:center;margin-bottom:12px;">Resumo Tributário</h4>
         <div class="row">
@@ -371,7 +371,11 @@
     </div>
 </div>
 <!-- end row -->	
-
+<div class="row" style="margin: 40px 0 80px 0;   padding: 0;text-align: center;display: block;">
+    <h3 style="margin-bottom: 20px;"> Ainda tem dúvida? </h3>
+    <a href="https://api.whatsapp.com/send/?phone=5571992330722&text=Tenho+interesse+em+um+parecer+jur%C3%ADdico&type=phone_number&app_absent=0" target="_blank"
+    style="text-align: center; background: #4CAF50; color: #fff; font-size: 16px; font-weight: 900; line-height: 19px; padding: 12px 37px; border-radius: 30px;">Tenha um parecer com validade Jurídica</a>
+</div>
     <!-- FINAL - PARTE 04 -->
 
 

@@ -14,7 +14,7 @@
         @foreach($notificacaos as $notificacao)
         <div class="col-md-6 col-xl-3">
             <div class="card" style="height: 93%;">
-                <p style="background: {{($notificacao->ao_vivo) ? '#4e8271' : '#626262'}}; font-size: 12px; text-align: center; padding: 2px 0; margin-bottom: 0; color: #fff;"><i class="mdi mdi-clock-outline"></i> noficação do dia {{$notificacao->data_fim_reduzida}}</p>
+                <p style="background: {{($notificacao->ao_vivo) ? '#4e8271' : '#626262'}}; font-size: 12px; text-align: center; padding: 2px 0; margin-bottom: 0; color: #fff;"><i class="mdi mdi-clock-outline"></i> noficação do dia {{$notificacao->data_inicio_reduzida}}</p>
                 <div class="card-body" style="padding: 12px;">
                     @if($notificacao->url_notificacao) 
                     <a href="javascript:goUrl('{{ $notificacao->url_notificacao }}');">

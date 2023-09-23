@@ -37,6 +37,11 @@ class Notificacao extends Model
         return ($this->data_inicio) ? date('H:i', strtotime($this->data_inicio)): '';
     }
 
+    public function getDataInicioReduzidaAttribute()
+    {
+        return ($this->data_inicio) ? date('d/m/Y', strtotime($this->data_inicio)) : '';
+    }       
+
     public function getDataFimFormatadaAttribute()
     {
         return ($this->data_fim) ? date('d-m-Y H:i', strtotime($this->data_fim)) : '';
@@ -51,6 +56,11 @@ class Notificacao extends Model
     {
         return ($this->data_fim) ? date('d/m/Y', strtotime($this->data_fim)) : '';
     }       
+
+    public function getDataFimCompactaAttribute()
+    {
+        return ($this->data_fim) ? date('d/m/y', strtotime($this->data_fim)) : '';
+    }           
 
     public function getHoraFimAjustadaAttribute()
     {

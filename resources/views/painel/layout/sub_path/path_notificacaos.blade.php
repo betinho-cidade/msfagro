@@ -8,7 +8,7 @@
                             $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente->id);
                             $query->orWhere('notificacaos.todos', 'S');
                         })
-                        ->orderBy('notificacaos.data_fim', 'asc')
+                        ->orderBy('notificacaos.data_fim', 'desc')
                         ->take(4)
                         ->get();
 @endphp

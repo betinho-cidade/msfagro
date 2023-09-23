@@ -8,6 +8,8 @@ use App\Models\Empresa;
 use App\Models\Produtor;
 use App\Models\Categoria;
 use App\Models\Movimentacao;
+use App\Models\Notificacao;
+use App\Models\ClienteNotificacao;
 use App\Models\FormaPagamento;
 use App\Models\Fazenda;
 use Illuminate\Http\Request;
@@ -188,6 +190,8 @@ class MovimentacaoController extends Controller
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
 
+            if($movimentacao->situacao == 'PD' && $movimentacao->tipo == 'D') $movimentacao->create_notification();
+
             DB::commit();
 
         } catch (Exception $ex){
@@ -327,6 +331,10 @@ class MovimentacaoController extends Controller
 
             DB::beginTransaction();
 
+            $data_programada_old = $movimentacao->data_programada_ajustada;
+            $item_texto_old = $movimentacao->item_texto;
+            $valor_old = $movimentacao->valor;
+
             $movimentacao->data_programada = $request->data_programada;
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->empresa_id = $request->empresa;
@@ -375,6 +383,20 @@ class MovimentacaoController extends Controller
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
+
+            if(($movimentacao->data_programada != $data_programada_old || 
+               $movimentacao->item_texto != $item_texto_old ||   
+               $movimentacao->valor != $valor_old) && 
+               $movimentacao->situacao == 'PD' && 
+               $movimentacao->tipo == 'D') {
+
+                $movimentacao->delete_notification();
+                $movimentacao->create_notification();
+            }
+
+            if($movimentacao->tipo == 'D' && $movimentacao->situacao == 'PG') {
+                $movimentacao->delete_notification();
+            }        
 
             DB::commit();
 
@@ -434,8 +456,12 @@ class MovimentacaoController extends Controller
             $movimentacao_arquivos[0]['path_nota'] = $movimentacao->path_nota;
             $movimentacao_arquivos[0]['path_comprovante'] = $movimentacao->path_comprovante;
 
+            if($movimentacao->tipo == 'D') {
+                $movimentacao->delete_notification();
+            }            
+            
             $movimentacao->delete();
-
+            
             $this->destroy_files($movimentacao_arquivos);
 
             DB::commit();
@@ -539,6 +565,10 @@ class MovimentacaoController extends Controller
                 $movimentacao_arquivos[$contArquivos]['movimentacao_id'] = $movimentacao->id;
                 $movimentacao_arquivos[$contArquivos]['path_nota'] = $movimentacao->path_nota;
                 $movimentacao_arquivos[$contArquivos]['path_comprovante'] = $movimentacao->path_comprovante;
+
+                if($movimentacao->tipo == 'D') {
+                    $movimentacao->delete_notification();
+                }        
 
                 $movimentacao->delete();
                 $contArquivos++;
@@ -650,4 +680,5 @@ class MovimentacaoController extends Controller
 
         return Storage::download($path_documento);
     }
+
 }

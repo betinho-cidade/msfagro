@@ -228,6 +228,8 @@ class EfetivoController extends Controller
 
                 $movimentacao->save();
 
+                if($movimentacao->situacao == 'PD' && $movimentacao->tipo == 'D') $movimentacao->create_notification();
+
             }
 
             // =================================================================
@@ -277,6 +279,12 @@ class EfetivoController extends Controller
 
                 $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $movimentacao->path_comprovante = $nome_arquivo;
+                $movimentacao->situacao = 'PG';
+
+                if($movimentacao->tipo == 'D') {
+                    $movimentacao->delete_notification();
+                }
+
                 $movimentacao->save();
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
@@ -423,6 +431,10 @@ class EfetivoController extends Controller
 
             DB::beginTransaction();
 
+            $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
+            $item_texto_old = $efetivo->movimentacao->item_texto;
+            $valor_old = $efetivo->movimentacao->valor;            
+
             $efetivo->data_programada = $request->data_programada;
             $efetivo->observacao = $request->observacao;
             $efetivo->gta = $request->gta;
@@ -498,6 +510,20 @@ class EfetivoController extends Controller
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
+
+            if(($efetivo->movimentacao->data_programada != $data_programada_old || 
+                $efetivo->movimentacao->item_texto != $item_texto_old ||   
+                $efetivo->movimentacao->valor != $valor_old) && 
+                $efetivo->movimentacao->situacao == 'PD' && 
+                $efetivo->movimentacao->tipo == 'D') {
+
+                $efetivo->movimentacao->delete_notification();
+                $efetivo->movimentacao->create_notification();
+            }        
+
+            if($efetivo->movimentacao->tipo == 'D' && $efetivo->movimentacao->situacao == 'PG') {
+                $efetivo->movimentacao->delete_notification();
+            }        
 
             DB::commit();
 
@@ -714,6 +740,11 @@ class EfetivoController extends Controller
                 if($efetivo->movimentacao){
                     $efetivo_arquivos[$contArquivos]['path_nota'] = $efetivo->movimentacao->path_nota;
                     $efetivo_arquivos[$contArquivos]['path_comprovante'] = $efetivo->movimentacao->path_comprovante;
+
+                    if($efetivo->movimentacao->tipo == 'D') {
+                        $efetivo->movimentacao->delete_notification();
+                    }        
+
                     $efetivo->movimentacao->delete();
                 }
 

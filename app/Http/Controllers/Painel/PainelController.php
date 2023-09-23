@@ -150,7 +150,7 @@ class PainelController extends Controller
 
         $notificacaos = Notificacao::leftJoin('cliente_notificacaos', 'cliente_notificacaos.notificacao_id', '=', 'notificacaos.id')
                                     ->select('notificacaos.*')
-                                    ->whereNull('notificacaos.movimentacao_id')
+                                    //->whereNull('notificacaos.movimentacao_id')
                                     ->where('notificacaos.status', 'A')
                                     ->whereRaw('(notificacaos.data_inicio <= now())')
                                     ->where(function($query) use ($user)
