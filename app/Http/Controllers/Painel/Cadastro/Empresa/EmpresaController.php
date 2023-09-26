@@ -43,13 +43,13 @@ class EmpresaController extends Controller
             return redirect()->route('painel');
         }
 
-        $empresas_AT = empresa::where('status','A')
+        $empresas_AT = Empresa::where('status','A')
                             ->where('cliente_id', $user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
 
-        $empresas_IN = empresa::where('status','I')
+        $empresas_IN = Empresa::where('status','I')
                             ->where('cliente_id', $user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
@@ -102,7 +102,7 @@ class EmpresaController extends Controller
 
             DB::beginTransaction();
 
-            $empresa = new empresa();
+            $empresa = new Empresa();
 
             $empresa->cliente_id = $user->cliente->id;
             $empresa->nome = $request->nome;
@@ -144,7 +144,7 @@ class EmpresaController extends Controller
 
 
 
-    public function show(empresa $empresa, Request $request)
+    public function show(Empresa $empresa, Request $request)
     {
 
         if(Gate::denies('edit_empresa')){
@@ -165,7 +165,7 @@ class EmpresaController extends Controller
 
 
 
-    public function update(UpdateRequest $request, empresa $empresa)
+    public function update(UpdateRequest $request, Empresa $empresa)
     {
         if(Gate::denies('edit_empresa')){
             abort('403', 'Página não disponível');
@@ -225,7 +225,7 @@ class EmpresaController extends Controller
 
 
 
-    public function destroy(empresa $empresa, Request $request)
+    public function destroy(Empresa $empresa, Request $request)
     {
         if(Gate::denies('delete_empresa')){
             abort('403', 'Página não disponível');

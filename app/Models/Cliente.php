@@ -54,6 +54,11 @@ class Cliente extends Model
         return $this->hasMany('App\Models\ClienteNotificacao');
     }    
 
+    public function lucros(){
+
+        return $this->hasMany('App\Models\Lucro');
+    }    
+
     public function getTipoClienteAttribute()
     {
         $tipo = '';

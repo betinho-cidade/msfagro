@@ -424,7 +424,35 @@ class PermissionSeeder extends Seeder
                     'description' => 'Possibilidade do cliente visualizar suas notificações',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ],                                
+                ],                    
+                [
+                    'id' => 60,
+                    'name' => 'view_lucro',
+                    'description' => 'Visualizar as informações das Distribuições de Lucros',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 61,
+                    'name' => 'edit_lucro',
+                    'description' => 'Editar as informações das Distribuições de Lucros',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 62,
+                    'name' => 'create_lucro',
+                    'description' => 'Criar uma nova Distribuição de Lucro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 63,
+                    'name' => 'delete_lucro',
+                    'description' => 'Excluir uma Distribuição de Lucro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],                      
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

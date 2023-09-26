@@ -92,6 +92,8 @@
                                 </ul>
                             </li>
 
+                            <li><a href="{{ route('lucro.index') }}"><i class="fas fa-money-bill"></i><span> Distribuição Lucros</span></a></li>
+
                             <li><a href="{{ route('financeiro.index') }}"><i class="fas fa-money-bill"></i><span> Financeiro</span></a></li>
 
                             <li><a href="{{ route('relatorio.index') }}"><i class="far fa-chart-bar"></i><span>Relatório</span></a></li>   

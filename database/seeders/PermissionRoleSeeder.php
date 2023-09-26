@@ -384,7 +384,31 @@ class PermissionRoleSeeder extends Seeder
                     'role_id' => 2,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ],                
+                ],   
+                [
+                    'permission_id' => 60,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],   
+                [
+                    'permission_id' => 61,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],   
+                [
+                    'permission_id' => 62,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],   
+                [
+                    'permission_id' => 63,
+                    'role_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],   
             ]);
         } else {
             echo "\e[31mTabela Permission_Role não está vazia. ";

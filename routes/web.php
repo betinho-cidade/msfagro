@@ -147,7 +147,19 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/notificacao/{notificacao}/cliente_store', 'NotificacaoController@cliente_store')->name('notificacao.cliente_store');    
                 Route::delete('/notificacao/{notificacao}/cliente_destroy/{cliente_notificacao}', 'NotificacaoController@cliente_destroy')->name('notificacao.cliente_destroy');  
                 Route::delete('/notificacao/{notificacao}/destroy', 'NotificacaoController@destroy')->name('notificacao.destroy');
-            });                    
+            });         
+            
+            Route::group(['namespace' => 'Lucro'], function(){
+                Route::get('/lucro', 'LucroController@index')->name('lucro.index');
+                Route::get('/lucro/create', 'LucroController@create')->name('lucro.create');
+                Route::post('/lucro/store', 'LucroController@store')->name('lucro.store');
+                Route::post('/lucro/refreshList', 'LucroController@refreshList')->name('lucro.refreshList');
+                Route::get('/lucro/search', 'LucroController@search')->name('lucro.search');
+                Route::get('/lucro/{lucro}', 'LucroController@show')->name('lucro.show');
+                Route::put('/lucro/{lucro}/update', 'LucroController@update')->name('lucro.update');
+                Route::delete('/lucro/{lucro}/destroy', 'LucroController@destroy')->name('lucro.destroy');
+                Route::get('/lucro/{lucro}/download', 'LucroController@download')->name('lucro.download');
+            });            
 
         });
 

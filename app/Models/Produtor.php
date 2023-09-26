@@ -25,6 +25,11 @@ class Produtor extends Model
         return $this->hasMany('App\Models\FormaPagamento');
     }
 
+    public function lucros(){
+
+        return $this->hasMany('App\Models\Lucro');
+    }        
+
     public function getTipoPessoaTextoAttribute()
     {
         $tipo_pessoa = '';
