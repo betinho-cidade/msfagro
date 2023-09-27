@@ -1,7 +1,7 @@
 @extends('painel.layout.index')
 
 
-@section('content')
+@section('content') 
 
 <div class="row">
     <div class="col-12">
@@ -26,64 +26,66 @@
         <div class="card">
             <div class="card-body">
 
-                <form id="search_lucro" action="{{route('lucro.search')}}" method="GET">
-                    @csrf
-                    <!-- <input type="hidden" id="mes_referencia" name="mes_referencia" value="">
-                    <input type="hidden" id="status_movimentacao" name="status_movimentacao" value=""> -->
-                    <span>
-                    <div class="row" style="width: 100%;">
+                <div class="filtro-e-relario" style="padding: 0 0 0 30px; margin-bottom: {{($lucros) ? 0 : 25}}px;">
+                    <form id="search_lucro" action="{{route('lucro.search')}}" method="GET">
+                        @csrf
+                        <!-- <input type="hidden" id="mes_referencia" name="mes_referencia" value="">
+                        <input type="hidden" id="status_movimentacao" name="status_movimentacao" value=""> -->
+                        <span>
+                        <div class="row" style="width: 100%;display: flow-root;">
 
-                        <div class="row" style="width: 50%; float:left">
-                            <div class="row" style="width: 100%;">
-                                <div class="col-md-3"  style="padding-right: 0;">
-                                    <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
-                                    <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
-                                </div>  
-                            
-                                <div class="col-md-3"  style="padding-right: 0;">
-                                    <label for="data_fim" style="margin: 0 0 0 2px;">Data Final</label>
-                                    <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
-                                </div>                          
-
-                                <div class="col-md-4"  style="padding-right: 0;">
-                                    <label for="observacao" style="margin: 0 0 0 2px;">Observação</label>
-                                    <input type="text" class="form-control" id="observacao" name="observacao" value="{{$search['observacao'] ?? ''}}" placeholder="Observação">
-                                </div>  
+                            <div class="row" style="width: {{($lucros) ? 50 : 100}}%; float:left">
+                                <div class="row" style="width: 100%;">
+                                    <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
+                                        <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
+                                        <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
+                                    </div>  
                                 
-                                <div class="col-md-4" style="padding-right: 0;">
-                                    <select id="produtor" name="produtor" class="form-control select2">
-                                        <option value="">Selecione: Produtor</option>
-                                        @foreach($produtors as $produtor)
-                                            <option value="{{ $produtor->id }}" {{($search && $search['produtor'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
+                                        <label for="data_fim" style="margin: 0 0 0 2px;">Data Final</label>
+                                        <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
+                                    </div>                          
+
+                                    <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
+                                        <label for="observacao" style="margin: 0 0 0 2px;">Observação</label>
+                                        <input type="text" class="form-control" id="observacao" name="observacao" value="{{$search['observacao'] ?? ''}}" placeholder="Observação">
+                                    </div>  
+                                    
+                                    <div class="col-md-4" style="padding-right: 0;margin-bottom: 10px;">
+                                        <select id="produtor" name="produtor" class="form-control select2">
+                                            <option value="">Selecione: Produtor</option>
+                                            @foreach($produtors as $produtor)
+                                                <option value="{{ $produtor->id }}" {{($search && $search['produtor'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
+                                        <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
+                                            <option value="">Selecione: Forma Pagamento</option>
+                                            @foreach($forma_pagamentos as $forma_pagamento)
+                                                <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4" style="padding-right: 0;margin-bottom: 10px;">
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light" style="width:100%;">Filtrar</button>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-md-4"  style="padding-right: 0;">
-                                    <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
-                                        <option value="">Selecione: Forma Pagamento</option>
-                                        @foreach($forma_pagamentos as $forma_pagamento)
-                                            <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
 
-                            <div class="row" style="width: 100%;">
-                                <div class="col-md-4" style="padding-right: 0;">
-                                    <button type="submit" class="btn btn-primary waves-effect waves-light" style="width:100%;">Filtrar</button>
-                                </div>
+                            @if($lucros)
+                            <div class="row" style="width: 50%; padding-left: 35px;display: inline-grid;">
+                                <div id="piechart" style="margin-top: 5px; width:600px;"></div>
                             </div>
+                            @endif
                         </div>
-
-                        <div class="row" style="width: 50%; float:right">
-                            <div id="piechart" style="margin-top: 5px;"></div>
-                        </div>
-                    </div>
-                    </span>
-                </form>
-                
-                <br><br>
+                        </span>
+                    </form>
+                </div>
 
                 <span style="float: right">
                     <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
@@ -218,11 +220,11 @@
             var options = {
                 title: 'Distribuição Lucro x Produtor',
                 pieHole: 0.8,
-                chartArea:{left:5,top:20,width:'100%',height:'100%'},
+                chartArea:{left:20,top:20,width:'110%',height:'100%'},
                 is3D:true,
-                fontSize:10,
+                fontSize:12,
                 //pieSliceText: 'value',
-                legend:{position: 'right', textStyle:{fontSize:10}},
+                legend:{position: 'left',alignment:'center', textStyle:{fontSize:10,top:5}},
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
