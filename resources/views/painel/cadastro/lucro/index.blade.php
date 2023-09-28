@@ -224,7 +224,7 @@
                 is3D:true,
                 fontSize:12,
                 //pieSliceText: 'value',
-                legend:{position: 'left',alignment:'center', textStyle:{fontSize:10,top:5}},
+                legend:{position: 'labeled',alignment:'center', textStyle:{fontSize:10,top:5}},
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
