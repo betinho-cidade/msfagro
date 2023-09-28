@@ -150,7 +150,7 @@ class LucroController extends Controller
             $request->session()->flash('message.content', 'A Distribuição de Lucro foi criada com sucesso');
         }
 
-        return redirect()->route('lucro.index');
+        return redirect()->route('lucro.search', ['data_inicio' =>  $lucro->data_lancamento, 'data_fim' =>  $lucro->data_lancamento, 'produtor' =>  $lucro->produtor_id, 'forma_pagamento' =>  $lucro->forma_pagamento_id]);
     }
 
     public function show(Lucro $lucro, Request $request)
@@ -260,7 +260,7 @@ class LucroController extends Controller
             $request->session()->flash('message.content', 'A Distribuição de Lucro foi atualizada com sucesso');
         }
 
-        return redirect()->route('lucro.index');
+        return redirect()->route('lucro.search', ['data_inicio' =>  $lucro->data_lancamento, 'data_fim' =>  $lucro->data_lancamento, 'produtor' =>  $lucro->produtor_id, 'forma_pagamento' =>  $lucro->forma_pagamento_id]);
     }
 
     public function destroy(lucro $lucro, Request $request)
@@ -477,29 +477,29 @@ class LucroController extends Controller
             ];
         } else{
             $search = [];
-        }        
+        }      
 
         $lucros = Lucro::where('cliente_id', $user->cliente->id)
                         ->where(function($query) use ($search){
 
-                            if($search['produtor']){
+                            if($search && $search['produtor']){
                                 $query->where('produtor_id', $search['produtor']);
                             }
 
-                            if($search['forma_pagamento']){
+                            if($search && $search['forma_pagamento']){
                                 $query->where('forma_pagamento_id', $search['forma_pagamento']);
                             }
 
-                            if($search['observacao']){
+                            if($search && $search['observacao']){
                                 $query->where('observacao', 'like', '%' . $search['observacao'] . '%');
                             }                                            
 
-                            if($search['data_inicio'] && $search['data_fim']){
+                            if($search && $search['data_inicio'] && $search['data_fim']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
                                 $query->where('data_lancamento', '<=', $search['data_fim']);
-                            } elseif($search['data_inicio']){
+                            } elseif($search && $search['data_inicio']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
-                            } elseif($search['data_fim']){
+                            } elseif($search && $search['data_fim']){
                                 $query->where('data_lancamento', '<=', $search['data_fim']);
                             }
                         })
@@ -522,24 +522,24 @@ class LucroController extends Controller
                         ->where('produtors.cliente_id', $user->cliente->id)
                         ->where(function($query) use ($search){
 
-                            if($search['produtor']){
+                            if($search && $search['produtor']){
                                 $query->where('produtor_id', $search['produtor']);
                             }
 
-                            if($search['forma_pagamento']){
+                            if($search && $search['forma_pagamento']){
                                 $query->where('forma_pagamento_id', $search['forma_pagamento']);
                             }
 
-                            if($search['observacao']){
+                            if($search && $search['observacao']){
                                 $query->where('observacao', 'like', '%' . $search['observacao'] . '%');
                             }                                            
 
-                            if($search['data_inicio'] && $search['data_fim']){
+                            if($search && $search['data_inicio'] && $search['data_fim']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
                                 $query->where('data_lancamento', '<=', $search['data_fim']);
-                            } elseif($search['data_inicio']){
+                            } elseif($search && $search['data_inicio']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
-                            } elseif($search['data_fim']){
+                            } elseif($search && $search['data_fim']){
                                 $query->where('data_lancamento', '<=', $search['data_fim']);
                             }
                         })

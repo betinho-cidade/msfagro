@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-body">
 
-                <div class="filtro-e-relario" style="padding: 0 0 0 30px; margin-bottom: {{($lucros) ? 0 : 25}}px;">
+                <div class="filtro-e-relario" style="padding: 0 0 0 30px; margin-bottom: {{($lucros && $lucros->count() > 0) ? 0 : 25}}px;">
                     <form id="search_lucro" action="{{route('lucro.search')}}" method="GET">
                         @csrf
                         <!-- <input type="hidden" id="mes_referencia" name="mes_referencia" value="">
@@ -34,7 +34,7 @@
                         <span>
                         <div class="row" style="width: 100%;display: flow-root;">
 
-                            <div class="row" style="width: {{($lucros) ? 50 : 100}}%; float:left">
+                            <div class="row" style="width: {{($lucros && $lucros->count() > 0) ? 50 : 100}}%; float:left">
                                 <div class="row" style="width: 100%;">
                                     <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
                                         <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
@@ -77,7 +77,7 @@
 
                             </div>
 
-                            @if($lucros)
+                            @if($lucros && $lucros->count() > 0)
                             <div class="row" style="width: 50%; padding-left: 35px;display: inline-grid;">
                                 <div id="piechart" style="margin-top: 5px; width:600px;"></div>
                             </div>
