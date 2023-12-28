@@ -16,8 +16,8 @@ class CreateFazendasTable extends Migration
             $table->string('end_cep', 8)->nullable();
             $table->string('end_cidade', 60)->nullable();
             $table->string('end_uf', 2)->nullable();
-            $table->string('latitude', 300);
-            $table->string('longitude', 300);
+            $table->string('latitude', 300)->nullable();
+            $table->string('longitude', 300)->nullable();
             $table->integer('qtd_macho')->nullable();
             $table->integer('qtd_femea')->nullable();
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo

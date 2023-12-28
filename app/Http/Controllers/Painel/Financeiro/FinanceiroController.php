@@ -62,10 +62,10 @@ class FinanceiroController extends Controller
                                         ->get();
 
         $movimentacao_efetiva = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where('situacao', 'PG')
+                                        ->whereIn('movimentacaos.situacao', ['PG'])
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
@@ -78,10 +78,10 @@ class FinanceiroController extends Controller
                                         ->get();
 
         $movimentacao_futura = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where('situacao', 'PD')
+                                        ->whereIn('movimentacaos.situacao', ['PD'])
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
@@ -96,7 +96,7 @@ class FinanceiroController extends Controller
         $saldo_global = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->select(DB::raw('SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
@@ -105,10 +105,10 @@ class FinanceiroController extends Controller
                                         ->first();
 
         $saldo_efetivo = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where('situacao', 'PG')
+                                        ->whereIn('movimentacaos.situacao', ['PG'])
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->select(DB::raw('SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
@@ -116,10 +116,10 @@ class FinanceiroController extends Controller
                                         ->first();
 
         $saldo_futuro = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where('situacao', 'PD')
+                                        ->whereIn('movimentacaos.situacao', ['PD'])
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->select(DB::raw('SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
@@ -192,7 +192,7 @@ class FinanceiroController extends Controller
                                         })
                                         ->where(function($query) use ($user){
                                             if($user->cliente->tipo == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
                                         ->whereYear('data_programada', $data_programada_vetor[1])
@@ -361,7 +361,7 @@ class FinanceiroController extends Controller
                                         })
                                         ->where(function($query) use ($search){
                                             if($search['tipo_cliente']['param_key'] == 'AG'){
-                                                $query->where('segmento', 'MF');
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
                                             } else if($search['segmento']['param_key']){
                                                 $query->where('segmento', $search['segmento']['param_key']);
                                             }

@@ -119,7 +119,7 @@
                             <th>Ordenação</th>
                             <th>ID</th>
                             <th>Produtor</th>
-                            <th>Valor</th>
+                            <th style="text-align:right;">Valor (R$)</th>
                             <th>Observação</th>
                             <th style="text-align:center;">Data</th>
                             <th style="text-align:center;">Ações</th>
@@ -132,7 +132,7 @@
                             <td>{{$lucro->data_lancamento_ordenacao}}</td>
                             <td>{{$lucro->id}}</td>
                             <td data-toggle="tooltip" title="{{ $lucro->produtor->nome_produtor ?? '...' }}">{{ $lucro->produtor->nome_produtor_reduzido ?? '...' }}</td>
-                            <td class="valor_mask">{{$lucro->valor}}</td>                            
+                            <td style="text-align:right;">{{number_format($lucro->valor,2,',','.')}}</td>
                             <td data-toggle="tooltip" title="{{ $lucro->observacao }}">{{$lucro->observacao_reduzida}}</td>
                             <td style="text-align:center;">{{$lucro->data_lancamento_formatada}}</td>
                             <td style="text-align:center;">

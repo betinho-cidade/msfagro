@@ -129,7 +129,18 @@ class ProdutorController extends Controller
 
             DB::rollBack();
 
-            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+            if(strpos($ex->getMessage(), 'produtor_uk') !== false){
+                $message = "Já existe um CPF/CNPJ com o mesmo valor informado.";
+
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', $message);
+    
+                return redirect()->back()->withInput();
+
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }            
+
         }
 
         if ($message && $message !='') {
@@ -211,7 +222,17 @@ class ProdutorController extends Controller
 
             DB::rollBack();
 
-            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+            if(strpos($ex->getMessage(), 'produtor_uk') !== false){
+                $message = "Já existe um CPF/CNPJ com o mesmo valor informado.";
+
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', $message);
+    
+                return redirect()->back()->withInput();
+
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
         }
 
         if ($message && $message !='') {

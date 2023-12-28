@@ -59,7 +59,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Tipo Conta</th>
-                            <th>Produtor/Documento</th>
+                            <th>Forma Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -69,7 +69,7 @@
                         <tr>
                             <td>{{$forma_pagamento->id}}</td>
                             <td>{{$forma_pagamento->tipo_conta_texto}}</td>
-                            <td data-toggle="tooltip" title="{{ $forma_pagamento->nome_produtor_full }}">{{$forma_pagamento->nome_produtor}}</td>
+                            <td data-toggle="tooltip" title="{{ $forma_pagamento->nome_conta . ' ' . $forma_pagamento->nome_produtor  }}">{{$forma_pagamento->nome_conta_resumida}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
@@ -87,7 +87,7 @@
                                     @section('modal_type')@endsection
                                     @section('modal_name')"modal-delete-forma_pagamento"@endsection
                                     @section('modal_msg_title')Deseja excluir o registro ? @endsection
-                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente, BEM COMO TODOS seus relacionamentos. @endsection
+                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente. @endsection
                                     @section('modal_close')Fechar @endsection
                                     @section('modal_save')Excluir @endsection
                             @endcan
@@ -111,7 +111,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Tipo Conta</th>
-                            <th>Produtor/Documento</th>
+                            <th>Forma Pagamento</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -121,7 +121,7 @@
                         <tr>
                             <td>{{$forma_pagamento->id}}</td>
                             <td>{{$forma_pagamento->tipo_conta_texto}}</td>
-                            <td>{{$forma_pagamento->nome_produtor}}</td>
+                            <td data-toggle="tooltip" title="{{ $forma_pagamento->nome_conta . ' ' . $forma_pagamento->nome_produtor  }}">{{$forma_pagamento->nome_conta_resumida}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')

@@ -134,7 +134,7 @@
                             <th>Tipo</th>
                             <th>Segmento</th>
                             <th>Item Fiscal</th>
-                            <th>Valor</th>
+                            <th style="text-align:right;">Valor (R$)</th>
                             <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
@@ -150,7 +150,7 @@
                             <td>{{$movimentacao->tipo_movimentacao_texto}}</td>
                             <td>{{$movimentacao->segmento_texto}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td class="valor_mask">{{$movimentacao->valor}}</td>
+                            <td style="text-align: right;">{{number_format($movimentacao->valor,2,',','.')}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">

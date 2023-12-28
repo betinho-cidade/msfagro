@@ -238,7 +238,7 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Número Nota Fiscal</label>
+                            <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Doc. Comprobatório</label>
                             <input type="text" style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};" class="form-control {{($errors->first('nota') ? 'form-error-field' : '')}}" id="nota" name="nota" value="{{$efetivo->movimentacao->nota ?? '...'}}" placeholder="Número Nota" {{ $efetivo->tipo == 'EG' ? 'disabled' : '' }}>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -246,7 +246,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)
+                        <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Doc. Comprobatório (imagem/pdf)
                             @if($efetivo->movimentacao && $efetivo->movimentacao->path_nota)
                             <a href="{{ route('efetivo.download', ['efetivo' => $efetivo->id, 'tipo_documento' => 'NT']) }}">
                                 <i class="mdi mdi-file-download mdi-18px" style="color: goldenrod;cursor: pointer" title="Download da Nota"></i>

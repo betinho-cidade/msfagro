@@ -43,7 +43,10 @@ class LucroController extends Controller
             return redirect()->route('painel');
         }
 
-        $lucros = [];
+        $lucros = Lucro::where('cliente_id', $user->cliente->id)
+                        ->orderBy('lucros.data_lancamento', 'desc')
+                        ->get();
+
 
         $produtors = Produtor::where('cliente_id', $user->cliente->id)
                                             ->where('status', 'A')
@@ -56,9 +59,19 @@ class LucroController extends Controller
                                             ->get();   
             
         $search = []; 
+
+        $graphs = Lucro::where('lucros.cliente_id', $user->cliente->id)
+                        ->join('produtors', 'lucros.produtor_id', '=', 'produtors.id')
+                        ->where('produtors.cliente_id', $user->cliente->id)
+                        ->selectRaw('produtors.nome as nome, sum(lucros.valor) as valor')
+                        ->groupBy('produtors.nome')
+                        ->get();                                        
         
         $lucro_produtors = [['Produtor', 'Valor']];
-
+        foreach($graphs as $graph){
+            array_push($lucro_produtors, [$graph->nome, intval($graph->valor)]);
+        }        
+        
         return view('painel.cadastro.lucro.index', compact('user', 'lucros', 'produtors', 'forma_pagamentos', 'search', 'lucro_produtors'));
     }
 

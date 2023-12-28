@@ -33,21 +33,21 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#global" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Movimentação Global ( <code class="highlighter-rouge valor_mask" style="color:{{ ($saldo_global->saldo >= 0) ? 'blue' : 'redd' }}">{{($saldo_global->saldo ?? 'R$ 0,00')}}</code> )
+                            <span class="d-none d-sm-block">Movimentação Global ( <code class="highlighter-rouge" style="color:{{ ($saldo_global->saldo >= 0) ? 'blue' : 'red' }}">R$ {{(number_format($saldo_global->saldo,2,',','.') ?? '0,00')}}</code> )
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#efetiva" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Movimentação Efetiva ( <code class="highlighter-rouge valor_mask" style="color:blue">{{($saldo_efetivo->receita ?? 'R$ 0,00')}}</code> - <code class="highlighter-rouge valor_mask" style="color:red">{{($saldo_efetivo->despesa ?? 'R$ 0,00')}}</code> )
+                            <span class="d-none d-sm-block">Movimentação Efetiva ( <code class="highlighter-rouge" style="color:blue">R$ {{(number_format($saldo_efetivo->receita,2,',','.') ?? '0,00')}}</code> - <code class="highlighter-rouge" style="color:red">R$ {{(number_format($saldo_efetivo->despesa,2,',','.') ?? '0,00')}}</code> )
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#futura" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Movimentação Futura ( <code class="highlighter-rouge valor_mask" style="color:blue">{{($saldo_futuro->receita ?? 'R$ 0,00')}}</code> - <code class="highlighter-rouge valor_mask" style="color:red">{{($saldo_futuro->despesa ?? 'R$ 0,00')}}</code> )
+                            <span class="d-none d-sm-block">Movimentação Futura ( <code class="highlighter-rouge" style="color:blue">R$ {{(number_format($saldo_futuro->receita,2,',','.') ?? '0,00')}}</code> - <code class="highlighter-rouge" style="color:red">R$ {{(number_format($saldo_futuro->despesa,2,',','.') ?? '0,00')}}</code> )
                             </span>
                         </a>
                     </li>
@@ -64,9 +64,9 @@
                         <tr>
                             <th>Ordenação</th>
                             <th style="text-align:center;">Mês / Ano</th>
-                            <th style="text-align:center;">Receitas</th>
-                            <th style="text-align:center;">Despesas</th>
-                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:center;">Saldo</th>
+                            <th style="text-align:right;">Receitas (R$)</th>
+                            <th style="text-align:right;">Despesas (R$)</th>
+                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:right;">Saldo (R$)</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -76,9 +76,9 @@
                         <tr>
                             <td>{{$movimentacao->data_programada_ordenacao}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$movimentacao->mes_referencia}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->receita}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->despesa}}</td>
-                            <td style="text-align:center;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}" class="valor_mask">{{$movimentacao->saldo}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->receita,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->despesa,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}">{{number_format($movimentacao->saldo,2,',','.')}}</td>
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')
@@ -103,9 +103,9 @@
                         <tr>
                             <th>Ordenação</th>
                             <th style="text-align:center;">Mês / Ano</th>
-                            <th style="text-align:center;">Receitas</th>
-                            <th style="text-align:center;">Despesas</th>
-                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:center;">Saldo</th>
+                            <th style="text-align:right;">Receitas (R$)</th>
+                            <th style="text-align:right;">Despesas (R$)</th>
+                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:right;">Saldo (R$)</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -115,9 +115,9 @@
                         <tr>
                             <td>{{$movimentacao->data_programada_ordenacao}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$movimentacao->mes_referencia}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->receita}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->despesa}}</td>
-                            <td style="text-align:center;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}" class="valor_mask">{{$movimentacao->saldo}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->receita,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->despesa,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}">{{number_format($movimentacao->saldo,2,',','.')}}</td>
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')
@@ -142,9 +142,9 @@
                         <tr>
                             <th>Ordenação</th>
                             <th style="text-align:center;">Mês / Ano</th>
-                            <th style="text-align:center;">Receitas</th>
-                            <th style="text-align:center;">Despesas</th>
-                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:center;">Saldo</th>
+                            <th style="text-align:right;">Receitas (R$)</th>
+                            <th style="text-align:right;">Despesas (R$)</th>
+                            <th data-toggle="tooltip" title="Saldo remanescente referente a Movimentação Fiscal do mês" style="text-align:right;">Saldo (R$)</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -154,9 +154,9 @@
                         <tr>
                             <td>{{$movimentacao->data_programada_ordenacao}}</td>
                             <td style="text-align:center;vertical-align: middle">{{$movimentacao->mes_referencia}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->receita}}</td>
-                            <td style="text-align:center;vertical-align: middle" class="valor_mask">{{$movimentacao->despesa}}</td>
-                            <td style="text-align:center;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}" class="valor_mask">{{$movimentacao->saldo}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->receita,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle">{{number_format($movimentacao->despesa,2,',','.')}}</td>
+                            <td style="text-align:right;vertical-align: middle;color: {{ ($movimentacao->receita >= $movimentacao->despesa) ? 'blue' : 'red' }}">{{number_format($movimentacao->saldo,2,',','.')}}</td>
                             <td style="text-align:center;vertical-align: middle">
 
                             @can('list_financeiro')

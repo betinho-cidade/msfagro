@@ -108,4 +108,45 @@ class FormaPagamento extends Model
         return $forma;
     }
 
+    public function getNomeContaAttribute()
+    {
+
+        $forma = ' [' . $this->tipo_conta_texto . '] ';
+
+        $banco = (($this->banco) ? Str::limit($this->banco, 20, '...') : '');
+        $agencia = (($this->agencia) ? $this->agencia : '');
+        $conta = (($this->conta) ? $this->conta : '');
+
+        if($banco && $agencia && $conta){
+            $forma = $forma . '[' . $banco . ': ' . $agencia . '/' . $conta . ']';
+        } else if($banco && $agencia && !$conta){
+            $forma = $forma . '[' . $banco . ': ' . $agencia . ']';
+        } else if($banco && !$agencia && $conta){
+            $forma = $forma . '[' . $banco . ': ' . $conta . ']';
+        } else if(!$banco && $agencia && $conta){
+            $forma = $forma . '[' . $agencia . '/' . $conta . ']';
+        } else if($banco && !$agencia && !$conta){
+            $forma = $forma . '[' . $banco . ']';
+        } else if(!$banco && $agencia && !$conta){
+            $forma = $forma . '[ag: ' . $agencia . ']';
+        } else if(!$banco && !$agencia && $conta){
+            $forma = $forma . '[conta: ' . $conta . ']';
+        }          
+
+        $forma = $forma . (($this->pix) ? ' [pix: ' . $this->pix . ']' : '');
+
+        return $forma;
+    }    
+
+    public function getNomeContaResumidaAttribute()
+    {
+
+        $produtor = ' [' . strtok($this->produtor->nome, ' ') . '] ';
+        $banco = (($this->banco) ? '[' .$this->banco . ']' : '');
+
+        $nome_conta_resumida = $produtor . $banco;
+
+        return $nome_conta_resumida;
+    }    
+
 }

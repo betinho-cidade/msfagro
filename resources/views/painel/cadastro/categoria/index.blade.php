@@ -89,7 +89,7 @@
                                     @section('modal_type')@endsection
                                     @section('modal_name')"modal-delete-categoria"@endsection
                                     @section('modal_msg_title')Deseja excluir o registro ? @endsection
-                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente, BEM COMO TODOS seus relacionamentos. @endsection
+                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente. @endsection
                                     @section('modal_close')Fechar @endsection
                                     @section('modal_save')Excluir @endsection
                             @endcan

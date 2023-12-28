@@ -121,7 +121,7 @@
                         <div class="form-group">
                             <label for="latitude" class="{{($errors->first('latitude') ? 'form-error-label' : '')}}">Latitude</label>
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-geolocalizacao" style="display:none;max-width: 17%; margin-left: 26px;">                            
-                            <input type="text" class="form-control {{($errors->first('latitude') ? 'form-error-field' : '')}}" id="latitude" name="latitude" value="{{$fazenda->latitude}}" placeholder="Latitude" required>
+                            <input type="text" class="form-control {{($errors->first('latitude') ? 'form-error-field' : '')}}" id="latitude" name="latitude" value="{{$fazenda->latitude}}" placeholder="Latitude">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -130,7 +130,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="longitude" class="{{($errors->first('longitude') ? 'form-error-label' : '')}}">Longitude</label>
-                            <input type="text" class="form-control {{($errors->first('longitude') ? 'form-error-field' : '')}}" id="longitude" name="longitude" value="{{$fazenda->longitude}}" placeholder="Longitude" required>
+                            <input type="text" class="form-control {{($errors->first('longitude') ? 'form-error-field' : '')}}" id="longitude" name="longitude" value="{{$fazenda->longitude}}" placeholder="Longitude">
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>

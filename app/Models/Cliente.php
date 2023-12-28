@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 
 class Cliente extends Model
 {
@@ -128,5 +128,23 @@ class Cliente extends Model
 
         return $nome_cliente_reduzido;
     }
+
+
+    public function getSaldoGlobalAttribute(){
+
+        $user = $this->user;
+
+        $saldo_global = $this->movimentacaos()->where('movimentacaos.cliente_id', $this->id)
+                                        ->where(function($query) use ($user){
+                                            if($user->cliente->tipo == 'AG'){
+                                                $query->where('segmento', 'MF');
+                                            }
+                                        })
+                                        ->select(DB::raw('SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
+                                                SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) as despesa,
+                                                SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) - SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) AS saldo'))
+                                        ->first();      
+        return $saldo_global->saldo ?? 0;  
+    }    
 
 }

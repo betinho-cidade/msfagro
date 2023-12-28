@@ -189,7 +189,7 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Número Nota Fiscal</label>
+                            <label for="nota" class="{{($errors->first('nota') ? 'form-error-label' : '')}}">Doc. Comprobatório</label>
                             <input type="text" class="form-control {{($errors->first('nota') ? 'form-error-field' : '')}}" id="nota" name="nota" value="{{old('nota')}}" placeholder="Número Nota" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -197,10 +197,10 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Nota Fiscal (imagem/pdf)</label>
+                        <label for="path_nota" class="{{($errors->first('path_nota') ? 'form-error-label' : '')}}">Doc. Comprobatório (imagem/pdf)</label>
                         <div class="form-group custom-file">
                             <input type="file" class="custom-file-input {{($errors->first('path_nota') ? 'form-error-field' : '')}}" id="path_nota" name="path_nota" accept="image/*, application/pdf" required>
-                            <label id="path_nota_lbl" class="custom-file-label" for="path_nota">Selecionar Nota</label>
+                            <label id="path_nota_lbl" class="custom-file-label" for="path_nota">Selecionar</label>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>

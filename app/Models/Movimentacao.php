@@ -160,13 +160,21 @@ class Movimentacao extends Model
     public function create_notification(){
 
         // Aviso de notificação para vencer
-        $notificacao_aviso = new Notificacao();        
-
+        $notificacao_aviso = new Notificacao();  
+        
         $aviso_ini = Carbon::createFromFormat('Y-m-d H:i', $this->data_programada . ' 00:01');
         $aviso_fim = Carbon::createFromFormat('Y-m-d H:i', $this->data_programada . ' 23:59');
+
+        // Para notificações com data programada futura, antecipar 72 horas (3 dias) para iniciar o aviso
+        $antecipar_aviso = false;
+        $aviso_antecipado_ini = '';
+        if($this->data_programada > Carbon::now()){
+            $aviso_antecipado_ini = $aviso_ini->copy()->subDays(3);
+            $antecipar_aviso = true;
+        }        
         
         $notificacao_aviso->movimentacao_id = $this->id;
-        $notificacao_aviso->data_inicio = $aviso_ini;
+        $notificacao_aviso->data_inicio = ($antecipar_aviso) ? $aviso_antecipado_ini : $aviso_ini;
         $notificacao_aviso->data_fim = $aviso_fim;
         $notificacao_aviso->nome= 'MF: Á Vencer - R$ '. $this->valor . ' - ' . $notificacao_aviso->data_fim_compacta;
         $notificacao_aviso->resumo= $this->item_texto;

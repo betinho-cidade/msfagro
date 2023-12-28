@@ -29,6 +29,7 @@ class CreateProdutorsTable extends Migration
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
             $table->timestamps();
             $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unique(['cliente_id', 'cpf_cnpj'], 'produtor_uk');
         });
     }
 

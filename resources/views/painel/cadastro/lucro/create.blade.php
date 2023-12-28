@@ -47,7 +47,7 @@
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Distribuição de Lucro</h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Distribuição de Lucro  <span class="text-danger font-size-12 float-right">{{($user->cliente->saldo_global < 0) ? 'Atencão: O caixa está negativo R$ '. number_format($user->cliente->saldo_global, 2, ',', '.') .' caso queira continuar com o registro da distribuição de lucros' : ''}}</span></h5>
                 </div>
 
                 <div class="row">

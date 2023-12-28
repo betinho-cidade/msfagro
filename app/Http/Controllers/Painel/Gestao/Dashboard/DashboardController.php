@@ -65,12 +65,13 @@ class DashboardController extends Controller
                                         if($cliente !== 'TODOS'){
                                             $query->where('cliente_id', $cliente);
                                         }
-                                     })  
+                                     })
+                                     ->whereIn('situacao', ['PG'])
                                      ->selectRaw("year(data_programada) as ano")
                                      ->groupByRaw("year(data_programada)") 
                                      ->orderByRaw("year(data_programada) desc")
                                      ->get(); 
-                 
+
         if($efetivo_anos->count() == 0){
             $efetivo_anos = collect([
                 ['ano' => Carbon::now()->year]
@@ -132,6 +133,7 @@ class DashboardController extends Controller
                                             $query->whereYear('data_programada', $efetivo_anos[0]['ano']);      
                                         }                                        
                                     })
+                                    ->whereIn('situacao', ['PG'])
                                     ->groupByRaw('YEAR(data_programada), MONTH(data_programada)')
                                     ->orderByRaw('YEAR(data_programada)')
                                     ->orderByRaw('MONTH(data_programada)')
