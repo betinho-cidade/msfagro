@@ -278,7 +278,7 @@
                             <div class="media-body overflow-hidden" style="text-align:center;">
 								<h4 class="font-size-24" style="color: {{$cor_financeiro}};padding-top: 7px;margin-bottom:2px;">R$ {{($resumo_pecuario['prejuizo'] == 'N') ? $resumo_pecuario['lucro_real'] : ' - ' . $resumo_pecuario['lucro_real']}}</h4>
                                 <h5 class="mb-0" style="">Lucro Real</h5>
-                                <span class="badge badge-soft-success" style="font-size: 12px;padding: 3px 8px !important;background: #f5efe1;color: #957c49;margin-top: 10px;">Imposto: R$ {{$resumo_pecuario['imposto_real']}}</span>
+                                <span class="badge badge-soft-success" style="font-size: 16px;padding: 5px 8px !important;background: #f5efe1;color: #957c49;margin-top: 10px;">Imposto: R$ {{$resumo_pecuario['imposto_real']}}</span>
 
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                             <div class="media-body overflow-hidden" style="text-align:center;">
 								<h4 class="font-size-24" style="color: green;padding-top: 7px;margin-bottom:2px;">R$ {{$resumo_pecuario['lucro_presumido']}}</h4>
                                 <h5 class="mb-0" style="">Lucro Presumido</h5>
-                                <span class="badge badge-soft-success" style="font-size: 12px;padding: 3px 8px !important;background: #f5efe1;color: #957c49;margin-top: 10px;">Imposto: R$ {{$resumo_pecuario['imposto_presumido']}}</span>
+                                <span class="badge badge-soft-success" style="font-size: 16px;padding: 5px 8px !important;background: #f5efe1;color: #957c49;margin-top: 10px;">Imposto: R$ {{$resumo_pecuario['imposto_presumido']}}</span>
                             </div>
                         </div>
                     </div>

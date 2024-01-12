@@ -108,8 +108,8 @@
                                 </a>
                             </li>   
                             @endif
-
-                            <li style="background: #30374a;"><a href="https://api.whatsapp.com/send/?phone=5571992330722&type=phone_number&app_absent=0" target="_blank"><i class="fab fa-whatsapp"></i><span>Suporte</span></a></li>                               
+                            
+                            <li style="background: #30374a;"><a href="https://api.whatsapp.com/send/?phone=5571997081850&type=phone_number&app_absent=0" target="_blank"><i class="fab fa-whatsapp"></i><span>Suporte</span></a></li>                               
 
                             <!-- Menus Relacioandos ao cliente - Acesso somente para CLIENTE - FIM-->
                             @endif
