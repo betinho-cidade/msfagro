@@ -33,7 +33,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#ativa" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Podutores Ativos ( <code class="highlighter-rouge">{{$produtors_AT->count()}}</code> )
+                            <span class="d-none d-sm-block">Produtores Ativos ( <code class="highlighter-rouge">{{$produtors_AT->count()}}</code> )
                                 @can('create_produtor')
                                     <i class="fas fa-plus-circle" onclick="location.href='{{route('produtor.create')}}'" style="color: goldenrod" title="Novo Produtor"></i>
                                 @endcan
@@ -43,7 +43,7 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#inativa" role="tab">
                             <span class="d-block d-sm-none"><i class=" ri-close-circle-line"></i></span>
-                            <span class="d-none d-sm-block">Podutores Inativos ( <code class="highlighter-rouge">{{$produtors_IN->count()}}</code> )</span>
+                            <span class="d-none d-sm-block">Produtores Inativos ( <code class="highlighter-rouge">{{$produtors_IN->count()}}</code> )</span>
                         </a>
                     </li>
                 </ul>

@@ -140,11 +140,16 @@ class FormaPagamento extends Model
 
     public function getNomeContaResumidaAttribute()
     {
+        $nome_conta_resumida = '';
 
-        $produtor = ' [' . strtok($this->produtor->nome, ' ') . '] ';
-        $banco = (($this->banco) ? '[' .$this->banco . ']' : '');
-
-        $nome_conta_resumida = $produtor . $banco;
+        if($this->produtor){
+            $produtor = ' [' . strtok($this->produtor->nome, ' ') . '] ';
+            $banco = (($this->banco) ? '[' .$this->banco . ']' : '');
+    
+            $nome_conta_resumida = $produtor . $banco;
+        } else {
+            $nome_conta_resumida = (($this->banco) ? '[' .$this->banco . ']' : '');   
+        }
 
         return $nome_conta_resumida;
     }    

@@ -62,7 +62,7 @@
                     <div class="col-md-7">
                         <div class="form-group">
                             <label for="resumo">Resumo</label>
-                            <textarea class="form-control" name="resumo" id="resumo" rows="3" placeholder="Informe o resumo da Notificação" required>{{old('resumo')}}</textarea>
+                            <textarea class="form-control" name="resumo" id="resumo" rows="3" maxlength="500" placeholder="Informe o resumo da Notificação" required>{{old('resumo')}}</textarea>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>

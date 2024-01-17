@@ -52,7 +52,8 @@
         </div>
     </form>
 
-    <!-- INICIO - PARTE 01-->
+    <!-- INICIO - PARTE 01 -- RESUMO PECUARIO -->
+    @if($user->perfil == 'Gestor' || $user->cliente->tipo != 'AG')
     <div class="row">
         <div class="col-xl-12">
         <h4 style="text-align:center;margin-bottom:12px;">Resumo Pecuário</h4>
@@ -133,7 +134,8 @@
             </div>
         </div>
     </div>
-    <!-- FINAL - PARTE 01-->
+    @endif
+    <!-- FINAL - PARTE 01 -- RESUMO PECUARIO-->
 
 
     <!-- INICIO - PARTE 02-->
