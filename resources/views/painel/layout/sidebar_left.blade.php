@@ -70,9 +70,7 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ route('produtor.index') }}">Produtores</a></li>
                                     <li><a href="{{ route('forma_pagamento.index') }}">Formas de Pagamento</a></li>
-                                    @if($user->cliente->tipo !== 'AG')                                                              
-                                        <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
-                                    @endif
+                                    <li><a href="{{ route('fazenda.index') }}">Fazendas</a></li>
                                     <li><a href="{{ route('empresa.index') }}">Empresas</a></li>
                                 </ul>
                             </li>
@@ -100,14 +98,7 @@
 
                             <li><a href="{{ route('painel.notificacao') }}"><i class="ri-notification-3-line"></i><span>Notificações</span></a></li>   
                             
-                            @if($user->cliente->tipo !== 'AG')                                    
-                            <li>
-                                <a href="{{ route('relatorio.geomaps') }}">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Maps</span>
-                                </a>
-                            </li>   
-                            @endif
+                            <li><a href="{{ route('relatorio.geomaps') }}"><i class="fas fa-map-marker-alt"></i><span>Maps</span></a></li>   
                             
                             <li style="background: #30374a;"><a href="https://api.whatsapp.com/send/?phone=5571997081850&type=phone_number&app_absent=0" target="_blank"><i class="fab fa-whatsapp"></i><span>Suporte</span></a></li>                               
 

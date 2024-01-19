@@ -385,12 +385,12 @@ class RelatorioController extends Controller
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Visualização permitida somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Visualização permitida somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        } 
+        //     return redirect()->route('painel');
+        // } 
         
         $anomes_referencia = Carbon::now();
         $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)

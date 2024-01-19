@@ -45,12 +45,12 @@ class FazendaController extends Controller
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }
+        //     return redirect()->route('painel');
+        // }
 
         $anomes_referencia = Carbon::now();
         $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
@@ -98,12 +98,12 @@ class FazendaController extends Controller
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }        
+        //     return redirect()->route('painel');
+        // }        
 
         return view('painel.cadastro.fazenda.create', compact('user'));
     }
@@ -125,12 +125,12 @@ class FazendaController extends Controller
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }        
+        //     return redirect()->route('painel');
+        // }        
 
         $message = '';
 
@@ -184,12 +184,12 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }             
+        //     return redirect()->route('painel');
+        // }             
 
         if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
@@ -211,12 +211,12 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }             
+        //     return redirect()->route('painel');
+        // }             
 
         if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
@@ -273,12 +273,12 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }             
+        //     return redirect()->route('painel');
+        // }             
 
         if(!$user->cliente ||($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
@@ -329,12 +329,12 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if($user->cliente->tipo == 'AG'){
-            $request->session()->flash('message.level', 'warning');
-            $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
-            return redirect()->route('painel');
-        }        
+        //     return redirect()->route('painel');
+        // }        
 
         if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
