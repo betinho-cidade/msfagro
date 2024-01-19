@@ -258,7 +258,6 @@
             if(valor_view && valor_view.value){
                 valor_new = valor_view.value;
                 valor_new = valor_new.replace('R$ ', '').replace('.', '');
-                valor_new = valor_new.replace('R$ ', '').replace('.', '');
                 valor.value = valor_new;
             }
         });

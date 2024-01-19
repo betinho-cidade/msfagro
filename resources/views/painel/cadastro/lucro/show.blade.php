@@ -99,7 +99,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="hidden" class="form-control" id="valor" name="valor" value="">
+                            <input type="hidden" class="form-control" id="valor" name="valor" value="{{$lucro->valor}}">
                             <input type="text" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{$lucro->valor}}" placeholder="Valor" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -177,7 +177,6 @@
 
             if(valor_view && valor_view.value){
                 valor_new = valor_view.value;
-                valor_new = valor_new.replace('R$ ', '').replace('.', '');
                 valor_new = valor_new.replace('R$ ', '').replace('.', '');
                 valor.value = valor_new;
             }

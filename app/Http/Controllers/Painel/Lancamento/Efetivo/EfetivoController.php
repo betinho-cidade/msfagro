@@ -221,7 +221,7 @@ class EfetivoController extends Controller
                 $movimentacao->data_pagamento = $request->data_pagamento;
                 $movimentacao->segmento = 'MG';
                 $movimentacao->tipo = $tipo;
-                $movimentacao->valor = $request->valor;
+                $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
                 $movimentacao->nota = $request->nota;
                 $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
                 $movimentacao->item_texto = $efetivo->texto_efetivo;
@@ -433,7 +433,7 @@ class EfetivoController extends Controller
 
             $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
             $item_texto_old = $efetivo->movimentacao->item_texto;
-            $valor_old = $efetivo->movimentacao->valor;            
+            $valor_old = str_replace(',', '.', $efetivo->movimentacao->valor);
 
             $efetivo->data_programada = $request->data_programada;
             $efetivo->observacao = $request->observacao;
@@ -449,7 +449,7 @@ class EfetivoController extends Controller
 
                 $efetivo->movimentacao->data_programada = $efetivo->data_programada;
                 $efetivo->movimentacao->data_pagamento = $request->data_pagamento;
-                $efetivo->movimentacao->valor = $request->valor;
+                $efetivo->movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
                 $efetivo->movimentacao->nota = $request->nota;
 
                 $efetivo->movimentacao->save();
@@ -519,7 +519,7 @@ class EfetivoController extends Controller
 
                 $efetivo->movimentacao->delete_notification();
                 $efetivo->movimentacao->create_notification();
-            }        
+            }     
 
             if($efetivo->movimentacao->tipo == 'D' && $efetivo->movimentacao->situacao == 'PG') {
                 $efetivo->movimentacao->delete_notification();

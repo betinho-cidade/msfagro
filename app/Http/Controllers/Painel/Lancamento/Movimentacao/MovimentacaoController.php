@@ -156,7 +156,7 @@ class MovimentacaoController extends Controller
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->segmento = 'MF';
             $movimentacao->tipo = $request->tipo;
-            $movimentacao->valor = $request->valor;
+            $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
             $movimentacao->nota = $request->nota;
             $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
             $movimentacao->item_texto = $request->item_texto;
@@ -326,21 +326,21 @@ class MovimentacaoController extends Controller
 
         $ano_mes = Carbon::createFromFormat('Y-m-d', $request->data_programada);
         $mes_referencia = Str::padLeft($ano_mes->month, 2, '0') . '-' . $ano_mes->year;
-
+       
         try {
 
             DB::beginTransaction();
 
             $data_programada_old = $movimentacao->data_programada_ajustada;
             $item_texto_old = $movimentacao->item_texto;
-            $valor_old = $movimentacao->valor;
+            $valor_old = str_replace(',', '.', $movimentacao->valor);
 
             $movimentacao->data_programada = $request->data_programada;
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->empresa_id = $request->empresa;
             $movimentacao->item_texto = $request->item_texto;
             $movimentacao->observacao = $request->observacao;
-            $movimentacao->valor = $request->valor;
+            $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
             $movimentacao->nota = $request->nota;
 
             $movimentacao->save();
@@ -396,8 +396,8 @@ class MovimentacaoController extends Controller
 
             if($movimentacao->tipo == 'D' && $movimentacao->situacao == 'PG') {
                 $movimentacao->delete_notification();
-            }        
-
+            }       
+            
             DB::commit();
 
         } catch (Exception $ex){

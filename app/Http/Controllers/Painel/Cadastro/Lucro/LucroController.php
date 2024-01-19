@@ -126,7 +126,7 @@ class LucroController extends Controller
             $lucro->produtor_id = $request->produtor;
             $lucro->forma_pagamento_id = $request->forma_pagamento;
             $lucro->data_lancamento = $request->data_lancamento;
-            $lucro->valor = $request->valor;
+            $lucro->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
             $lucro->observacao = $request->observacao;
 
             $lucro->save();
@@ -230,7 +230,7 @@ class LucroController extends Controller
             $lucro->produtor_id = $request->produtor;
             $lucro->forma_pagamento_id = $request->forma_pagamento;
             $lucro->data_lancamento = $request->data_lancamento;
-            $lucro->valor = $request->valor;
+            $lucro->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
             $lucro->observacao = $request->observacao;
 
             $lucro->save();
