@@ -47,10 +47,6 @@ class FormaPagamento extends Model
                 $tipo_conta = 'Cessão de Crédito';
                 break;
             }
-            case 'BL' : {
-                $tipo_conta = 'Boleto';
-                break;
-            }
             case 'ES' : {
                 $tipo_conta = 'Espécie';
                 break;

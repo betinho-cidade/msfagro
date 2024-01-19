@@ -62,7 +62,6 @@
                                 <option value="CC" {{($forma_pagamento->tipo_conta == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
                                 <option value="CP" {{($forma_pagamento->tipo_conta == 'CP') ? 'selected' : '' }}>Conta Poupança</option>
                                 <option value="CT" {{($forma_pagamento->tipo_conta == 'CT') ? 'selected' : '' }}>Cessão de Crédito</option>
-                                <option value="BL" {{($forma_pagamento->tipo_conta == 'BL') ? 'selected' : '' }}>Boleto</option>
                                 <option value="ES" {{($forma_pagamento->tipo_conta == 'ES') ? 'selected' : '' }}>Espécie</option>
                             </select>
                             <div class="valid-feedback">ok!</div>

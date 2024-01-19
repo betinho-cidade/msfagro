@@ -67,9 +67,9 @@ class DashboardController extends Controller
                                         }
                                      })
                                      ->whereIn('situacao', ['PG'])
-                                     ->selectRaw("year(data_programada) as ano")
-                                     ->groupByRaw("year(data_programada)") 
-                                     ->orderByRaw("year(data_programada) desc")
+                                     ->selectRaw("year(data_pagamento) as ano")
+                                     ->groupByRaw("year(data_pagamento)") 
+                                     ->orderByRaw("year(data_pagamento) desc")
                                      ->get(); 
 
         if($efetivo_anos->count() == 0){
@@ -117,8 +117,8 @@ class DashboardController extends Controller
 
 
         $lancamentos = Movimentacao::select(
-                                        DB::raw("YEAR(data_programada) as ano"),   
-                                        DB::raw("LPAD(MONTH(data_programada),2,0) as mes"),   
+                                        DB::raw("YEAR(data_pagamento) as ano"),   
+                                        DB::raw("LPAD(MONTH(data_pagamento),2,0) as mes"),   
                                         DB::raw("SUM(CASE WHEN tipo = 'D' then valor END) as debito"),   
                                         DB::raw("SUM(CASE WHEN tipo = 'R' then valor END) as credito"),   
                                     )                                                     
@@ -128,15 +128,15 @@ class DashboardController extends Controller
                                         }      
 
                                         if($search['efetivo_ano']){
-                                            $query->whereYear('data_programada', $search['efetivo_ano']);      
+                                            $query->whereYear('data_pagamento', $search['efetivo_ano']);      
                                         } else {
-                                            $query->whereYear('data_programada', $efetivo_anos[0]['ano']);      
+                                            $query->whereYear('data_pagamento', $efetivo_anos[0]['ano']);      
                                         }                                        
                                     })
                                     ->whereIn('situacao', ['PG'])
-                                    ->groupByRaw('YEAR(data_programada), MONTH(data_programada)')
-                                    ->orderByRaw('YEAR(data_programada)')
-                                    ->orderByRaw('MONTH(data_programada)')
+                                    ->groupByRaw('YEAR(data_pagamento), MONTH(data_pagamento)')
+                                    ->orderByRaw('YEAR(data_pagamento)')
+                                    ->orderByRaw('MONTH(data_pagamento)')
                                     ->get();
 
         $total_credito = 0;

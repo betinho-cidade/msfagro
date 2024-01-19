@@ -59,7 +59,6 @@
                                 <option value="CC" {{(old('tipo_conta') == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
                                 <option value="CP" {{(old('tipo_conta') == 'CP') ? 'selected' : '' }}>Conta Poupança</option>
                                 <option value="CT" {{(old('tipo_conta') == 'CT') ? 'selected' : '' }}>Cessão de Crédito</option>
-                                <option value="BL" {{(old('tipo_conta') == 'BL') ? 'selected' : '' }}>Boleto</option>
                                 <option value="ES" {{(old('tipo_conta') == 'ES') ? 'selected' : '' }}>Espécie</option>
                             </select>
                             <div class="valid-feedback">ok!</div>
