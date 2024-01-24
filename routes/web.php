@@ -22,7 +22,7 @@ Route::get('/logout', 'HomeController@logout')->name('logout')->middleware('auth
 // Route::post('/user/js_viacep', 'HomeController@js_viacep')->name('user.js_viacep');
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'assinante.ativo'])->group(function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
