@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Formas de Pagamento do Cliente</h4>
+
+            @can('create_forma_pagamento')
+            <div class="page-title-right">
+                <a href="{{route("forma_pagamento.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Forma Pagamento</a>
+            </div>
+            @endcan            
         </div>
     </div>
 </div>
@@ -73,6 +79,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
+                                <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
                                 <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
                             @endcan
 
@@ -125,6 +132,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
+                                <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
                                 <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
                             @endcan
 

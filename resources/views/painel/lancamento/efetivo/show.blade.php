@@ -114,7 +114,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="gta">Número GTA</label>
-                            <input type="text" class="form-control" id="gta" name="gta" value="{{$efetivo->gta}}" placeholder="Número GTA">
+                            <input type="text" class="form-control" id="gta" name="gta" value="{{$efetivo->gta}}" placeholder="Número GTA" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -129,7 +129,7 @@
                             @endif
                         </label>
                         <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input {{($errors->first('path_gta') ? 'form-error-field' : '')}}" id="path_gta" name="path_gta" accept="image/*, application/pdf">
+                            <input type="file" class="custom-file-input {{($errors->first('path_gta') ? 'form-error-field' : '')}}" id="path_gta" name="path_gta" accept="image/*, application/pdf" required>
                             <label class="custom-file-label" for="path_gta">Selecionar GTA</label>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
@@ -213,8 +213,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="hidden" class="form-control" id="valor" name="valor" value="{{ $efetivo->movimentacao->valor ?? '' }}">
-                            <input type="text" style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{ $efetivo->movimentacao->valor ?? '' }}" placeholder="Valor" {{ $efetivo->tipo == 'EG' ? 'disabled' : 'required' }}>
+                            <input type="number" style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{ $efetivo->movimentacao->valor ?? '' }}" placeholder="Valor" {{ $efetivo->tipo == 'EG' ? 'disabled' : 'required' }}>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -261,6 +260,29 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Outros anexos</h5>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="path_anexo" class="{{($errors->first('path_anexo') ? 'form-error-label' : '')}}">Anexo (imagem/pdf/xls/doc)
+                            @if($efetivo->movimentacao && $efetivo->movimentacao->path_anexo)
+                            <a href="{{ route('efetivo.download', ['efetivo' => $efetivo->id, 'tipo_documento' => 'AN']) }}">
+                                <i class="mdi mdi-file-download mdi-18px" style="color: goldenrod;cursor: pointer" title="Download do Anexo"></i>
+                            </a>
+                            @endif
+                        </label>
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input {{($errors->first('path_anexo') ? 'form-error-field' : '')}}" id="path_anexo" name="path_anexo"  accept="image/*,application/pdf,.doc,.docx,.xml,.xls,.xlsx,application/msword" {{ $efetivo->tipo == 'EG' ? 'disabled' : '' }}>
+                            <label style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};"  id="path_anexo_lbl" class="custom-file-label" for="path_anexo">Selecionar Anexo</label>
+                            <div class="valid-feedback">ok!</div>
+                            <div class="invalid-feedback">Inválido!</div>
+                        </div>
+                    </div>
+                </div>                
+                <br>
                 @endif
 
             <!-- Dados Pessoais -- FIM -->
@@ -282,53 +304,5 @@
     <script src="{{asset('nazox/assets/js/pages/form-validation.init.js')}}"></script>
     <script src="{{asset('nazox/assets/libs/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <script src="{{asset('nazox/assets/js/pages/form-element.init.js')}}"></script>
-
-    <!-- form mask -->
-    <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
-    <script src="{{asset('js/jquery.maskMoney.min.js')}}"></script>
-
-    <script>
-
-    $(document).ready(function(){
-
-        $('.mask_valor').maskMoney({
-            prefix:'R$ ',
-            allowNegative: false,
-            thousands:'.',
-            decimal:',',
-            precision: 2,
-            affixesStay: true
-        });
-
-        formatValorMoeda('valor');
-        formatValorMoeda('valor_view');
-
-        $('.updValor').change(function(){
-            let valor_view = document.getElementById('valor_view');
-            let valor = document.getElementById('valor');
-
-            if(valor_view && valor_view.value){
-                valor_new = valor_view.value;
-                valor_new = valor_new.replace('R$ ', '').replace('.', '');
-                valor.value = valor_new;
-            }            
-
-        });
-
-    });
-
-    function formatValorMoeda(field){
-        let element =  document.getElementById(field);
-
-        if(element && element.value){
-            valueFormatted = parseFloat(element.value.replace('R$ ', '').replace(',', '.')).toFixed(2).replace('.', ',');
-            document.getElementById(field).value = valueFormatted;
-
-            $('#'+field).trigger('select');
-        }
-    }
-
-    </script>
-
-@endsection
+ @endsection
 

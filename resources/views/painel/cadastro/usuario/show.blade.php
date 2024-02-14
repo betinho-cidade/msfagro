@@ -40,9 +40,18 @@
         <div class="card">
             <div class="card-body">
             <!-- FORMULÁRIO - INICIO -->
+            <div style="display: inline-flex;margin-bottom: 15px;">
+                <div style="float: left;">
+                    <img width="100px" src="{{ $usuario->avatar }}">   
+                </div>   
 
-            <h4 class="card-title">Formulário de Atualização - Usuário {{$usuario->name}}</h4>
-            <p class="card-title-desc">O usuário cadastrado poderá acessar ao sistema e realizar as ações necessárias conforme seu perfil de acesso GESTOR ou CLIENTE. Cada usuário somente poderá ter um ÚNICO perfil associado.</p>
+                <div style="padding: 5px 0 0 10px;"> 
+                    <h4 class="card-title">Formulário de Atualização - Usuário {{$usuario->name}}</h4>
+                    <p class="card-title-desc">O usuário cadastrado poderá acessar ao sistema e realizar as ações necessárias conforme seu perfil de acesso GESTOR ou CLIENTE. Cada usuário somente poderá ter um ÚNICO perfil associado.</p>
+                </div>
+            </div>
+          
+
 
             <form name="edit_usuario" method="POST" action="{{route('usuario.update', compact('usuario'))}}"  class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf

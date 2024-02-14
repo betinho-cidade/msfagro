@@ -59,10 +59,14 @@
                             <label for="tipo_conta" class="{{($errors->first('tipo_conta') ? 'form-error-label' : '')}}">Tipo Conta</label>
                             <select id="tipo_conta" name="tipo_conta" class="form-control {{($errors->first('tipo_conta') ? 'form-error-field' : '')}}" required>
                                 <option value="">---</option>
-                                <option value="CC" {{($forma_pagamento->tipo_conta == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
-                                <option value="CP" {{($forma_pagamento->tipo_conta == 'CP') ? 'selected' : '' }}>Conta Poupança</option>
-                                <option value="CT" {{($forma_pagamento->tipo_conta == 'CT') ? 'selected' : '' }}>Cessão de Crédito</option>
-                                <option value="ES" {{($forma_pagamento->tipo_conta == 'ES') ? 'selected' : '' }}>Espécie</option>
+                                @if($forma_pagamento->tipo_conta == 'CC' || $forma_pagamento->tipo_conta == 'CP')
+                                    <option value="CC" {{($forma_pagamento->tipo_conta == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
+                                    <option value="CP" {{($forma_pagamento->tipo_conta == 'CP') ? 'selected' : '' }}>Conta Poupança</option>
+                                @elseif($forma_pagamento->tipo_conta == 'CT')
+                                    <option value="CT" {{($forma_pagamento->tipo_conta == 'CT') ? 'selected' : '' }}>Cessão de Crédito</option>
+                                @elseif($forma_pagamento->tipo_conta == 'ES')
+                                    <option value="ES" {{($forma_pagamento->tipo_conta == 'ES') ? 'selected' : '' }}>Espécie</option>
+                                @endif
                             </select>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>

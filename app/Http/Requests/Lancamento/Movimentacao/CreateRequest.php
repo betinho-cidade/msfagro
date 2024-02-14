@@ -30,6 +30,7 @@ class CreateRequest extends FormRequest
             'observacao' => 'max:1000',
             'path_nota' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:5120',
             'path_comprovante' => ['nullable', 'required_with:data_pagamento', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_pagamento ?? '')],
+            'path_anexo' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf,xlsx,xls,doc,docx,xml|max:5120',
         ];
     }
 
@@ -55,6 +56,9 @@ class CreateRequest extends FormRequest
             'path_comprovante.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para o comprovante de pagamento',
             'path_comprovante.max' => 'O tamanho máximo permitido para o Comprovante de Pagamento é de 1Mb.',
             'path_comprovante.required_with' => 'O Comprovante de Pagamento é requerido com a Data de Pagamento.',
+            'path_anexo.mimes' => 'Somente arquivos do tipo JPEG|JPG|PNG|GIF|SVG|XLSX|XLS|DOC|DOCX|XML são permitidas para o Anexo',
+            'path_anexo.max' => 'O tamanho máximo permitido para o Anexo é de 5Mb.',
+
         ];
     }
 }

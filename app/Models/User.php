@@ -29,6 +29,12 @@ class User extends Authenticatable
     ];
 
 
+    public function getAvatarAttribute()
+    {
+        return ($this->path_avatar) ? asset('images/avatar').'/'.$this->path_avatar : asset('images/avatar') .'/avatar.png';
+    }
+
+
     public function getDataAlteracaoAttribute()
     {
         return date('d/m/Y H:i:s', strtotime($this->updated_at));

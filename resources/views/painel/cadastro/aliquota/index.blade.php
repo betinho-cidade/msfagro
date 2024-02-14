@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Alíquotas do Sistema</h4>
+
+            @can('create_aliquota')
+                <div class="page-title-right">
+                    <a href="{{route("aliquota.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Aliquota</a>
+                </div>            
+            @endcan
         </div>
     </div>
 </div>

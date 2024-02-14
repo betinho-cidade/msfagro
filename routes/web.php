@@ -59,6 +59,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/usuario/{usuario}', 'UsuarioController@show')->name('usuario.show');
                 Route::put('/usuario/{usuario}/update', 'UsuarioController@update')->name('usuario.update');
                 Route::delete('/usuario/{usuario}/destroy', 'UsuarioController@destroy')->name('usuario.destroy');
+                Route::get('/usuario/{usuario}/alterar_status', 'UsuarioController@alterar_status')->name('usuario.alterar_status');
             });
 
             Route::group(['namespace' => 'UsuarioLogado'], function(){
@@ -73,6 +74,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/categoria/{categoria}', 'CategoriaController@show')->name('categoria.show');
                 Route::put('/categoria/{categoria}/update', 'CategoriaController@update')->name('categoria.update');
                 Route::delete('/categoria/{categoria}/destroy', 'CategoriaController@destroy')->name('categoria.destroy');
+                Route::get('/categoria/{categoria}/alterar_status', 'CategoriaController@alterar_status')->name('categoria.alterar_status');
             });
 
             Route::group(['namespace' => 'Aliquota'], function(){
@@ -91,6 +93,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/cliente/{cliente}', 'ClienteController@show')->name('cliente.show');
                 Route::put('/cliente/{cliente}/update', 'ClienteController@update')->name('cliente.update');
                 Route::delete('/cliente/{cliente}/destroy', 'ClienteController@destroy')->name('cliente.destroy');
+                Route::get('/cliente/{cliente}/alterar_status', 'ClienteController@alterar_status')->name('cliente.alterar_status');
             });
 
             Route::group(['namespace' => 'FormaPagamento'], function(){
@@ -100,6 +103,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/forma_pagamento/{forma_pagamento}', 'FormaPagamentoController@show')->name('forma_pagamento.show');
                 Route::put('/forma_pagamento/{forma_pagamento}/update', 'FormaPagamentoController@update')->name('forma_pagamento.update');
                 Route::delete('/forma_pagamento/{forma_pagamento}/destroy', 'FormaPagamentoController@destroy')->name('forma_pagamento.destroy');
+                Route::get('/forma_pagamento/{forma_pagamento}/alterar_status', 'FormaPagamentoController@alterar_status')->name('forma_pagamento.alterar_status');
             });
 
             Route::group(['namespace' => 'Fazenda'], function(){
@@ -110,6 +114,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::put('/fazenda/{fazenda}/update', 'FazendaController@update')->name('fazenda.update');
                 Route::delete('/fazenda/{fazenda}/destroy', 'FazendaController@destroy')->name('fazenda.destroy');
                 Route::post('/fazenda/{fazenda}/geomaps', 'FazendaController@geomaps')->name('fazenda.geomaps');
+                Route::get('/fazenda/{fazenda}/alterar_status', 'FazendaController@alterar_status')->name('fazenda.alterar_status');
             });
 
             Route::group(['namespace' => 'Empresa'], function(){
@@ -119,6 +124,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/empresa/{empresa}', 'EmpresaController@show')->name('empresa.show');
                 Route::put('/empresa/{empresa}/update', 'EmpresaController@update')->name('empresa.update');
                 Route::delete('/empresa/{empresa}/destroy', 'EmpresaController@destroy')->name('empresa.destroy');
+                Route::get('/empresa/{empresa}/alterar_status', 'EmpresaController@alterar_status')->name('empresa.alterar_status');
             });
 
             Route::group(['namespace' => 'Produtor'], function(){
@@ -128,6 +134,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/produtor/{produtor}', 'ProdutorController@show')->name('produtor.show');
                 Route::put('/produtor/{produtor}/update', 'ProdutorController@update')->name('produtor.update');
                 Route::delete('/produtor/{produtor}/destroy', 'ProdutorController@destroy')->name('produtor.destroy');
+                Route::get('/produtor/{produtor}/alterar_status', 'ProdutorController@alterar_status')->name('produtor.alterar_status');
             });
 
             Route::group(['namespace' => 'Googlemap'], function(){
@@ -147,6 +154,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::put('/notificacao/{notificacao}/cliente_store', 'NotificacaoController@cliente_store')->name('notificacao.cliente_store');    
                 Route::delete('/notificacao/{notificacao}/cliente_destroy/{cliente_notificacao}', 'NotificacaoController@cliente_destroy')->name('notificacao.cliente_destroy');  
                 Route::delete('/notificacao/{notificacao}/destroy', 'NotificacaoController@destroy')->name('notificacao.destroy');
+                Route::get('/notificacao/{notificacao}/alterar_status', 'NotificacaoController@alterar_status')->name('notificacao.alterar_status');
             });         
             
             Route::group(['namespace' => 'Lucro'], function(){

@@ -438,4 +438,57 @@ class FazendaController extends Controller
         return redirect()->route('fazenda.index');
     }    
 
+
+
+    public function alterar_status(Fazenda $fazenda, Request $request)
+    {
+        if(Gate::denies('edit_fazenda')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        // if($user->cliente->tipo == 'AG'){
+        //     $request->session()->flash('message.level', 'warning');
+        //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
+
+        //     return redirect()->route('painel');
+        // }             
+
+        if(!$user->cliente ||($user->cliente->id != $fazenda->cliente_id) ){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
+
+            return redirect()->route('fazenda.index');
+        }
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $fazenda->status = ($fazenda->status == 'A') ? 'I' : 'A';
+
+            $fazenda->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+            
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Fazenda <code class="highlighter-rouge">'. $fazenda->nome .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('fazenda.index');
+    }
+
 }

@@ -220,6 +220,13 @@ class UsuarioController extends Controller
 
                 $usuario->delete();
 
+                $path_avatar = 'images/avatar';
+
+                if(\File::exists(public_path($path_avatar.'/'.$usuario->path_avatar))){
+                    \File::delete(public_path($path_avatar.'/'.$usuario->path_avatar));
+                }
+
+
                 DB::commit();
 
             } catch (Exception $ex){
@@ -248,5 +255,59 @@ class UsuarioController extends Controller
 
         return redirect()->route('usuario.index');
     }
+
+
+    public function alterar_status(Request $request, User $usuario)
+    {
+        if(Gate::denies('edit_usuario')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+
+        if($usuario->id == $user->id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não é possível alterar o próprio status.');
+
+            return redirect()->route('usuario.index');
+        }
+
+
+        $message = '';
+
+        try {
+
+            DB::beginTransaction();
+
+            $usuario_status = $usuario->situacao;
+
+            $novo_status = ($usuario_status['status'] == 'A') ? 'I' : 'A';
+
+            if($usuario->id != $user->id){
+                $usuario_status['status'] = $novo_status;
+                $usuario_status->save();
+            }
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. " . $ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Usuário <code class="highlighter-rouge">'. $usuario->name .'</code> foi alterado com sucesso');
+        }
+
+        return redirect()->route('usuario.index');
+    }
+
 
 }

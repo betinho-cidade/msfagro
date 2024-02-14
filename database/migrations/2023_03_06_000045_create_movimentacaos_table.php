@@ -22,8 +22,9 @@ class CreateMovimentacaosTable extends Migration
             $table->datetime('data_pagamento')->nullable();
             $table->enum('tipo', ['R' ,'D']); //R->Receita  D->Despesa
             $table->enum('segmento', ['MG', 'MF']);  //MG->Movimentação Bovina  MF->Movimentação Fiscal
-            $table->decimal('valor', 10, 2);
+            $table->decimal('valor', 20, 2);
             $table->string('path_comprovante', 500)->nullable();
+            $table->string('path_anexo', 500)->nullable();
             $table->string('nota', 50);
             $table->string('path_nota', 500);
             $table->enum('situacao', ['PD', 'PG', 'CL'])->default('PD');  //PD->Movimentação Pendente  PG->Movimentação Paga  CL->Movimentação Cancelada

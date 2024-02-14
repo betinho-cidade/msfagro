@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Fazendas do Cliente</h4>
+
+            @can('create_fazenda')
+            <div class="page-title-right">
+                <a href="{{route("fazenda.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Fazenda</a>
+            </div>
+            @endcan              
         </div>
     </div>
 </div>
@@ -90,6 +96,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_fazenda')
+                                <a href="{{route('fazenda.alterar_status', compact('fazenda'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Fazenda"></i></a>
                                 <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Fazenda"></i></a>
                                 <i onclick="geoMapsData({{$fazenda->id}})" class="fas fa-map-marker-alt" style="color: goldenrod" data-toggle="tooltip" title="Atualizar a Geolocalização (Latitude/Longitude)"></i>
                             @endcan
@@ -159,6 +166,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_fazenda')
+                                <a href="{{route('fazenda.alterar_status', compact('fazenda'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Fazenda"></i></a>
                                 <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Fazenda"></i></a>
                             @endcan
 

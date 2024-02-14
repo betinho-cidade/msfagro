@@ -5,7 +5,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Usuários do Sistema</h4>
+        <h4 class="mb-0">Usuários do Sistema</h4>
+        
+            @can('create_usuario')
+                <div class="page-title-right">
+                    <a href="{{route("usuario.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Novo Usuário</a>
+                </div>          
+            @endcan  
         </div>
     </div>
 </div>
@@ -75,6 +81,9 @@
                             <td style="text-align:center;">
 
                             @can('edit_usuario')
+                                @if($user->id != $usuario->id)
+                                    <a href="{{route('usuario.alterar_status', compact('usuario'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Usuário"></i></a>
+                                @endif
                                 <a href="{{route('usuario.show', compact('usuario'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Usuário"></i></a>
                             @endcan
 
@@ -131,6 +140,9 @@
                             <td style="text-align:center;">
 
                             @can('edit_usuario')
+                                @if($user->id != $usuario->id)
+                                    <a href="{{route('usuario.alterar_status', compact('usuario'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Usuário"></i></a>
+                                @endif
                                 <a href="{{route('usuario.show', compact('usuario'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Usuário"></i></a>
                             @endcan
 

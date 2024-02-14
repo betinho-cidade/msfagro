@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="view_password" class="{{($errors->first('view_password') ? 'form-error-label' : '')}}">Senha Atual</label>
                                 <input type="password" class="form-control {{($errors->first('view_password') ? 'form-error-field' : '')}}" id="view_password" name="view_password" placeholder="Senha" required>
@@ -80,7 +80,7 @@
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="password_new" class="{{($errors->first('password_new') ? 'form-error-label' : '')}}">Nova Senha</label>
                                 <input type="password" class="form-control {{($errors->first('password_new') ? 'form-error-field' : '')}}" id="password_new" name="password_new" placeholder="Senha">
@@ -89,7 +89,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="password_confirm" class="{{($errors->first('password_confirm') ? 'form-error-label' : '')}}">Nova Senha Confirmação</label>
                                 <input type="password" class="form-control {{($errors->first('password_confirm') ? 'form-error-field' : '')}}" id="password_confirm" name="password_confirm" placeholder="Senha de Confirmação">
@@ -97,7 +97,21 @@
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <label for="path_avatar">Imagem</label>
+                            <div class="form-group custom-file">
+                                <input type="file" class="custom-file-input" id="path_avatar" name="path_avatar" accept="image/*">
+                                <label class="custom-file-label" for="path_avatar">Selecionar Imagem</label>
+                                <div class="valid-feedback">ok!</div>
+                                <div class="invalid-feedback">Inválido!</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <img width="100px" src="{{ $user->avatar }}">   
+                        </div>                       
                     </div>
+                
+
                 <!-- Dados Pessoais -- FIM -->
 
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>

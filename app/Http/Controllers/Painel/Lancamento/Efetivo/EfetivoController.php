@@ -221,7 +221,7 @@ class EfetivoController extends Controller
                 $movimentacao->data_pagamento = $request->data_pagamento;
                 $movimentacao->segmento = 'MG';
                 $movimentacao->tipo = $tipo;
-                $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+                $movimentacao->valor = ($request->valor) ? $request->valor : null;
                 $movimentacao->nota = $request->nota;
                 $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
                 $movimentacao->item_texto = $efetivo->texto_efetivo;
@@ -289,6 +289,18 @@ class EfetivoController extends Controller
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
+
+            if ($request->path_anexo) {
+
+                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+
+                $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                $movimentacao->path_anexo = $nome_arquivo;
+
+                $movimentacao->save();
+
+                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+            }            
 
             DB::commit();
 
@@ -431,9 +443,11 @@ class EfetivoController extends Controller
 
             DB::beginTransaction();
 
-            $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
-            $item_texto_old = $efetivo->movimentacao->item_texto;
-            $valor_old = str_replace(',', '.', $efetivo->movimentacao->valor);
+            if($efetivo->movimentacao){
+                $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
+                $item_texto_old = $efetivo->movimentacao->item_texto;
+                $valor_old = $efetivo->movimentacao->valor;
+            }
 
             $efetivo->data_programada = $request->data_programada;
             $efetivo->observacao = $request->observacao;
@@ -449,7 +463,7 @@ class EfetivoController extends Controller
 
                 $efetivo->movimentacao->data_programada = $efetivo->data_programada;
                 $efetivo->movimentacao->data_pagamento = $request->data_pagamento;
-                $efetivo->movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+                $efetivo->movimentacao->valor = ($request->valor) ? $request->valor : null;
                 $efetivo->movimentacao->nota = $request->nota;
 
                 $efetivo->movimentacao->save();
@@ -511,7 +525,24 @@ class EfetivoController extends Controller
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
 
-            if(($efetivo->movimentacao->data_programada != $data_programada_old || 
+            if ($request->path_anexo) {
+
+                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+
+                if($efetivo->movimentacao->path_anexo){
+                    if(Storage::exists($path_anexo)) {
+                        Storage::delete($path_anexo . $efetivo->movimentacao->path_anexo);
+                    }
+                }
+
+                $nome_arquivo = 'ANEXO_'.$efetivo->movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                $efetivo->movimentacao->path_anexo = $nome_arquivo;
+                $efetivo->movimentacao->save();
+
+                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+            }            
+
+            if($efetivo->movimentacao && ($efetivo->movimentacao->data_programada != $data_programada_old || 
                 $efetivo->movimentacao->item_texto != $item_texto_old ||   
                 $efetivo->movimentacao->valor != $valor_old) && 
                 $efetivo->movimentacao->situacao == 'PD' && 
@@ -603,8 +634,14 @@ class EfetivoController extends Controller
             $efetivo_arquivos[0]['path_gta'] = $efetivo->path_gta;
 
             if($efetivo->movimentacao){
+
+                if($efetivo->movimentacao->tipo == 'D') {
+                    $efetivo->movimentacao->delete_notification();
+                }            
+
                 $efetivo_arquivos[0]['path_nota'] = $efetivo->movimentacao->path_nota;
                 $efetivo_arquivos[0]['path_comprovante'] = $efetivo->movimentacao->path_comprovante;
+                $efetivo_arquivos[0]['path_anexo'] = $efetivo->movimentacao->path_anexo;
                 $efetivo->movimentacao->delete();
             }
 
@@ -740,6 +777,7 @@ class EfetivoController extends Controller
                 if($efetivo->movimentacao){
                     $efetivo_arquivos[$contArquivos]['path_nota'] = $efetivo->movimentacao->path_nota;
                     $efetivo_arquivos[$contArquivos]['path_comprovante'] = $efetivo->movimentacao->path_comprovante;
+                    $efetivo_arquivos[$contArquivos]['path_anexo'] = $efetivo->movimentacao->path_anexo;
 
                     if($efetivo->movimentacao->tipo == 'D') {
                         $efetivo->movimentacao->delete_notification();
@@ -803,6 +841,13 @@ class EfetivoController extends Controller
                     Storage::delete($path_comprovante . $efetivo['path_comprovante']);
                 }
             }
+
+            $path_anexo = 'documentos/'. $efetivo['cliente_id'] . '/anexos/';
+            if($efetivo['movimentacao_id'] != 0 && $efetivo['path_anexo']){
+                if(Storage::exists($path_anexo)) {
+                    Storage::delete($path_anexo . $efetivo['path_anexo']);
+                }
+            }            
 
         }
     }
@@ -875,6 +920,10 @@ class EfetivoController extends Controller
                 $path_documento = $path_documento . 'notas/' . $efetivo->movimentacao->path_nota;
                 break;
             }
+            case 'AN':{
+                $path_documento = $path_documento . 'anexos/' . $efetivo->movimentacao->path_anexo;
+                break;
+            }            
         }
 
         return Storage::download($path_documento);

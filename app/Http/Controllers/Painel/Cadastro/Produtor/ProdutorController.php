@@ -43,13 +43,13 @@ class ProdutorController extends Controller
             return redirect()->route('painel');
         }
 
-        $produtors_AT = produtor::where('status','A')
+        $produtors_AT = Produtor::where('status','A')
                             ->where('cliente_id', $user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
 
-        $produtors_IN = produtor::where('status','I')
+        $produtors_IN = Produtor::where('status','I')
                             ->where('cliente_id', $user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
@@ -102,7 +102,7 @@ class ProdutorController extends Controller
 
             DB::beginTransaction();
 
-            $produtor = new produtor();
+            $produtor = new Produtor();
 
             $produtor->cliente_id = $user->cliente->id;
             $produtor->nome = $request->nome;
@@ -248,7 +248,7 @@ class ProdutorController extends Controller
 
 
 
-    public function destroy(produtor $produtor, Request $request)
+    public function destroy(Produtor $produtor, Request $request)
     {
         if(Gate::denies('delete_produtor')){
             abort('403', 'Página não disponível');
@@ -295,5 +295,49 @@ class ProdutorController extends Controller
 
         return redirect()->route('produtor.index');
     }
+
+    public function alterar_status(Produtor $produtor, Request $request)
+    {
+        if(Gate::denies('edit_produtor')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente ||($user->cliente->id != $produtor->cliente_id) ){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Produtor não pertence ao cliente informado.');
+
+            return redirect()->route('produtor.index');
+        }
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $produtor->status = ($produtor->status == 'A') ? 'I' : 'A';
+
+            $produtor->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A situação do Produtor <code class="highlighter-rouge">'. $produtor->nome .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('produtor.index');
+    }    
 
 }

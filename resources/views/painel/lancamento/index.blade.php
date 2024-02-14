@@ -6,6 +6,18 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Lançamentos do Cliente</h4>
+            
+            <div class="page-title-right">
+                @if($user->cliente && $user->cliente->tipo != 'AG')    
+                    @can('create_efetivo')
+                        <a href="{{route("efetivo.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Novo Efetivo Pecuário</a>
+                    @endcan                                                 
+                @endif
+
+                @can('create_movimentacao')
+                    <a href="{{route("movimentacao.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Movimentação Fiscal</a>
+                @endcan                                                              
+            </div>
         </div>
     </div>
 </div>

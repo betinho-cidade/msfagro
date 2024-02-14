@@ -273,4 +273,48 @@ class EmpresaController extends Controller
         return redirect()->route('empresa.index');
     }
 
+    public function alterar_status(Empresa $empresa, Request $request)
+    {
+        if(Gate::denies('edit_empresa')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente ||($user->cliente->id != $empresa->cliente_id) ){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'A Empresa não pertence ao cliente informado.');
+
+            return redirect()->route('empresa.index');
+        }
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $empresa->status = ($empresa->status == 'A') ? 'I' : 'A';
+
+            $empresa->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Empresa <code class="highlighter-rouge">'. $empresa->nome .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('empresa.index');
+    }    
+
 }

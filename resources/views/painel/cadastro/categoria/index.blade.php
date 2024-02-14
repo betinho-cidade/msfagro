@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Categorias do Sistema</h4>
+
+            @can('create_categoria')
+            <div class="page-title-right">
+                <a href="{{route("categoria.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Categoria</a>
+            </div>
+            @endcan              
         </div>
     </div>
 </div>
@@ -75,6 +81,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_categoria')
+                                <a href="{{route('categoria.alterar_status', compact('categoria'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Categoria"></i></a>
                                 <a href="{{route('categoria.show', compact('categoria'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Categoria"></i></a>
                             @endcan
 
@@ -129,6 +136,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_categoria')
+                                <a href="{{route('categoria.alterar_status', compact('categoria'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Categoria"></i></a>
                                 <a href="{{route('categoria.show', compact('categoria'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Categoria"></i></a>
                             @endcan
 

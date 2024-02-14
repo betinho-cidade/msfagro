@@ -342,4 +342,42 @@ class NotificacaoController extends Controller
         return redirect()->route('notificacao.show', compact('notificacao'));
     }    
 
+
+    public function alterar_status(Notificacao $notificacao, Request $request)
+    {
+        if(Gate::denies('edit_notificacao')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $notificacao->status = ($notificacao->status == 'A') ? 'I' : 'A';
+
+            $notificacao->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Notificação foi alterada com sucesso');
+        }
+
+        return redirect()->route('notificacao.index');
+    }
+
 }

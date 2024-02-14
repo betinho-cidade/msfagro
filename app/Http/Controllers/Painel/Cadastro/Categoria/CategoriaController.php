@@ -212,4 +212,41 @@ class CategoriaController extends Controller
         return redirect()->route('categoria.index');
     }
 
+    public function alterar_status(Categoria $categoria, Request $request)
+    {
+        if(Gate::denies('edit_categoria')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $categoria->status = ($categoria->status == 'A') ? 'I' : 'A';
+
+            $categoria->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Categoria <code class="highlighter-rouge">'. $categoria->nome .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('categoria.index');
+    }    
+
 }

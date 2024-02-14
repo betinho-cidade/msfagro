@@ -110,9 +110,13 @@ class FormaPagamentoController extends Controller
 
             $forma_pagamento = new FormaPagamento();
 
+            if($request->tipo_conta == 'CC' || $request->tipo_conta == 'CP'){
+                $forma_pagamento->tipo_conta = $request->tipo_conta;
+            }
+
             $forma_pagamento->cliente_id = $user->cliente->id;
             $forma_pagamento->produtor_id = $request->produtor;
-            $forma_pagamento->tipo_conta = $request->tipo_conta;
+            //$forma_pagamento->tipo_conta = $request->tipo_conta;
             $forma_pagamento->banco = $request->banco;
             $forma_pagamento->agencia = $request->agencia;
             $forma_pagamento->conta = $request->conta;
@@ -190,7 +194,9 @@ class FormaPagamentoController extends Controller
 
             DB::beginTransaction();
 
-            $forma_pagamento->tipo_conta = $request->tipo_conta;
+            if($forma_pagamento->tipo_conta == 'CC' || $forma_pagamento->tipo_conta == 'CP'){
+                $forma_pagamento->tipo_conta = $request->tipo_conta;
+            }
             $forma_pagamento->produtor_id = $request->produtor;
             $forma_pagamento->banco = $request->banco;
             $forma_pagamento->agencia = $request->agencia;
@@ -269,5 +275,49 @@ class FormaPagamentoController extends Controller
 
         return redirect()->route('forma_pagamento.index');
     }
+
+    public function alterar_status(FormaPagamento $forma_pagamento, Request $request)
+    {
+        if(Gate::denies('edit_forma_pagamento')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente ||($user->cliente->id != $forma_pagamento->cliente_id) ){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'A forma de pagamento não pertence ao cliente informado.');
+
+            return redirect()->route('forma_pagamento.index');
+        }
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $forma_pagamento->status = ($forma_pagamento->status == 'A') ? 'I' : 'A';
+
+            $forma_pagamento->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Forma de Pagamento <code class="highlighter-rouge">'. $forma_pagamento->tipo_conta_texto .'</code> foi alterada com sucesso');
+        }
+
+        return redirect()->route('forma_pagamento.index');
+    }        
 
 }

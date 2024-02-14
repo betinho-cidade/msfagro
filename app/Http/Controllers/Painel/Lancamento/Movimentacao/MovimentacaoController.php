@@ -156,7 +156,7 @@ class MovimentacaoController extends Controller
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->segmento = 'MF';
             $movimentacao->tipo = $request->tipo;
-            $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+            $movimentacao->valor = ($request->valor) ? $request->valor : null;
             $movimentacao->nota = $request->nota;
             $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
             $movimentacao->item_texto = $request->item_texto;
@@ -189,6 +189,17 @@ class MovimentacaoController extends Controller
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
+
+            if ($request->path_anexo) {
+
+                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+
+                $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                $movimentacao->path_anexo = $nome_arquivo;
+                $movimentacao->save();
+
+                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+            }            
 
             if($movimentacao->situacao == 'PD' && $movimentacao->tipo == 'D') $movimentacao->create_notification();
 
@@ -333,14 +344,14 @@ class MovimentacaoController extends Controller
 
             $data_programada_old = $movimentacao->data_programada_ajustada;
             $item_texto_old = $movimentacao->item_texto;
-            $valor_old = str_replace(',', '.', $movimentacao->valor);
+            $valor_old = $movimentacao->valor;
 
             $movimentacao->data_programada = $request->data_programada;
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->empresa_id = $request->empresa;
             $movimentacao->item_texto = $request->item_texto;
             $movimentacao->observacao = $request->observacao;
-            $movimentacao->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+            $movimentacao->valor = ($request->valor) ? $request->valor : null;
             $movimentacao->nota = $request->nota;
 
             $movimentacao->save();
@@ -383,6 +394,23 @@ class MovimentacaoController extends Controller
 
                 Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
             }
+
+            if ($request->path_anexo) {
+
+                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+
+                if($movimentacao->path_anexo){
+                    if(Storage::exists($path_anexo)) {
+                        Storage::delete($path_anexo . $movimentacao->path_anexo);
+                    }
+                }
+
+                $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                $movimentacao->path_anexo = $nome_arquivo;
+                $movimentacao->save();
+
+                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+            }            
 
             if(($movimentacao->data_programada != $data_programada_old || 
                $movimentacao->item_texto != $item_texto_old ||   
@@ -455,6 +483,7 @@ class MovimentacaoController extends Controller
             $movimentacao_arquivos[0]['movimentacao_id'] = $movimentacao->id;
             $movimentacao_arquivos[0]['path_nota'] = $movimentacao->path_nota;
             $movimentacao_arquivos[0]['path_comprovante'] = $movimentacao->path_comprovante;
+            $movimentacao_arquivos[0]['path_anexo'] = $movimentacao->path_anexo;
 
             if($movimentacao->tipo == 'D') {
                 $movimentacao->delete_notification();
@@ -565,6 +594,7 @@ class MovimentacaoController extends Controller
                 $movimentacao_arquivos[$contArquivos]['movimentacao_id'] = $movimentacao->id;
                 $movimentacao_arquivos[$contArquivos]['path_nota'] = $movimentacao->path_nota;
                 $movimentacao_arquivos[$contArquivos]['path_comprovante'] = $movimentacao->path_comprovante;
+                $movimentacao_arquivos[$contArquivos]['path_anexo'] = $movimentacao->path_anexo;
 
                 if($movimentacao->tipo == 'D') {
                     $movimentacao->delete_notification();
@@ -618,6 +648,13 @@ class MovimentacaoController extends Controller
                     Storage::delete($path_comprovante . $movimentacao['path_comprovante']);
                 }
             }
+
+            $path_anexo = 'documentos/'. $movimentacao['cliente_id'] . '/anexos/';
+            if($movimentacao['movimentacao_id'] != 0 && $movimentacao['path_anexo']){
+                if(Storage::exists($path_anexo)) {
+                    Storage::delete($path_anexo . $movimentacao['path_anexo']);
+                }
+            }            
         }
     }
 
@@ -676,6 +713,10 @@ class MovimentacaoController extends Controller
                 $path_documento = $path_documento . 'notas/' . $movimentacao->path_nota;
                 break;
             }
+            case 'AN':{
+                $path_documento = $path_documento . 'anexos/' . $movimentacao->path_anexo;
+                break;
+            }            
         }
 
         return Storage::download($path_documento);

@@ -35,11 +35,12 @@ class CreateRequest extends FormRequest
             'forma_pagamento' => 'nullable|required_if:tipo,VD,CP',
             'empresa' => 'nullable|required_if:tipo,VD,CP',
             'nota' => 'nullable|required_if:tipo,VD,CP',
-            'gta' => 'max:50',
+            'gta' => 'required|max:50',
             'observacao' => 'max:1000',
-            'path_gta' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
+            'path_gta' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
             'path_nota' => 'nullable|required_if:tipo,VD,CP|mimes:jpeg,png,jpg,gif,svg,pdf|max:5120',
             'path_comprovante' => ['nullable', 'required_with:data_pagamento', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_pagamento ?? '')],
+            'path_anexo' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf,xlsx,xls,doc,docx,xml|max:5120',
         ];
     }
 
@@ -66,16 +67,20 @@ class CreateRequest extends FormRequest
             'forma_pagamento.required_if' => 'A Forma de Pagamento é requerida para Movimentações de Compra ou Venda',
             'empresa.required_if' => 'A Empresa é requerida para Movimentações de Compra ou Venda',
             'nota.required_if' => 'O Número da Nota Fiscal é requerido para Movimentações de Compra ou Venda',
+            'gta.required' => 'O Número da GTA é requerido',
             'gta.max' => 'O tamanho máximo permitido para o Número da GTA é de 50 caracteres.',
             'observacao.max' => 'O tamanho máximo permitido para a Observação é de 1.000 caracteres.',
             'path_nota.required_if' => 'O Arquivo da Nota Fiscal é requerido para Movimentações de Compra ou Venda',
             'path_nota.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para a Nota Fiscal',
             'path_nota.max' => 'O tamanho máximo permitido para a Nota Fiscal é de 5Mb.',
+            'path_gta.required' => 'A GTA é requerida.',
             'path_gta.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para a GTA',
             'path_gta.max' => 'O tamanho máximo permitido para a GTA é de 1Mb.',
             'path_comprovante.mimes' => 'Somente imagens do tipo JPEG|JPG|PNG|GIF|SVG são permitidas para o comprovante de pagamento',
             'path_comprovante.max' => 'O tamanho máximo permitido para o Comprovante de Pagamento é de 1Mb.',
             'path_comprovante.required_with' => 'O Comprovante de Pagamento é requerido com a Data de Pagamento.',
+            'path_anexo.mimes' => 'Somente arquivos do tipo JPEG|JPG|PNG|GIF|SVG|XLSX|XLS|DOC|DOCX|XML são permitidas para o Anexo',
+            'path_anexo.max' => 'O tamanho máximo permitido para o Anexo é de 5Mb.',            
         ];
     }
 }

@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Clientes do Sistema</h4>
+
+            @can('create_cliente')
+            <div class="page-title-right">
+                <a href="{{route("cliente.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Novo Cliente</a>
+            </div>
+            @endcan                   
         </div>
     </div>
 </div>
@@ -81,6 +87,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_cliente')
+                                <a href="{{route('cliente.alterar_status', compact('cliente'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Cliente"></i></a>
                                 <a href="{{route('cliente.show', compact('cliente'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Cliente"></i></a>
                             @endcan
 
@@ -141,6 +148,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_cliente')
+                                <a href="{{route('cliente.alterar_status', compact('cliente'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Cliente"></i></a>
                                 <a href="{{route('cliente.show', compact('cliente'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Cliente"></i></a>
                             @endcan
 

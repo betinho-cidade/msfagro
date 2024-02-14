@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Notificação</h4>
+
+            @can('create_notificacao')
+            <div class="page-title-right">
+                <a href="{{route("notificacao.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Notificação</a>
+            </div>
+            @endcan                        
         </div>
     </div>
 </div>
@@ -72,6 +78,7 @@
                             <td style="text-align:center;">
 
                             @can('view_notificacao')
+                               <a href="{{route('notificacao.alterar_status', compact('notificacao'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Notificação"></i></a>
                                <a href="{{route('notificacao.show', compact('notificacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Notificação"></i></a>
                             @endcan
 
@@ -123,6 +130,7 @@
                             <td style="text-align:center;">
 
                             @can('view_notificacao')
+                                <a href="{{route('notificacao.alterar_status', compact('notificacao'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Notificação"></i></a>
                                 <a href="{{route('notificacao.show', compact('notificacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Notificação"></i></a>
                             @endcan
 

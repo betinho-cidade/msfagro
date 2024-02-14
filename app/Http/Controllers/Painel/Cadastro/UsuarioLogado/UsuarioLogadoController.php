@@ -85,6 +85,32 @@ class UsuarioLogadoController extends Controller
 
             $user->save();
 
+
+            if($request->path_avatar){
+                $img_avatar = 'avatar_'.$user->id.'_'.time().'.'.$request->path_avatar->extension();
+                $path_avatar = 'images/avatar';
+
+                $imageOld = $user->path_avatar;
+                $user->path_avatar = $img_avatar;
+
+                if(!\File::isDirectory($path_avatar)){
+                    \File::makeDirectory($path_avatar);
+                }
+
+                if(\File::exists($path_avatar.'/'.$imageOld)){
+                    \File::delete($path_avatar.'/'.$imageOld);
+                }
+
+                $img = Image::make($request->path_avatar)->orientate();
+
+                $img->resize(1024, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($path_avatar.'/'.$img_avatar, 80);
+                //$img->save($path_evidencia, 60);
+
+                $user->save();
+            }            
+
             DB::commit();
 
         } catch (Exception $ex){

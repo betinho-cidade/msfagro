@@ -6,6 +6,12 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Empresas do Cliente</h4>
+
+            @can('create_empresa')
+            <div class="page-title-right">
+                <a href="{{route("empresa.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Empresa</a>
+            </div>
+            @endcan                          
         </div>
     </div>
 </div>
@@ -75,6 +81,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_empresa')
+                                <a href="{{route('empresa.alterar_status', compact('empresa'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Empresa"></i></a>
                                 <a href="{{route('empresa.show', compact('empresa'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Empresa"></i></a>
                             @endcan
 
@@ -129,6 +136,7 @@
                             <td style="text-align:center;">
 
                             @can('edit_empresa')
+                                <a href="{{route('empresa.alterar_status', compact('empresa'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Empresa"></i></a>
                                 <a href="{{route('empresa.show', compact('empresa'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a empresa"></i></a>
                             @endcan
 

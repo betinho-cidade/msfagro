@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Cliente;
 use App\Models\Googlemap;
+use App\Models\FormaPagamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Exception;
@@ -125,6 +126,18 @@ class ClienteController extends Controller
             $cliente->status = $request->situacao;
 
             $cliente->save();
+
+            $forma_pagamento_CT = new FormaPagamento();
+            $forma_pagamento_CT->cliente_id = $cliente->id;
+            $forma_pagamento_CT->tipo_conta = 'CT';
+            $forma_pagamento_CT->status = 'A';                       
+            $forma_pagamento_CT->save();
+
+            $forma_pagamento_ES = new FormaPagamento();
+            $forma_pagamento_ES->cliente_id = $cliente->id;
+            $forma_pagamento_ES->tipo_conta = 'ES';
+            $forma_pagamento_ES->status = 'A';                       
+            $forma_pagamento_ES->save();            
 
             DB::commit();
 
@@ -282,7 +295,44 @@ class ClienteController extends Controller
             $request->session()->flash('message.content', $message);
         } else {
             $request->session()->flash('message.level', 'success');
-            $request->session()->flash('message.content', 'A cliente <code class="highlighter-rouge">'. $cliente_nome .'</code> foi excluída com sucesso');
+            $request->session()->flash('message.content', 'O cliente <code class="highlighter-rouge">'. $cliente_nome .'</code> foi excluído com sucesso');
+        }
+
+        return redirect()->route('cliente.index');
+    }
+
+    public function alterar_status(Cliente $cliente, Request $request)
+    {
+        if(Gate::denies('edit_cliente')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            $cliente->status = ($cliente->status == 'A') ? 'I' : 'A';
+
+            $cliente->save();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O cliente <code class="highlighter-rouge">'. $cliente->nome .'</code> foi alterado com sucesso');
         }
 
         return redirect()->route('cliente.index');
