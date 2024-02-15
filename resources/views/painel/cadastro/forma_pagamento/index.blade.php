@@ -79,24 +79,28 @@
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
-                                <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
-                                <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
+                                @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
+                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
+                                @endif
                             @endcan
 
                             @can('delete_forma_pagamento')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$forma_pagamento->id}})"
-                                    data-target="#modal-delete-forma_pagamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Forma de Pagamento"></i></a>
-                                    <form action="" id="deleteForm" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    </form>
-                                    @section('modal_target')"formSubmit();"@endsection
-                                    @section('modal_type')@endsection
-                                    @section('modal_name')"modal-delete-forma_pagamento"@endsection
-                                    @section('modal_msg_title')Deseja excluir o registro ? @endsection
-                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente. @endsection
-                                    @section('modal_close')Fechar @endsection
-                                    @section('modal_save')Excluir @endsection
+                                @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$forma_pagamento->id}})"
+                                        data-target="#modal-delete-forma_pagamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Forma de Pagamento"></i></a>
+                                        <form action="" id="deleteForm" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        </form>
+                                        @section('modal_target')"formSubmit();"@endsection
+                                        @section('modal_type')@endsection
+                                        @section('modal_name')"modal-delete-forma_pagamento"@endsection
+                                        @section('modal_msg_title')Deseja excluir o registro ? @endsection
+                                        @section('modal_msg_description')O registro selecionado será excluído definitivamente. @endsection
+                                        @section('modal_close')Fechar @endsection
+                                        @section('modal_save')Excluir @endsection
+                                @endif
                             @endcan
                             </td>
                         </tr>
@@ -132,24 +136,28 @@
                             <td style="text-align:center;">
 
                             @can('edit_forma_pagamento')
-                                <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
-                                <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
+                                @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
+                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
+                                @endif
                             @endcan
 
                             @can('delete_forma_pagamento')
-                                <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$forma_pagamento->id}})"
-                                    data-target="#modal-delete-forma_pagamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Forma de Pagamento"></i></a>
-                                    <form action="" id="deleteForm" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    </form>
-                                    @section('modal_target')"formSubmit();"@endsection
-                                    @section('modal_type')@endsection
-                                    @section('modal_name')"modal-delete-forma_pagamento"@endsection
-                                    @section('modal_msg_title')Deseja excluir o registro ? @endsection
-                                    @section('modal_msg_description')O registro selecionado será excluído definitivamente, BEM COMO TODOS seus relacionamentos. @endsection
-                                    @section('modal_close')Fechar @endsection
-                                    @section('modal_save')Excluir @endsection
+                                @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$forma_pagamento->id}})"
+                                        data-target="#modal-delete-forma_pagamento"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Forma de Pagamento"></i></a>
+                                        <form action="" id="deleteForm" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        </form>
+                                        @section('modal_target')"formSubmit();"@endsection
+                                        @section('modal_type')@endsection
+                                        @section('modal_name')"modal-delete-forma_pagamento"@endsection
+                                        @section('modal_msg_title')Deseja excluir o registro ? @endsection
+                                        @section('modal_msg_description')O registro selecionado será excluído definitivamente, BEM COMO TODOS seus relacionamentos. @endsection
+                                        @section('modal_close')Fechar @endsection
+                                        @section('modal_save')Excluir @endsection
+                                @endif
                             @endcan
                             </td>
                           </tr>

@@ -60,8 +60,6 @@ class FormaPagamentoController extends Controller
     }
 
 
-
-
     public function create(Request $request)
     {
         if(Gate::denies('create_forma_pagamento')){
@@ -84,7 +82,6 @@ class FormaPagamentoController extends Controller
 
         return view('painel.cadastro.forma_pagamento.create', compact('user', 'produtors'));
     }
-
 
 
     public function store(CreateRequest $request)
@@ -146,7 +143,6 @@ class FormaPagamentoController extends Controller
     }
 
 
-
     public function show(FormaPagamento $forma_pagamento, Request $request)
     {
 
@@ -162,6 +158,14 @@ class FormaPagamentoController extends Controller
 
             return redirect()->route('forma_pagamento.index');
         }
+
+        if($forma_pagamento->tipo_conta == 'CT' || $forma_pagamento->tipo_conta == 'ES'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não é possíve editar essa forma de pagamento.');
+
+            return redirect()->route('forma_pagamento.index');
+        }
+
 
         $produtors = Produtor::where('status','A')
                             ->where('cliente_id', $user->cliente->id)
@@ -187,6 +191,14 @@ class FormaPagamentoController extends Controller
 
             return redirect()->route('forma_pagamento.index');
         }
+
+        if($forma_pagamento->tipo_conta == 'CT' || $forma_pagamento->tipo_conta == 'ES'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não é possíve editar essa forma de pagamento.');
+
+            return redirect()->route('forma_pagamento.index');
+        }
+
 
         $message = '';
 
@@ -243,6 +255,14 @@ class FormaPagamentoController extends Controller
             return redirect()->route('forma_pagamento.index');
         }
 
+        if($forma_pagamento->tipo_conta == 'CT' || $forma_pagamento->tipo_conta == 'ES'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não é possíve editar essa forma de pagamento.');
+
+            return redirect()->route('forma_pagamento.index');
+        }
+        
+
         $message = '';
         $forma_pagamento_nome = $forma_pagamento->tipo_conta_texto;
 
@@ -290,6 +310,14 @@ class FormaPagamentoController extends Controller
 
             return redirect()->route('forma_pagamento.index');
         }
+
+        if($forma_pagamento->tipo_conta == 'CT' || $forma_pagamento->tipo_conta == 'ES'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não é possíve editar essa forma de pagamento.');
+
+            return redirect()->route('forma_pagamento.index');
+        }
+
 
         $message = '';
 
