@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'gta' => 'required|max:50',
             'observacao' => 'max:1000',
             'path_nota' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:5120',
-            'path_gta' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
+            'path_gta' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf|max:1024',
             'path_comprovante' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:1024', new RangeValidation($this->data_pagamento ?? '')],
             'path_anexo' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf,xlsx,xls,doc,docx,xml|max:5120',
         ];

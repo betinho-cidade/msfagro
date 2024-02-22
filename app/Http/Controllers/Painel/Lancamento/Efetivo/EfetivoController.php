@@ -359,7 +359,13 @@ class EfetivoController extends Controller
             }
         }
 
-        return view('painel.lancamento.efetivo.show', compact('user', 'efetivo'));
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+                                            ->where('status', 'A')
+                                            ->orderBy('produtor_id', 'desc')
+                                            ->orderBy('tipo_conta', 'asc')
+                                            ->get();        
+
+        return view('painel.lancamento.efetivo.show', compact('user', 'efetivo', 'forma_pagamentos'));
     }
 
     public function update(UpdateRequest $request, Efetivo $efetivo)
@@ -465,6 +471,7 @@ class EfetivoController extends Controller
                 $efetivo->movimentacao->data_pagamento = $request->data_pagamento;
                 $efetivo->movimentacao->valor = ($request->valor) ? $request->valor : null;
                 $efetivo->movimentacao->nota = $request->nota;
+                $efetivo->movimentacao->forma_pagamento_id = $request->forma_pagamento;
 
                 $efetivo->movimentacao->save();
             }

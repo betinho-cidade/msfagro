@@ -144,8 +144,16 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="forma_pagamento">Forma Pagamento</label>
-                                <textarea style="background-color: #D3D3D3;" type="text" class="form-control" disabled>{{$movimentacao->forma_pagamento->forma ?? '...'}}</textarea>
+                                <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento<a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                                <img src="{{asset('images/loading.gif')}}" id="img-loading-forma_pagamento" style="display:none;max-width: 20px; margin-left: 12px;">
+                                <select id="forma_pagamento" name="forma_pagamento" class="form-control {{($errors->first('forma_pagamento') ? 'form-error-field' : '')}} select2" required>
+                                    <option value="">---</option>
+                                    @foreach($forma_pagamentos as $forma_pagamento)
+                                        <option value="{{ $forma_pagamento->id }}" {{($movimentacao->forma_pagamento->id == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="valid-feedback">ok!</div>
+                                <div class="invalid-feedback">Inválido!</div>
                             </div>
                         </div>
                     </div>

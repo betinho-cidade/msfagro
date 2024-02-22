@@ -263,7 +263,13 @@ class MovimentacaoController extends Controller
                                                 ->get();            
         }
 
-        return view('painel.lancamento.movimentacao.show', compact('user', 'movimentacao', 'empresas'));
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+                                            ->where('status', 'A')
+                                            ->orderBy('produtor_id', 'desc')
+                                            ->orderBy('tipo_conta', 'asc')
+                                            ->get();        
+
+        return view('painel.lancamento.movimentacao.show', compact('user', 'movimentacao', 'empresas', 'forma_pagamentos'));
     }
 
     public function update(UpdateRequest $request, Movimentacao $movimentacao)
@@ -353,6 +359,7 @@ class MovimentacaoController extends Controller
             $movimentacao->observacao = $request->observacao;
             $movimentacao->valor = ($request->valor) ? $request->valor : null;
             $movimentacao->nota = $request->nota;
+            $movimentacao->forma_pagamento_id = $request->forma_pagamento;
 
             $movimentacao->save();
 
