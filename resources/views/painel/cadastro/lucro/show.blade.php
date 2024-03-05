@@ -97,14 +97,13 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="hidden" class="form-control" id="valor" name="valor" value="{{$lucro->valor}}">
-                            <input type="text" class="form-control updValor mask_valor {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor_view" name="valor_view" value="{{$lucro->valor}}" placeholder="Valor" required>
-                            <div class="valid-feedback">ok!</div>
-                            <div class="invalid-feedback">Inválido!</div>
-                        </div>
-                    </div>       
+                            <div class="form-group">
+                                <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor (R$)</label>
+                                <input type="number" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{$lucro->valor}}" placeholder="Valor" required>
+                                <div class="valid-feedback">ok!</div>
+                                <div class="invalid-feedback">Inválido!</div>
+                            </div>
+                        </div>                    
 
                     <div class="col-md-4">
                         <label for="path_comprovante" class="{{($errors->first('path_comprovante') ? 'form-error-label' : '')}}">Comprovante (imagem/pdf)
@@ -153,50 +152,15 @@
 
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
-    <script src="{{asset('js/jquery.maskMoney.min.js')}}"></script>
 
     <script>
 
     $(document).ready(function(){
 
-        $('.mask_valor').maskMoney({
-            prefix:'R$ ',
-            allowNegative: false,
-            thousands:'.',
-            decimal:',',
-            precision: 2,
-            affixesStay: true
-        });
-
-        formatValorMoeda('valor');
-        formatValorMoeda('valor_view');
-
-        $('.updValor').change(function(){
-            let valor_view = document.getElementById('valor_view');
-            let valor = document.getElementById('valor');
-
-            if(valor_view && valor_view.value){
-                valor_new = valor_view.value;
-                valor_new = valor_new.replace('R$ ', '').replace('.', '');
-                valor.value = valor_new;
-            }
-        });
-
         $('.dynamic_produtor').change(function(){
             refreshList('FP');
         });   
     });
-
-    function formatValorMoeda(field){
-        let element =  document.getElementById(field);
-
-        if(element && element.value){
-            valueFormatted = parseFloat(element.value.replace('R$ ', '').replace(',', '.')).toFixed(2).replace('.', ',');
-            document.getElementById(field).value = valueFormatted;
-
-            $('#'+field).trigger('select');
-        }
-    }
 
     function refreshList(tipo) {
 

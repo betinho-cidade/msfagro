@@ -126,6 +126,7 @@ class RelatorioController extends Controller
         if($request->has('data_inicio') ||
             $request->has('data_fim') ||
             $request->has('item_texto') ||
+            $request->has('nota') ||
             $request->has('movimentacao') ||
             $request->has('tipo_movimentacao') ||
             $request->has('produtor') ||
@@ -138,6 +139,7 @@ class RelatorioController extends Controller
                 'data_inicio' => ($request->data_inicio) ? $request->data_inicio : '',
                 'data_fim' => ($request->data_fim) ? $request->data_fim : '',
                 'item_texto' => ($request->item_texto) ? $request->item_texto : '',
+                'nota' => ($request->nota) ? $request->nota : '',
                 'movimentacao' => ($request->movimentacao) ? $request->movimentacao : '',
                 'tipo_movimentacao' => ($request->tipo_movimentacao) ? $request->tipo_movimentacao : '',
                 'produtor' => ($request->produtor) ? $request->produtor : '',
@@ -183,7 +185,11 @@ class RelatorioController extends Controller
 
                                             if($search['item_texto']){
                                                 $query->where('item_texto', 'like', '%' . $search['item_texto'] . '%');
-                                            }                                            
+                                            }          
+                                            
+                                            if($search['nota']){
+                                                $query->where('nota', 'like', '%' . $search['nota'] . '%');
+                                            }                                                      
 
                                             if($search['data_inicio'] && $search['data_fim']){
                                                 $query->where('data_programada', '>=', $search['data_inicio']);
@@ -333,7 +339,11 @@ class RelatorioController extends Controller
 
                                             if($search['item_texto']){
                                                 $query->where('item_texto', 'like', '%' . $search['item_texto'] . '%');
-                                            }                                            
+                                            }       
+                                            
+                                            if($search['nota']){
+                                                $query->where('nota', 'like', '%' . $search['nota'] . '%');
+                                            }                                                   
 
                                             if($search['data_inicio'] && $search['data_fim']){
                                                 $query->where('data_programada', '>=', $search['data_inicio']);

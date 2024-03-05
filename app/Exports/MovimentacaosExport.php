@@ -142,7 +142,11 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
                                             if($search['item_texto']){
                                                 $query->where('item_texto', 'like', '%' . $search['item_texto'] . '%');
-                                            }                                            
+                                            }     
+                                            
+                                            if($search['nota']){
+                                                $query->where('nota', 'like', '%' . $search['nota'] . '%');
+                                            }                                                 
 
                                             if($search['data_inicio'] && $search['data_fim']){
                                                 $query->where('data_programada', '>=', $search['data_inicio']);

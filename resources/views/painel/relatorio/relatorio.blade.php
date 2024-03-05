@@ -185,6 +185,7 @@
                             <th style="align:center">Forma Pagamento</th>
                             <th style="align:center">Produtor</th>
                             <th style="align:center">Nota</th>
+                            <th style="align:center">Download</th>
                         </tr>
                         </thead>
 
@@ -199,6 +200,7 @@
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->empresa->nome_empresa ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->forma_pagamento->forma ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->produtor->nome_produtor ?? '...' }}</td>
+                            <td style="text-align:center;font-size:12px;">{{ $movimentacao->nota ?? '...' }}</td>
                             <td style="text-align:center;font-size:12px;">
                               @if($movimentacao->link_nota_guest)
                                 <a href="{{$movimentacao->link_nota_guest}}"><img src="https://adm.mfsagro.com.br/images/clips.png" style="max-width:17px;"></a>

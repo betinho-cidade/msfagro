@@ -255,8 +255,6 @@
                 console.log('entrou');   
                 let valor_tipo = document.getElementById('tipo').value;
 
-                console.log(valor_tipo);
-
                 if(valor_tipo == 'D'){
                     refreshList('CD');
 

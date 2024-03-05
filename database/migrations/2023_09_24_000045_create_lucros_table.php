@@ -16,7 +16,7 @@ class CreateLucrosTable extends Migration
             $table->unsignedBigInteger('produtor_id');
             $table->unsignedBigInteger('forma_pagamento_id');
             $table->datetime('data_lancamento');
-            $table->decimal('valor', 10, 2);
+            $table->decimal('valor', 20, 2);
             $table->string('path_comprovante', 500)->nullable();
             $table->string('observacao', 1000)->nullable();
             $table->timestamps();

@@ -42,10 +42,15 @@
                             <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
                         </div>                          
 
-                        <div class="col-md-4"  style="padding-right: 0;">
+                        <div class="col-md-2"  style="padding-right: 0;">
                             <label for="item_texto" style="margin: 0 0 0 2px;">Item Fiscal</label>
                             <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
                         </div>  
+
+                        <div class="col-md-2"  style="padding-right: 0;">
+                            <label for="nota" style="margin: 0 0 0 2px;">Nota Fiscal</label>
+                            <input type="text" class="form-control" id="nota" name="nota" value="{{$search['nota'] ?? ''}}" placeholder="Nota Fiscal">
+                        </div>                          
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
@@ -156,6 +161,7 @@
                             <th style="text-align:right;">Valor (R$)</th>
                             <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Pagamento</th>
+                            <th style="text-align:center;">Nota</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -172,6 +178,13 @@
                             <td style="text-align:right;">{{number_format($movimentacao->valor,2,',','.')}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
+                            <td style="text-align:center;">
+                                    @if($movimentacao->link_nota)
+                                        <a href="{{$movimentacao->link_nota}}">{{$movimentacao->nota}}</a>
+                                    @else
+                                        {{$movimentacao->nota}}
+                                    @endif                                
+                            </td>
                             <td style="text-align:center;">
 
                             @can('edit_movimentacao')

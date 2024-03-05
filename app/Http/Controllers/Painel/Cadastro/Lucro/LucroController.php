@@ -194,7 +194,6 @@ class LucroController extends Controller
                             ->get();        
         
 
-
         return view('painel.cadastro.lucro.show', compact('user', 'lucro', 'produtors', 'forma_pagamentos'));
     }
 
@@ -273,7 +272,7 @@ class LucroController extends Controller
             $request->session()->flash('message.content', 'A Distribuição de Lucro foi atualizada com sucesso');
         }
 
-        return redirect()->route('lucro.search', ['data_inicio' =>  $lucro->data_lancamento, 'data_fim' =>  $lucro->data_lancamento, 'produtor' =>  $lucro->produtor_id, 'forma_pagamento' =>  $lucro->forma_pagamento_id]);
+        return redirect()->route('lucro.index');
     }
 
     public function destroy(lucro $lucro, Request $request)
