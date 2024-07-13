@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Painel\Cadastro\Cliente;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Perfil;
 use App\Models\Cliente;
+use App\Models\ClienteUser;
 use App\Models\Googlemap;
 use App\Models\FormaPagamento;
 use Illuminate\Http\Request;
@@ -26,7 +28,6 @@ class ClienteController extends Controller
     {
         $this->middleware('auth');
     }
-
 
     public function index()
     {
@@ -50,9 +51,6 @@ class ClienteController extends Controller
         return view('painel.cadastro.cliente.index', compact('user', 'clientes_AT', 'clientes_IN'));
     }
 
-
-
-
     public function create()
     {
         if(Gate::denies('create_cliente')){
@@ -61,20 +59,8 @@ class ClienteController extends Controller
 
         $user = Auth()->User();
 
-        $usuarios = User::join('role_user', 'role_user.user_id', 'users.id')
-                            ->where('role_user.status','A')
-                            ->join('roles', 'roles.id', 'role_user.role_id')
-                            ->where('roles.name','Cliente')
-                            ->leftJoin('clientes', 'clientes.user_id', 'role_user.user_id')
-                            ->whereNull('clientes.user_id')
-                            ->orderBy('users.id', 'desc')
-                            ->select('users.*')
-                            ->get();
-
-        return view('painel.cadastro.cliente.create', compact('user', 'usuarios'));
+        return view('painel.cadastro.cliente.create', compact('user'));
     }
-
-
 
     public function store(CreateRequest $request)
     {
@@ -159,8 +145,6 @@ class ClienteController extends Controller
         return redirect()->route('cliente.index');
     }
 
-
-
     public function show(Cliente $cliente)
     {
 
@@ -171,23 +155,10 @@ class ClienteController extends Controller
 
         $user = Auth()->User();
 
-        $usuarios = User::join('role_user', 'role_user.user_id', 'users.id')
-                            ->where('role_user.status','A')
-                            ->join('roles', 'roles.id', 'role_user.role_id')
-                            ->where('roles.name','Cliente')
-                            ->leftJoin('clientes', 'clientes.user_id', 'role_user.user_id')
-                            ->where(function($query) use ($cliente){
-                                $query->OrWhere('clientes.id', $cliente->id);
-                                $query->OrwhereNull('clientes.user_id');
-                            })
-                            ->orderBy('users.id', 'desc')
-                            ->select('users.*')
-                            ->get();
+        $cliente_users = ClienteUser::where('cliente_id', $cliente->id)->get();                             
 
-        return view('painel.cadastro.cliente.show', compact('user', 'cliente', 'usuarios'));
+        return view('painel.cadastro.cliente.show', compact('user', 'cliente', 'cliente_users'));
     }
-
-
 
     public function update(UpdateRequest $request, Cliente $cliente)
     {
@@ -257,8 +228,6 @@ class ClienteController extends Controller
 
         return redirect()->route('cliente.index');
     }
-
-
 
     public function destroy(Cliente $cliente, Request $request)
     {
@@ -337,5 +306,125 @@ class ClienteController extends Controller
 
         return redirect()->route('cliente.index');
     }
+
+    public function user_create(Cliente $cliente)
+    {
+
+        if(Gate::denies('create_cliente_user')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $users = User::join('role_user', 'role_user.user_id', '=', 'users.id')
+                        ->where('role_user.status', 'A')
+                        ->join('roles', 'role_user.role_id', '=', 'roles.id')
+                        ->where('roles.name', 'Cliente')
+                        ->whereNotExists(function($query) use ($cliente)
+                        {
+                            $query->select(DB::raw(1))
+                                ->from('cliente_users')
+                                ->whereRaw('cliente_users.user_id = users.id')
+                                ->where('cliente_users.cliente_id', $cliente->id);
+                        })
+                        ->select('users.*')
+                        ->get();
+
+        $perfils = Perfil::all();
+
+        return view('painel.cadastro.cliente.user_create', compact('user', 'cliente', 'users', 'perfils'));
+    }    
+
+    public function user_store(Request $request, Cliente $cliente)
+    {
+
+        if(Gate::denies('create_cliente_user')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            foreach($request->users as $usuario)
+            {
+                
+                $newClienteUser = new ClienteUser();
+                $newClienteUser->cliente_id = $cliente->id;
+                $newClienteUser->user_id = $usuario;
+                $newClienteUser->perfil_id = $request->perfil;
+                $newClienteUser->save();
+            }
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+            if(strpos($ex->getMessage(), 'cliente_user_uk') !== false){
+                $message = "Um dos usuários informados já está registrado para esse cliente.";
+
+                $request->session()->flash('message.level', 'warning');
+                $request->session()->flash('message.content', $message);
+    
+                return redirect()->back()->withInput();
+
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'Os usuários foram vinculados com sucesso');
+        }
+
+        return redirect()->route('cliente.show', compact('cliente'));
+    }       
+
+    public function user_destroy(Cliente $cliente, ClienteUser $cliente_user, Request $request)
+    {
+        if(Gate::denies('delete_cliente_user')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        $message = '';
+
+        try {
+            DB::beginTransaction();
+
+            ClienteUser::where('id', $cliente_user->id)
+                            ->where('cliente_id', $cliente->id)
+                            ->delete();
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+            $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Usuário foi desvinculado do cliente com sucesso');
+        }
+
+        return redirect()->route('cliente.show', compact('cliente'));
+    }     
 
 }

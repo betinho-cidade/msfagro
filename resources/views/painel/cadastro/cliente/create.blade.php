@@ -186,19 +186,6 @@
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados Acesso</h5>
                 </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="usuario" class="{{($errors->first('usuario') ? 'form-error-label' : '')}}">Usuário para acesso ao sistema</label>
-                                <select id="usuario" name="usuario" class="form-control {{($errors->first('usuario') ? 'form-error-field' : '')}} select2" required>
-                                    <option value="">---</option>
-                                    @foreach($usuarios as $usuario)
-                                        <option value="{{ $usuario->id }}" {{(old('usuario') == $usuario->id) ? 'selected' : '' }}>{{ $usuario->name }}</option>
-                                    @endforeach
-                                    <div class="valid-feedback">ok!</div>
-                                    <div class="invalid-feedback">Inválido!</div>
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>

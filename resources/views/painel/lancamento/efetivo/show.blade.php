@@ -51,9 +51,11 @@
             <p class="card-title-desc">O Lançamento registrado estará disponível para os movimentos no sistema.</p>
             
             @if($user->roles->contains('name', 'Cliente'))
+                @can('edit_efetivo')
                 <form name="edit_efetivo" method="POST" action="{{route('efetivo.update', compact('efetivo'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+                @endcan
             @endif
 
                 <input type="hidden" id="tipo" name="tipo" value="{{ $efetivo->tipo }}">
@@ -201,7 +203,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                        <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento<a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                        <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento 
+                        @can('edit_forma_pagamento')    
+                            <a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                        @endcan
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-forma_pagamento" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="forma_pagamento" name="forma_pagamento" class="form-control {{($errors->first('forma_pagamento') ? 'form-error-field' : '')}} select2" required>                            
                                 <option value="">---</option>
@@ -221,7 +226,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="number" style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{ $efetivo->movimentacao->valor ?? '' }}" placeholder="Valor" {{ $efetivo->tipo == 'EG' ? 'disabled' : 'required' }}>
+                            <input type="text" style="background-color: {{ $efetivo->tipo == 'EG' ? '#D3D3D3' : 'white' }};" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{$efetivo->movimentacao->valor ?? ''}}" placeholder="Valor" onInput="mascaraMoeda(event);" {{ $efetivo->tipo == 'EG' ? 'disabled' : 'required' }}>    
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -295,8 +300,10 @@
 
             <!-- Dados Pessoais -- FIM -->
             @if($user->roles->contains('name', 'Cliente'))
+                @can('edit_efetivo')
                     <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
                 </form>
+                @endcan
             @endif
 
             <!-- FORMULÁRIO - FIM -->
@@ -314,6 +321,11 @@
     <script src="{{asset('nazox/assets/js/pages/form-element.init.js')}}"></script>
     <script>
     @if($user->roles->contains('name', 'Cliente'))
+
+        $(document).ready(function(){
+            $('#valor').trigger('input');  
+        });
+
         function refreshList(tipo) {
 
             var _token = $('input[name="_token"]').val();
@@ -368,6 +380,24 @@
                 }
             })
         }
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.value
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.value = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }           
+
     @endif
 
     </script>

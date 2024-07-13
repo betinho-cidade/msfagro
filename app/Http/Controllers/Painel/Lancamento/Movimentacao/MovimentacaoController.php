@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Lancamento\Movimentacao\CreateRequest;
 use App\Http\Requests\Lancamento\Movimentacao\UpdateRequest;
 use Carbon\Carbon;
-
-
+use App\Http\Middleware\GenerateSafeSubmitToken;
+use App\Http\Middleware\HandleSafeSubmit;
+use App\SafeSubmit\SafeSubmit;
 
 class MovimentacaoController extends Controller
 {
@@ -30,6 +31,8 @@ class MovimentacaoController extends Controller
     public function __construct(Request $request)
     {
         $this->middleware('auth');
+        $this->middleware(GenerateSafeSubmitToken::class)->only('create');
+        $this->middleware(HandleSafeSubmit::class)->only('store');        
     }
 
     public function index(Request $request)
@@ -41,7 +44,7 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -62,12 +65,12 @@ class MovimentacaoController extends Controller
         setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
         $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
-        $movimentacaos = Movimentacao::where('cliente_id', $user->cliente->id)
+        $movimentacaos = Movimentacao::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('segmento', 'MF')
-                                    ->whereYear('data_programada', $data_programada_vetor[1])
-                                    ->whereMonth('data_programada', $data_programada_vetor[0])
-                                    ->orderBy('data_programada', 'asc')
-                                    ->get();
+                                    ->whereRaw(DB::raw('YEAR(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[1].'"'))
+                                    ->whereRaw(DB::raw('MONTH(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[0].'"'))
+                                    ->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'asc')
+                                    ->get();       
 
         return view('painel.lancamento.movimentacao.index', compact('user', 'mes_referencia', 'data_programada', 'movimentacaos'));
     }
@@ -80,25 +83,25 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
                                             ->get();
 
-        $empresas = Empresa::where('cliente_id', $user->cliente->id)
+        $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
@@ -112,7 +115,7 @@ class MovimentacaoController extends Controller
         return view('painel.lancamento.movimentacao.create', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias'));
     }
 
-    public function store(CreateRequest $request)
+    public function store(CreateRequest $request, SafeSubmit $safeSubmit)
     {
         if(Gate::denies('create_movimentacao')){
             abort('403', 'Página não disponível');
@@ -120,7 +123,7 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -147,7 +150,7 @@ class MovimentacaoController extends Controller
 
             $movimentacao = new Movimentacao();
 
-            $movimentacao->cliente_id = $user->cliente->id;
+            $movimentacao->cliente_id = $user->cliente_user->cliente->id;
             $movimentacao->empresa_id = $request->empresa;
             $movimentacao->produtor_id = $request->produtor;
             $movimentacao->forma_pagamento_id = $request->forma_pagamento;
@@ -156,7 +159,7 @@ class MovimentacaoController extends Controller
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->segmento = 'MF';
             $movimentacao->tipo = $request->tipo;
-            $movimentacao->valor = ($request->valor) ? $request->valor : null;
+            $movimentacao->valor = $request->valor;
             $movimentacao->nota = $request->nota;
             $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
             $movimentacao->item_texto = $request->item_texto;
@@ -170,7 +173,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_nota) {
 
-                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
 
                 $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
                 $movimentacao->path_nota = $nome_arquivo;
@@ -181,7 +184,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
 
                 $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $movimentacao->path_comprovante = $nome_arquivo;
@@ -192,7 +195,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_anexo) {
 
-                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
 
                 $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
                 $movimentacao->path_anexo = $nome_arquivo;
@@ -221,20 +224,23 @@ class MovimentacaoController extends Controller
             $request->session()->flash('message.content', 'O Lançamento de Movimentação Fiscal ('.$movimentacao->tipo_movimentacao_texto.') com ID <span style="color: #af1e1e;">'. $movimentacao->id .'</span> foi criado com sucesso');
         }
 
-        return redirect()->route('lancamento.index', ['aba' => 'MF']);
+        //return redirect()->route('lancamento.index', ['aba' => 'MF']);
+        return $safeSubmit->intended(route('lancamento.index', ['aba' => 'MF']));
+
+        
     }
 
     public function show(Movimentacao $movimentacao, Request $request)
     {
 
-        if(Gate::denies('edit_movimentacao') && (Gate::denies('view_relatorio_gestao'))){
+        if(Gate::denies('view_movimentacao') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if(!$user->cliente){
+            if(!$user->cliente_user){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -243,7 +249,7 @@ class MovimentacaoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->id != $movimentacao->cliente_id){
+            if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'O movimentacao Pecuário não pertence ao cliente informado.');
 
@@ -252,7 +258,7 @@ class MovimentacaoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            $empresas = Empresa::where('cliente_id', $user->cliente->id)
+            $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                                 ->where('status', 'A')
                                                 ->orderBy('nome', 'asc')
                                                 ->get();
@@ -263,13 +269,19 @@ class MovimentacaoController extends Controller
                                                 ->get();            
         }
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
-                                            ->get();        
+                                            ->get();     
+                                            
+        $categorias = Categoria::where('tipo', $movimentacao->tipo)
+                                ->where('segmento', 'MF')
+                                ->where('status', 'A')
+                                ->orderBy('nome', 'asc')
+                                ->get();                                            
 
-        return view('painel.lancamento.movimentacao.show', compact('user', 'movimentacao', 'empresas', 'forma_pagamentos'));
+        return view('painel.lancamento.movimentacao.show', compact('user', 'movimentacao', 'empresas', 'forma_pagamentos', 'categorias'));
     }
 
     public function update(UpdateRequest $request, Movimentacao $movimentacao)
@@ -281,14 +293,14 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $movimentacao->cliente_id){
+        if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
@@ -352,12 +364,13 @@ class MovimentacaoController extends Controller
             $item_texto_old = $movimentacao->item_texto;
             $valor_old = $movimentacao->valor;
 
+            $movimentacao->categoria_id = $request->categoria;
             $movimentacao->data_programada = $request->data_programada;
             $movimentacao->data_pagamento = $request->data_pagamento;
             $movimentacao->empresa_id = $request->empresa;
             $movimentacao->item_texto = $request->item_texto;
             $movimentacao->observacao = $request->observacao;
-            $movimentacao->valor = ($request->valor) ? $request->valor : null;
+            $movimentacao->valor = $request->valor;
             $movimentacao->nota = $request->nota;
             $movimentacao->forma_pagamento_id = $request->forma_pagamento;
 
@@ -369,7 +382,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_nota) {
 
-                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
 
                 if($movimentacao->path_nota){
                     if(Storage::exists($path_nota)) {
@@ -386,7 +399,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
 
                 if($movimentacao->path_comprovante){
                     if(Storage::exists($path_comprovante)) {
@@ -404,7 +417,7 @@ class MovimentacaoController extends Controller
 
             if ($request->path_anexo) {
 
-                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
 
                 if($movimentacao->path_anexo){
                     if(Storage::exists($path_anexo)) {
@@ -461,14 +474,14 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $movimentacao->cliente_id){
+        if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
@@ -533,7 +546,7 @@ class MovimentacaoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -577,7 +590,7 @@ class MovimentacaoController extends Controller
 
             $data_programada_vetor = explode('-', $mes_referencia);
 
-            $movimentacaos = Movimentacao::where('cliente_id', $user->cliente->id)
+            $movimentacaos = Movimentacao::where('cliente_id', $user->cliente_user->cliente->id)
                                         ->where('segmento', 'MF')
                                         ->whereYear('data_programada', $data_programada_vetor[1])
                                         ->whereMonth('data_programada', $data_programada_vetor[0])
@@ -589,7 +602,7 @@ class MovimentacaoController extends Controller
 
             foreach($movimentacaos as $movimentacao){
 
-                if($user->cliente->id != $movimentacao->cliente_id){
+                if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
                     $request->session()->flash('message.level', 'warning');
                     $request->session()->flash('message.content', 'A Movimentação FIscal não pertence ao cliente informado.');
 
@@ -674,7 +687,7 @@ class MovimentacaoController extends Controller
         $user = Auth()->User();
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if(!$user->cliente){
+            if(!$user->cliente_user){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
     
@@ -683,7 +696,7 @@ class MovimentacaoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->id != $movimentacao->cliente_id){
+            if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
 
@@ -705,7 +718,7 @@ class MovimentacaoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            $path_documento = 'documentos/' . $user->cliente->id . '/';
+            $path_documento = 'documentos/' . $user->cliente_user->cliente->id . '/';
         } else {
             $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
         }

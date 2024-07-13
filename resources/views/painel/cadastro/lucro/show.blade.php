@@ -48,9 +48,12 @@
                 </span>
 
             <p class="card-title-desc">A Distribuição de Lucro estará disponível no sistema.</p>
+
+            @can('edit_lucro')
                 <form name="edit_lucro" method="POST" action="{{route('lucro.update', compact('lucro'))}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+            @endcan
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Distribuição de Lucro</h5>
@@ -59,7 +62,10 @@
                 <div class="row">
                     <div class="col-md-6">
                          <div class="form-group">
-                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor <a href="{{ route('produtor.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Produtor"></i></a> <i onclick="refreshList('PT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Produtores"></i></label>
+                            <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor 
+                            @can('create_produtor')
+                                <a href="{{ route('produtor.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Novo Produtor"></i></a> <i onclick="refreshList('PT');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Produtores"></i></label>
+                            @endcan
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-produtor" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} dynamic_produtor select2" required>
                                 <option value="">---</option>
@@ -74,7 +80,10 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento<a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                            <label for="forma_pagamento" class="{{($errors->first('forma_pagamento') ? 'form-error-label' : '')}}">Forma Pagamento 
+                            @can('create_forma_pagamento')
+                                <a href="{{ route('forma_pagamento.create') }}" target="_blank"><i class="fas fa-plus-circle" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Nova Forma de Pagamento"></i></a> <i onclick="refreshList('FP');" class="fas fa-sync-alt" style="color: goldenrod; margin-left: 5px; vertical-align: middle;" title="Atualizar Forma de Pagamentos"></i></label>
+                            @endcan
                             <img src="{{asset('images/loading.gif')}}" id="img-loading-forma_pagamento" style="display:none;max-width: 20px; margin-left: 12px;">
                             <select id="forma_pagamento" name="forma_pagamento" class="form-control {{($errors->first('forma_pagamento') ? 'form-error-field' : '')}} select2" required>
                                 <option value="">---</option>
@@ -99,7 +108,7 @@
                     <div class="col-md-4">
                             <div class="form-group">
                                 <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor (R$)</label>
-                                <input type="number" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{$lucro->valor}}" placeholder="Valor" required>
+                                <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{$lucro->valor}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>    
                                 <div class="valid-feedback">ok!</div>
                                 <div class="invalid-feedback">Inválido!</div>
                             </div>
@@ -133,8 +142,10 @@
                     </div>
                 </div>
                 <!-- Dados Pessoais -- FIM -->
+                @can('edit_lucro')
                     <button class="btn btn-primary" type="submit">Salvar Cadastro</button>
                 </form>
+                @endcan
             <!-- FORMULÁRIO - FIM -->
 
             </div>
@@ -155,67 +166,86 @@
 
     <script>
 
-    $(document).ready(function(){
+        $(document).ready(function(){
 
-        $('.dynamic_produtor').change(function(){
-            refreshList('FP');
-        });   
-    });
+            $('.dynamic_produtor').change(function(){
+                refreshList('FP');
+            }); 
+            
+            $('#valor').trigger('input');  
+        });
 
-    function refreshList(tipo) {
+        function refreshList(tipo) {
 
-        var _token = $('input[name="_token"]').val();
-        var _tipo = tipo;
-        var objectList;
-        var objectName;
-        var objectValue;
+            var _token = $('input[name="_token"]').val();
+            var _tipo = tipo;
+            var objectList;
+            var objectName;
+            var objectValue;
 
-        if(tipo == 'FP'){
-            objectList = $('#forma_pagamento');
-            objectName = 'forma_pagamento';
-            objectValue = document.getElementById("produtor").value;
-        }
-
-        if(tipo == 'PT'){
-            objectList = $('#produtor');
-            objectName = 'produtor';
-            objectValue = '';
-        }
-
-        document.getElementById("img-loading-"+objectName).style.display = '';
-
-        $.ajax({
-            url: "{{route('lucro.refreshList')}}",
-            method: "POST",
-            dataType: "json",
-            data: {_token:_token, tipo:_tipo, produtor:objectValue},
-            success:function(response){
-
-                var len = 0;
-
-                if (response.mensagem != null) {
-                    len = response.mensagem.length;
-                }
-
-                if (len>0) {
-                    objectList.find('option').not(':first').remove();
-                    for (var i = 0; i<len; i++) {
-                        var id = response.mensagem[i].id;
-                        var nome = response.mensagem[i].nome;
-                        var option = "<option value='"+id+"'>"+nome+"</option>";
-                        objectList.append(option);
-                    }
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                } else {
-                    objectList.find('option').not(':first').remove();
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                }
-            },
-            error:function(erro){
-                document.getElementById("img-loading-"+objectName).style.display = 'none';
+            if(tipo == 'FP'){
+                objectList = $('#forma_pagamento');
+                objectName = 'forma_pagamento';
+                objectValue = document.getElementById("produtor").value;
             }
-        })
-    }
+
+            if(tipo == 'PT'){
+                objectList = $('#produtor');
+                objectName = 'produtor';
+                objectValue = '';
+            }
+
+            document.getElementById("img-loading-"+objectName).style.display = '';
+
+            $.ajax({
+                url: "{{route('lucro.refreshList')}}",
+                method: "POST",
+                dataType: "json",
+                data: {_token:_token, tipo:_tipo, produtor:objectValue},
+                success:function(response){
+
+                    var len = 0;
+
+                    if (response.mensagem != null) {
+                        len = response.mensagem.length;
+                    }
+
+                    if (len>0) {
+                        objectList.find('option').not(':first').remove();
+                        for (var i = 0; i<len; i++) {
+                            var id = response.mensagem[i].id;
+                            var nome = response.mensagem[i].nome;
+                            var option = "<option value='"+id+"'>"+nome+"</option>";
+                            objectList.append(option);
+                        }
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    } else {
+                        objectList.find('option').not(':first').remove();
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    }
+                },
+                error:function(erro){
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                }
+            })
+        }
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.value
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.value = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }   
 
     </script>
 

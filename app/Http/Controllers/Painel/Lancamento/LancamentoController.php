@@ -38,7 +38,7 @@ class LancamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -47,31 +47,51 @@ class LancamentoController extends Controller
 
         $aba = ($request->has('aba') ? $request->aba : 'MF');
 
-        if($user->cliente->tipo != 'AG'){
-            $efetivos = Efetivo::where('efetivos.cliente_id', $user->cliente->id)
+        if($user->cliente_user->cliente->tipo != 'AG'){
+            $efetivos = Efetivo::leftJoin('movimentacaos', 'movimentacaos.efetivo_id', '=', 'efetivos.id')
+                                        ->where('efetivos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where('efetivos.segmento', 'MG')
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(efetivos.data_programada), 2, 0), \'-\', YEAR(efetivos.data_programada))'))
-                                        ->select(DB::raw('concat(YEAR(efetivos.data_programada), LPAD(MONTH(efetivos.data_programada), 2, 0)) AS mes_ordem,
-                                                        concat(LPAD(MONTH(efetivos.data_programada), 2, 0), \'-\', YEAR(efetivos.data_programada)) AS mes_referencia,
-                                                        count( efetivos.id ) AS total,
+                                        ->groupBy(DB::raw('
+                                                        CASE WHEN efetivos.tipo in (\'EG\')
+                                                            THEN concat(LPAD(MONTH(efetivos.data_programada), 2, 0), \'-\', YEAR(efetivos.data_programada)) 
+                                                            ELSE concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada))) 
+                                                        END'))
+                                        ->select(DB::raw('
+                                                        CASE WHEN efetivos.tipo in (\'EG\')
+                                                            THEN concat(YEAR(efetivos.data_programada), LPAD(MONTH(efetivos.data_programada), 2, 0)) 
+                                                            ELSE concat(YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)), LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)), 2, 0)) 
+                                                        END AS mes_ordem, 
+                                                        CASE WHEN efetivos.tipo in  (\'EG\')
+                                                            THEN concat(LPAD(MONTH(efetivos.data_programada), 2, 0), \'-\', YEAR(efetivos.data_programada))
+                                                            ELSE concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada))) 
+                                                        END AS mes_referencia, 
+                                                        CASE WHEN efetivos.tipo in  (\'EG\')
+                                                            THEN count(efetivos.id)
+                                                            ELSE count(COALESCE(movimentacaos.id, efetivos.id ))
+                                                        END AS total,
                                                         SUM(CASE WHEN efetivos.tipo = (\'CP\') THEN 1 ELSE 0 END) as compra,
                                                         SUM(CASE WHEN efetivos.tipo = (\'VD\') THEN 1 ELSE 0 END) as venda,
                                                         SUM(CASE WHEN efetivos.tipo = (\'EG\') THEN 1 ELSE 0 END) as engorda'))
-                                        ->orderBy('efetivos.data_programada', 'desc')
+                                        ->orderBy(DB::raw('
+                                                            CASE WHEN efetivos.tipo in (\'EG\')
+                                                                THEN `efetivos`.`data_programada` 
+                                                                ELSE COALESCE(movimentacaos.data_pagamento, efetivos.data_programada) 
+                                                            END 
+                                                        '), 'desc')
                                         ->get();
         } else {
             $efetivos = [];
         }
 
-        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
+        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where('movimentacaos.segmento', 'MF')
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
-                                        ->select(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0)) AS mes_ordem,
-                                                concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)))'))
+                                        ->select(DB::raw('concat(YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0)) AS mes_ordem,
+                                                concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada))) AS mes_referencia,
                                                 count( movimentacaos.id ) AS total,
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN 1 ELSE 0 END) as receita,
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN 1 ELSE 0 END) as despesa'))
-                                        ->orderBy('movimentacaos.data_programada', 'desc')
+                                        ->orderBy(DB::raw('COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)'), 'desc')
                                         ->get();
 
         return view('painel.lancamento.index', compact('user', 'efetivos', 'movimentacaos', 'aba'));
@@ -86,7 +106,7 @@ class LancamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -105,7 +125,7 @@ class LancamentoController extends Controller
 
         switch($tipo) {
             case 'EP': {
-                $empresas = Empresa::where('cliente_id', $user->cliente->id)
+                $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();
@@ -121,7 +141,7 @@ class LancamentoController extends Controller
             }
 
             case 'FP': {
-                $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+                $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                                     ->where('status', 'A')
                                                     ->orderBy('produtor_id', 'desc')
                                                     ->orderBy('tipo_conta', 'asc')
@@ -138,7 +158,7 @@ class LancamentoController extends Controller
             }
 
             case 'PT': {
-                $produtors = Produtor::where('cliente_id', $user->cliente->id)
+                $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                         ->where('status', 'A')
                                         ->orderBy('nome', 'asc')
                                         ->get();
@@ -188,7 +208,7 @@ class LancamentoController extends Controller
             }                                    
 
             case 'OR': {
-                $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                $fazendas = Fazenda::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();
@@ -204,7 +224,7 @@ class LancamentoController extends Controller
             }
 
             case 'DT': {
-                $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+                $fazendas = Fazenda::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();

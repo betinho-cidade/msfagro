@@ -84,10 +84,13 @@
                             <td  style="width:30px;" class="mask_telefone">{{$produtor->telefone}}</td>
                             <td style="text-align:center;">
 
+                            @can('view_produtor')
+                                <a href="{{route('produtor.show', compact('produtor'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar o Produtor"></i></a>
+                            @endcan                            
+
                             @can('edit_produtor')
                                 <a href="{{route('produtor.alterar_status', compact('produtor'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Produtor"></i></a>
-                                <a href="{{route('produtor.show', compact('produtor'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Produtor"></i></a>
-                            @endcan
+                            @endcan                            
 
                             @can('delete_produtor')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$produtor->id}})"
@@ -143,10 +146,13 @@
                             <td class="mask_telefone">{{$produtor->telefone}}</td>
                             <td style="text-align:center;">
 
+                            @can('view_produtor')
+                                <a href="{{route('produtor.show', compact('produtor'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar o Produtor"></i></a>
+                            @endcan                            
+
                             @can('edit_produtor')
                                 <a href="{{route('produtor.alterar_status', compact('produtor'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Produtor"></i></a>    
-                                <a href="{{route('produtor.show', compact('produtor'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Produtor"></i></a>
-                            @endcan
+                            @endcan                            
 
                             @can('delete_produtor')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$produtor->id}})"

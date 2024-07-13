@@ -44,9 +44,12 @@
             <h4 class="card-title">Formulário de Atualização - Forma de Pagamento {{$forma_pagamento->tipo_conta_texto}}</h4>
             <p class="card-title-desc">A Forma de Pagamento cadastrada estará disponível para os lançamentos no sistema.</p>
 
+            @can('edit_forma_pagamento')
             <form name="edit_forma_pagamento" method="POST" action="{{route('forma_pagamento.update', compact('forma_pagamento'))}}"  class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="liberado" id="liberado" @if($forma_pagamento->has_lancamento) value="NAO" style="background-color: #D3D3D3;" disabled @else value=OK @endif required>
+            @endcan
 
                 <!-- Dados Pessoais - INI -->
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
@@ -57,7 +60,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="tipo_conta" class="{{($errors->first('tipo_conta') ? 'form-error-label' : '')}}">Tipo Conta</label>
-                            <select id="tipo_conta" name="tipo_conta" class="form-control {{($errors->first('tipo_conta') ? 'form-error-field' : '')}}" required>
+                            <select id="tipo_conta" name="tipo_conta" class="form-control {{($errors->first('tipo_conta') ? 'form-error-field' : '')}}" @if($forma_pagamento->has_lancamento) style="background-color: #D3D3D3;" disabled @endif required>
                                 <option value="">---</option>
                                 @if($forma_pagamento->tipo_conta == 'CC' || $forma_pagamento->tipo_conta == 'CP')
                                     <option value="CC" {{($forma_pagamento->tipo_conta == 'CC') ? 'selected' : '' }}>Conta Corrente</option>
@@ -75,7 +78,7 @@
                     <div class="col-md-7">
                         <div class="form-group">
                             <label for="produtor" class="{{($errors->first('produtor') ? 'form-error-label' : '')}}">Produtor</label>
-                            <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} select2">
+                            <select id="produtor" name="produtor" class="form-control {{($errors->first('produtor') ? 'form-error-field' : '')}} select2" @if($forma_pagamento->has_lancamento) style="background-color: #D3D3D3;" disabled @endif>
                                 <option value="">---</option>
                                 @foreach($produtors as $produtor)
                                     <option value="{{ $produtor->id }}" {{($forma_pagamento->produtor_id == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome }} / {{ $produtor->cpf_cnpj }}</option>
@@ -136,9 +139,10 @@
 
 
                 <!-- Dados Pessoais -- FIM -->
-
+            @can('edit_forma_pagamento')
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>
             </form>
+            @endcan
 
 
             <!-- FORMULÁRIO - FIM -->

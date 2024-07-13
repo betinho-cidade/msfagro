@@ -27,10 +27,10 @@ class UpdateRequest extends FormRequest
     {
 
         return [
-            'nome' => 'required|max:500',
+            'nome' => 'required_if:liberado,OK|max:500',
             'email' => 'required|email|max:255',
-            'tipo_pessoa' => 'required',
-            'cpf_cnpj' => 'required|cpf_ou_cnpj|max:14',
+            'tipo_pessoa' => 'required_if:liberado,OK',
+            'cpf_cnpj' => 'required_if:liberado,OK|cpf_ou_cnpj|max:14',
             'telefone' => 'required',
             'inscricao_representante' => 'required',
             'inscricao_estadual' => 'required_if:inscricao_representante,S|max:20',
@@ -48,13 +48,13 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'nome.required' => 'O Nome é requerido',
+            'nome.required_if' => 'O Nome é requerido',
             'nome.max' => 'O tamanho permitido para o Nome é de 200 caracteres',
             'email.required' => 'O E-mail é requerido',
             'email.max' => 'O tamanho permitido para o E-mail é de 255 caracteres',
             'email.email' => 'O E-mail não é valido',
-            'tipo_pessoa.required' => 'O Tipo da Pessoa é requerido',
-            'cpf_cnpj.required' => 'O CPF/CNPJ é requerido',
+            'tipo_pessoa.required_if' => 'O Tipo da Pessoa é requerido',
+            'cpf_cnpj.required_if' => 'O CPF/CNPJ é requerido',
             'cpf_cnpj.max' => 'O tamanho permitido para o CPF/CNPJ é de 14 caracteres',
             'cpf_cnpj.cpf_ou_cnpj' => 'O CPF/CNPJ não é válido',
             'telefone.required' => 'O Telefone é requerido',

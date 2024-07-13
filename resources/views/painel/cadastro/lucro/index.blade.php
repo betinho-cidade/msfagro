@@ -125,7 +125,7 @@
                             <th>Ordenação</th>
                             <th>ID</th>
                             <th>Produtor</th>
-                            <th style="text-align:right;">Valor (R$)</th>
+                            <th style="text-align:right;">Valor</th>
                             <th>Observação</th>
                             <th style="text-align:center;">Data</th>
                             <th style="text-align:center;">Ações</th>
@@ -138,14 +138,14 @@
                             <td>{{$lucro->data_lancamento_ordenacao}}</td>
                             <td>{{$lucro->id}}</td>
                             <td data-toggle="tooltip" title="{{ $lucro->produtor->nome_produtor ?? '...' }}">{{ $lucro->produtor->nome_produtor_reduzido ?? '...' }}</td>
-                            <td style="text-align:right;">{{number_format($lucro->valor,2,',','.')}}</td>
+                            <td style="text-align:right;" class="valor_mask" onLoad="mascaraMoeda(event);">{{$lucro->valor}}</td>
                             <td data-toggle="tooltip" title="{{ $lucro->observacao }}">{{$lucro->observacao_reduzida}}</td>
                             <td style="text-align:center;">{{$lucro->data_lancamento_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_lucro')
-                                <a href="{{route('lucro.show', compact('lucro'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Distribuição de Lucro"></i></a>
-                            @endcan
+                            @can('view_lucro')
+                                <a href="{{route('lucro.show', compact('lucro'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Distribuição de Lucro"></i></a>
+                            @endcan                            
 
                             @can('delete_lucro')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$lucro->id}})"
@@ -241,8 +241,25 @@
 
     <script>
 		$(document).ready(function(){
-            $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
+            $('.valor_mask').trigger('load');  
 		});
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.innerHTML
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.innerHTML = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }            
 	</script>
 
     @if($lucros && $lucros->count() > 0)

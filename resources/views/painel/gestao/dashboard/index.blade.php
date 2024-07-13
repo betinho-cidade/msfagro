@@ -53,7 +53,7 @@
     </form>
 
     <!-- INICIO - PARTE 01 -- RESUMO PECUARIO -->
-    @if($user->perfil == 'Gestor' || $user->cliente->tipo != 'AG')
+    @if($user->perfil == 'Gestor' || $user->cliente_user->cliente->tipo != 'AG')
     <div class="row">
         <div class="col-xl-12">
         <h4 style="text-align:center;margin-bottom:12px;">Resumo Pecuário</h4>

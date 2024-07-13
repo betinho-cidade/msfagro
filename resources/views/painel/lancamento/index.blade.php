@@ -8,7 +8,7 @@
             <h4 class="mb-0">Lançamentos do Cliente</h4>
             
             <div class="page-title-right">
-                @if($user->cliente && $user->cliente->tipo != 'AG')    
+                @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')    
                     @can('create_efetivo')
                         <a href="{{route("efetivo.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Novo Efetivo Pecuário</a>
                     @endcan                                                 
@@ -42,7 +42,7 @@
 
                 <!-- Nav tabs - LISTA efetivo - INI -->
                 <ul class="nav nav-tabs" role="tablist">
-                    @if($user->cliente && $user->cliente->tipo != 'AG')
+                    @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                     <li class="nav-item">
                         <a class="nav-link @if($aba == 'EP') active @endif" data-toggle="tab" href="#efetivo" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
@@ -55,7 +55,7 @@
                     </li>
                     @endif
                     <li class="nav-item">
-                        <a class="nav-link @if($user->cliente->tipo == 'AG') active @elseif($aba == 'MF') active @endif" data-toggle="tab" href="#fiscal" role="tab">
+                        <a class="nav-link @if($user->cliente_user->cliente->tipo == 'AG') active @elseif($aba == 'MF') active @endif" data-toggle="tab" href="#fiscal" role="tab">
                             <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
                             <span class="d-none d-sm-block">Movimentação Financeira
                                 @can('create_movimentacao')
@@ -71,7 +71,7 @@
                 <div class="tab-content p-3 text-muted">
 
                 <!-- Nav tabs - LISTA efetivo - ATIVA - INI -->
-                @if($user->cliente && $user->cliente->tipo != 'AG')
+                @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                 <div class="tab-pane @if($aba == 'EP') active @endif" id="efetivo" role="tabpanel">
                     <table id="dt_efetivo" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -114,7 +114,7 @@
                 </div>
                 @endif
 
-                <div class="tab-pane @if($user->cliente->tipo == 'AG') active @elseif($aba == 'MF') active @endif" id="fiscal" role="tabpanel">
+                <div class="tab-pane @if($user->cliente_user->cliente->tipo == 'AG') active @elseif($aba == 'MF') active @endif" id="fiscal" role="tabpanel">
                     <table id="dt_fiscal" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
@@ -176,7 +176,7 @@
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/inputmask/jquery.inputmask.min.js')}}"></script>
 
-    @if($user->cliente->tipo != 'AG' && $efetivos->count() > 0)
+    @if($user->cliente_user->cliente->tipo != 'AG' && $efetivos->count() > 0)
         <script>
             var table = $('#dt_efetivo').DataTable({
                 language: {

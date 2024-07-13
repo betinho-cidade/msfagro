@@ -37,7 +37,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -45,13 +45,13 @@ class FormaPagamentoController extends Controller
         }
 
         $forma_pagamentos_AT = FormaPagamento::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('id', 'desc')
                             ->get();
 
 
         $forma_pagamentos_IN = FormaPagamento::where('status','I')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('id', 'desc')
                             ->get();
 
@@ -68,7 +68,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -76,7 +76,7 @@ class FormaPagamentoController extends Controller
         }
 
         $produtors = Produtor::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
@@ -92,7 +92,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -111,7 +111,7 @@ class FormaPagamentoController extends Controller
                 $forma_pagamento->tipo_conta = $request->tipo_conta;
             }
 
-            $forma_pagamento->cliente_id = $user->cliente->id;
+            $forma_pagamento->cliente_id = $user->cliente_user->cliente->id;
             $forma_pagamento->produtor_id = $request->produtor;
             //$forma_pagamento->tipo_conta = $request->tipo_conta;
             $forma_pagamento->banco = $request->banco;
@@ -146,13 +146,13 @@ class FormaPagamentoController extends Controller
     public function show(FormaPagamento $forma_pagamento, Request $request)
     {
 
-        if(Gate::denies('edit_forma_pagamento')){
+        if(Gate::denies('view_forma_pagamento')){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $forma_pagamento->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $forma_pagamento->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A forma de pagamento não pertence ao cliente informado.');
 
@@ -168,7 +168,7 @@ class FormaPagamentoController extends Controller
 
 
         $produtors = Produtor::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
@@ -185,7 +185,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $forma_pagamento->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $forma_pagamento->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A forma de pagamento não pertence ao cliente informado.');
 
@@ -206,10 +206,12 @@ class FormaPagamentoController extends Controller
 
             DB::beginTransaction();
 
-            if($forma_pagamento->tipo_conta == 'CC' || $forma_pagamento->tipo_conta == 'CP'){
-                $forma_pagamento->tipo_conta = $request->tipo_conta;
+            if(!$forma_pagamento->has_lancamento){
+                if($forma_pagamento->tipo_conta == 'CC' || $forma_pagamento->tipo_conta == 'CP'){
+                    $forma_pagamento->tipo_conta = $request->tipo_conta;
+                }
+                $forma_pagamento->produtor_id = $request->produtor;
             }
-            $forma_pagamento->produtor_id = $request->produtor;
             $forma_pagamento->banco = $request->banco;
             $forma_pagamento->agencia = $request->agencia;
             $forma_pagamento->conta = $request->conta;
@@ -248,7 +250,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $forma_pagamento->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $forma_pagamento->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A forma de pagamento não pertence ao cliente informado.');
 
@@ -304,7 +306,7 @@ class FormaPagamentoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $forma_pagamento->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $forma_pagamento->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A forma de pagamento não pertence ao cliente informado.');
 

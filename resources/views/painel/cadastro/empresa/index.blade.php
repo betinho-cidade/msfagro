@@ -80,10 +80,13 @@
                             <td data-toggle="tooltip" title="{{ $empresa->nome }}">{{$empresa->nome_reduzido}}</td>
                             <td style="text-align:center;">
 
+                            @can('view_empresa')
+                                <a href="{{route('empresa.show', compact('empresa'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Empresa"></i></a>
+                            @endcan                            
+
                             @can('edit_empresa')
                                 <a href="{{route('empresa.alterar_status', compact('empresa'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Empresa"></i></a>
-                                <a href="{{route('empresa.show', compact('empresa'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Empresa"></i></a>
-                            @endcan
+                            @endcan                            
 
                             @can('delete_empresa')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$empresa->id}})"
@@ -136,8 +139,8 @@
                             <td style="text-align:center;">
 
                             @can('edit_empresa')
-                                <a href="{{route('empresa.alterar_status', compact('empresa'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Empresa"></i></a>
                                 <a href="{{route('empresa.show', compact('empresa'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a empresa"></i></a>
+                                <a href="{{route('empresa.alterar_status', compact('empresa'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Empresa"></i></a>
                             @endcan
 
                             @can('delete_empresa')

@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleUserSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(PermissionRoleSeeder::class);
+        $this->call(PerfilSeeder::class);
+        $this->call(PerfilPermissionSeeder::class);
         $this->call(CategoriaSeeder::class);
         $this->call(ClienteSeeder::class);
         $this->call(GooglemapSeeder::class);

@@ -72,7 +72,7 @@
         '<div id="siteNotice">' +
         "</div>" +
         '<h4 id="firstHeading" class="firstHeading">{{$fazenda->nome_fazenda}}</h4>' +
-        @if($user->cliente->tipo != 'AG')
+        @if($user->cliente_user->cliente->tipo != 'AG')
         '<div id="bodyContent">' +
         "<p><b>Quantidade de Machos:</b> {{$fazenda->qtd_macho}}</p>" +
         "<p><b>Quantidade de Fêmeas:</b> {{$fazenda->qtd_femea}}</p>" +

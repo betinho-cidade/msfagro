@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Lancamento\Efetivo\CreateRequest;
 use App\Http\Requests\Lancamento\Efetivo\UpdateRequest;
 use Carbon\Carbon;
-
+use App\Http\Middleware\GenerateSafeSubmitToken;
+use App\Http\Middleware\HandleSafeSubmit;
+use App\SafeSubmit\SafeSubmit;
 
 class EfetivoController extends Controller
 {
@@ -28,6 +30,8 @@ class EfetivoController extends Controller
     public function __construct(Request $request)
     {
         $this->middleware('auth');
+        $this->middleware(GenerateSafeSubmitToken::class)->only('create');
+        $this->middleware(HandleSafeSubmit::class)->only('store');
     }
 
     public function index(Request $request)
@@ -39,14 +43,14 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('lancamento.index');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -67,12 +71,40 @@ class EfetivoController extends Controller
         setlocale(LC_ALL, 'pt_BR.utf-8', 'ptb', 'pt_BR', 'portuguese-brazil', 'portuguese-brazilian', 'bra', 'brazil', 'br');
         $data_programada = Carbon::createFromDate($data_programada_vetor[1], $data_programada_vetor[0])->formatLocalized('%B/%Y');
 
-        $efetivos = Efetivo::where('cliente_id', $user->cliente->id)
-                                ->where('segmento', 'MG')
-                                ->whereYear('data_programada', $data_programada_vetor[1])
-                                ->whereMonth('data_programada', $data_programada_vetor[0])
-                                ->orderBy('data_programada', 'asc')
-                                ->get();
+        // $efetivos = Efetivo::where('cliente_id', $user->cliente_user->cliente->id)
+        //                         ->where('segmento', 'MG')
+        //                         ->whereYear('data_programada', $data_programada_vetor[1])
+        //                         ->whereMonth('data_programada', $data_programada_vetor[0])
+        //                         ->orderBy('data_programada', 'asc')
+        //                         ->get();
+
+        $efetivos = Efetivo::leftJoin('movimentacaos', 'movimentacaos.efetivo_id', '=', 'efetivos.id')
+                                ->where('efetivos.cliente_id', $user->cliente_user->cliente->id)
+                                ->where('efetivos.segmento', 'MG')
+                                ->whereRaw(DB::raw('
+                                                CASE WHEN efetivos.tipo in (\'EG\')
+                                                    THEN 
+                                                        YEAR(efetivos.data_programada) = "'.$data_programada_vetor[1].'" 
+                                                    ELSE  
+                                                        YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[1].'" 
+                                                    END
+                                                '))
+                                ->whereRaw(DB::raw('
+                                                CASE WHEN efetivos.tipo in (\'EG\')
+                                                    THEN 
+                                                        MONTH(efetivos.data_programada) = "'.$data_programada_vetor[0].'" 
+                                                    ELSE  
+                                                        MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[0].'" 
+                                                    END
+                                                '))
+                                ->orderBy(DB::raw('
+                                                    CASE WHEN efetivos.tipo in (\'EG\')
+                                                        THEN `efetivos`.`data_programada` 
+                                                        ELSE COALESCE(movimentacaos.data_pagamento, efetivos.data_programada) 
+                                                    END 
+                                                '), 'desc')
+                                ->select('efetivos.*')
+                                ->get();                                
 
         return view('painel.lancamento.efetivo.index', compact('user', 'mes_referencia', 'data_programada', 'efetivos'));
     }
@@ -85,14 +117,14 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -100,18 +132,18 @@ class EfetivoController extends Controller
         }
 
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
                                             ->get();
 
-        $empresas = Empresa::where('cliente_id', $user->cliente->id)
+        $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
@@ -121,7 +153,7 @@ class EfetivoController extends Controller
                                 ->orderBy('nome', 'asc')
                                 ->get();
 
-        $fazendas = Fazenda::where('cliente_id', $user->cliente->id)
+        $fazendas = Fazenda::where('cliente_id', $user->cliente_user->cliente->id)
                                 ->where('status', 'A')
                                 ->orderBy('nome', 'asc')
                                 ->get();
@@ -129,7 +161,7 @@ class EfetivoController extends Controller
         return view('painel.lancamento.efetivo.create', compact('user', 'produtors', 'forma_pagamentos', 'empresas', 'categorias', 'fazendas'));
     }
 
-    public function store(CreateRequest $request)
+    public function store(CreateRequest $request, SafeSubmit $safeSubmit)
     {
 
         if(Gate::denies('create_efetivo')){
@@ -138,14 +170,14 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -180,7 +212,7 @@ class EfetivoController extends Controller
 
             $efetivo = new Efetivo();
 
-            $efetivo->cliente_id = $user->cliente->id;
+            $efetivo->cliente_id = $user->cliente_user->cliente->id;
             $efetivo->data_programada = $request->data_programada;
             $efetivo->segmento = 'MG';
             $efetivo->tipo = $request->tipo;
@@ -212,7 +244,7 @@ class EfetivoController extends Controller
                 $movimentacao = new Movimentacao();
 
                 $movimentacao->efetivo_id = $efetivo->id;
-                $movimentacao->cliente_id = $user->cliente->id;
+                $movimentacao->cliente_id = $user->cliente_user->cliente->id;
                 $movimentacao->empresa_id = $efetivo->empresa_id;
                 $movimentacao->produtor_id = $request->produtor;
                 $movimentacao->forma_pagamento_id = $request->forma_pagamento;
@@ -221,7 +253,7 @@ class EfetivoController extends Controller
                 $movimentacao->data_pagamento = $request->data_pagamento;
                 $movimentacao->segmento = 'MG';
                 $movimentacao->tipo = $tipo;
-                $movimentacao->valor = ($request->valor) ? $request->valor : null;
+                $movimentacao->valor = $request->valor;
                 $movimentacao->nota = $request->nota;
                 $movimentacao->situacao = $request->path_comprovante ? 'PG' : 'PD';
                 $movimentacao->item_texto = $efetivo->texto_efetivo;
@@ -253,7 +285,7 @@ class EfetivoController extends Controller
 
             if ($request->path_gta) {
 
-                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+                $path_gta = 'documentos/'. $user->cliente_user->cliente->id . '/gtas/';
 
                 $nome_arquivo = 'GTA_'.$efetivo->id.'.'.$request->path_gta->getClientOriginalExtension();
                 $efetivo->path_gta = $nome_arquivo;
@@ -264,7 +296,7 @@ class EfetivoController extends Controller
 
             if ($request->path_nota) {
 
-                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
 
                 $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
                 $movimentacao->path_nota = $nome_arquivo;
@@ -275,7 +307,7 @@ class EfetivoController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
 
                 $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $movimentacao->path_comprovante = $nome_arquivo;
@@ -292,7 +324,7 @@ class EfetivoController extends Controller
 
             if ($request->path_anexo) {
 
-                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
 
                 $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
                 $movimentacao->path_anexo = $nome_arquivo;
@@ -320,20 +352,22 @@ class EfetivoController extends Controller
             $request->session()->flash('message.content', 'O Lançamento de Efetivo Pecuário ('.$efetivo->tipo_efetivo_texto.') com ID <span style="color: #af1e1e;">'. $efetivo->id .'</span> foi criado com sucesso');
         }
 
-        return redirect()->route('lancamento.index', ['aba' => 'EP']);
+        //return redirect()->route('lancamento.index', ['aba' => 'EP']);
+        return $safeSubmit->intended(route('lancamento.index', ['aba' => 'EP']));
+
     }
 
     public function show(Efetivo $efetivo, Request $request)
     {
 
-        if(Gate::denies('edit_efetivo') && (Gate::denies('view_relatorio_gestao'))){
+        if(Gate::denies('view_efetivo') && (Gate::denies('view_relatorio_gestao'))){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if(!$user->cliente){
+            if(!$user->cliente_user){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -342,7 +376,7 @@ class EfetivoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->tipo == 'AG'){
+            if($user->cliente_user->cliente->tipo == 'AG'){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -351,7 +385,7 @@ class EfetivoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->id != $efetivo->cliente_id){
+            if($user->cliente_user->cliente->id != $efetivo->cliente_id){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
@@ -359,7 +393,7 @@ class EfetivoController extends Controller
             }
         }
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
@@ -377,21 +411,21 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $efetivo->cliente_id){
+        if($user->cliente_user->cliente->id != $efetivo->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
@@ -469,7 +503,7 @@ class EfetivoController extends Controller
 
                 $efetivo->movimentacao->data_programada = $efetivo->data_programada;
                 $efetivo->movimentacao->data_pagamento = $request->data_pagamento;
-                $efetivo->movimentacao->valor = ($request->valor) ? $request->valor : null;
+                $efetivo->movimentacao->valor = $request->valor;
                 $efetivo->movimentacao->nota = $request->nota;
                 $efetivo->movimentacao->forma_pagamento_id = $request->forma_pagamento;
 
@@ -482,7 +516,7 @@ class EfetivoController extends Controller
 
             if ($request->path_gta) {
 
-                $path_gta = 'documentos/'. $user->cliente->id . '/gtas/';
+                $path_gta = 'documentos/'. $user->cliente_user->cliente->id . '/gtas/';
 
                 if($efetivo->path_gta){
                     if(Storage::exists($path_gta)) {
@@ -499,7 +533,7 @@ class EfetivoController extends Controller
 
             if ($request->path_nota) {
 
-                $path_nota = 'documentos/'. $user->cliente->id . '/notas/';
+                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
 
                 if($efetivo->movimentacao->path_nota){
                     if(Storage::exists($path_nota)) {
@@ -516,7 +550,7 @@ class EfetivoController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/comprovantes/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
 
                 if($efetivo->movimentacao->path_comprovante){
                     if(Storage::exists($path_comprovante)) {
@@ -534,7 +568,7 @@ class EfetivoController extends Controller
 
             if ($request->path_anexo) {
 
-                $path_anexo = 'documentos/'. $user->cliente->id . '/anexos/';
+                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
 
                 if($efetivo->movimentacao->path_anexo){
                     if(Storage::exists($path_anexo)) {
@@ -591,21 +625,21 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $efetivo->cliente_id){
+        if($user->cliente_user->cliente->id != $efetivo->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
@@ -689,14 +723,14 @@ class EfetivoController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->tipo == 'AG'){
+        if($user->cliente_user->cliente->tipo == 'AG'){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -744,8 +778,8 @@ class EfetivoController extends Controller
 
             $data_programada_vetor = explode('-', $mes_referencia);
 
-            $efetivos = ($user->cliente->tipo != 'AG') ?
-                                Efetivo::where('cliente_id', $user->cliente->id)
+            $efetivos = ($user->cliente_user->cliente->tipo != 'AG') ?
+                                Efetivo::where('cliente_id', $user->cliente_user->cliente->id)
                                         ->where('segmento', 'MG')
                                         ->whereYear('data_programada', $data_programada_vetor[1])
                                         ->whereMonth('data_programada', $data_programada_vetor[0])
@@ -757,7 +791,7 @@ class EfetivoController extends Controller
 
             foreach($efetivos as $efetivo){
 
-                if($user->cliente->id != $efetivo->cliente_id){
+                if($user->cliente_user->cliente->id != $efetivo->cliente_id){
                     $request->session()->flash('message.level', 'warning');
                     $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
@@ -868,7 +902,7 @@ class EfetivoController extends Controller
         $user = Auth()->User();
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if(!$user->cliente){
+            if(!$user->cliente_user){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -877,7 +911,7 @@ class EfetivoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->tipo == 'AG'){
+            if($user->cliente_user->cliente->tipo == 'AG'){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
 
@@ -886,7 +920,7 @@ class EfetivoController extends Controller
         }
 
         if((Gate::denies('view_relatorio_gestao'))){
-            if($user->cliente->id != $efetivo->cliente_id){
+            if($user->cliente_user->cliente->id != $efetivo->cliente_id){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
 
@@ -909,7 +943,7 @@ class EfetivoController extends Controller
        
 
         if((Gate::denies('view_relatorio_gestao'))){
-            $path_documento = 'documentos/' . $user->cliente->id . '/';
+            $path_documento = 'documentos/' . $user->cliente_user->cliente->id . '/';
         } else {
             $path_documento = 'documentos/' . $efetivo->movimentacao->cliente_id . '/';
         }        

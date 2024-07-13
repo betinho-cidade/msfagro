@@ -78,12 +78,17 @@
                             <td data-toggle="tooltip" title="{{ $forma_pagamento->nome_conta . ' ' . $forma_pagamento->nome_produtor  }}">{{$forma_pagamento->nome_conta_resumida}}</td>
                             <td style="text-align:center;">
 
+                            @can('view_forma_pagamento')
+                                @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Forma de Pagamento"></i></a>
+                                @endif
+                            @endcan                            
+
                             @can('edit_forma_pagamento')
                                 @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
                                     <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
-                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
                                 @endif
-                            @endcan
+                            @endcan                            
 
                             @can('delete_forma_pagamento')
                                 @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
@@ -137,8 +142,8 @@
 
                             @can('edit_forma_pagamento')
                                 @if($forma_pagamento->tipo_conta != 'CT' && $forma_pagamento->tipo_conta != 'ES')
+                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>                                
                                     <a href="{{route('forma_pagamento.alterar_status', compact('forma_pagamento'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Forma de Pagamento"></i></a>
-                                    <a href="{{route('forma_pagamento.show', compact('forma_pagamento'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Forma de Pagamento"></i></a>
                                 @endif
                             @endcan
 

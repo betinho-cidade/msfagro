@@ -452,7 +452,71 @@ class PermissionSeeder extends Seeder
                     'description' => 'Excluir uma Distribuição de Lucro',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ],                      
+                ],                   
+                [
+                    'id' => 64,
+                    'name' => 'view_cliente_user',
+                    'description' => 'Visualizar as informações dos usuários dos clientes',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 65,
+                    'name' => 'edit_cliente_user',
+                    'description' => 'Editar as informações dos usuários dos clientes',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 66,
+                    'name' => 'create_cliente_user',
+                    'description' => 'Criar um novo usuário para o cliente',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 67,
+                    'name' => 'delete_cliente_user',
+                    'description' => 'Excluir um usuário do cliente',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],      
+                [
+                    'id' => 68,
+                    'name' => 'view_usuario_cliente',
+                    'description' => 'Visualizar as informações do usuário pertencente ao Cliente do sistema MFSagro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 69,
+                    'name' => 'edit_usuario_cliente',
+                    'description' => 'Editar as informações do usuário pertencente ao Cliente do sistema MFSagro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 70,
+                    'name' => 'create_usuario_cliente',
+                    'description' => 'Criar um novo usuário pertencente ao Cliente do sistema MFSagro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 71,
+                    'name' => 'delete_usuario_cliente',
+                    'description' => 'Excluir o usuário pertencente ao Cliente do sistema MFSagro',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'id' => 72,
+                    'name' => 'view_relatorio_maps',
+                    'description' => 'Visualizar as informações do google maps no relatório',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],                
+                
             ]);
 
         } else { echo "\e[31mTabela Permissions não está vazia. "; }

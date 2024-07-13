@@ -38,14 +38,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
@@ -53,12 +53,12 @@ class FazendaController extends Controller
         // }
 
         $anomes_referencia = Carbon::now();
-        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
+        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente_user->cliente->id)
                                              ->whereYear('anomes_referencia', $anomes_referencia->year)
                                              ->whereMonth('anomes_referencia', $anomes_referencia->month)
                                              ->first();       
 
-        $cliente = Cliente::where('id', $user->cliente->id)                                     
+        $cliente = Cliente::where('id', $user->cliente_user->cliente->id)                                     
                            ->first();    
         
         $qtd_apimaps = $cliente->qtd_apimaps;
@@ -66,13 +66,13 @@ class FazendaController extends Controller
 
 
         $fazendas_AT = Fazenda::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
 
         $fazendas_IN = Fazenda::where('status','I')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
@@ -91,14 +91,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
@@ -118,14 +118,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
@@ -140,7 +140,7 @@ class FazendaController extends Controller
 
             $fazenda = new Fazenda();
 
-            $fazenda->cliente_id = $user->cliente->id;
+            $fazenda->cliente_id = $user->cliente_user->cliente->id;
             $fazenda->nome = $request->nome;
             $fazenda->end_cep = $request->end_cep;
             $fazenda->end_cidade = $request->end_cidade;
@@ -178,20 +178,20 @@ class FazendaController extends Controller
     public function show(Fazenda $fazenda, Request $request)
     {
 
-        if(Gate::denies('edit_fazenda')){
+        if(Gate::denies('view_fazenda')){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
         //     return redirect()->route('painel');
         // }             
 
-        if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
 
@@ -211,14 +211,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
         //     return redirect()->route('painel');
         // }             
 
-        if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
 
@@ -273,14 +273,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
         //     return redirect()->route('painel');
         // }             
 
-        if(!$user->cliente ||($user->cliente->id != $fazenda->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
 
@@ -329,14 +329,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
         //     return redirect()->route('painel');
         // }        
 
-        if(!$user->cliente || ($user->cliente->id != $fazenda->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
 
@@ -344,12 +344,12 @@ class FazendaController extends Controller
         }
 
         $anomes_referencia = Carbon::now();
-        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente->id)
+        $cliente_googlemap = ClienteGooglemap::where('cliente_id', $user->cliente_user->cliente->id)
                                              ->whereYear('anomes_referencia', $anomes_referencia->year)
                                              ->whereMonth('anomes_referencia', $anomes_referencia->month)
                                              ->first();       
 
-        $cliente = Cliente::where('id', $user->cliente->id)                                     
+        $cliente = Cliente::where('id', $user->cliente_user->cliente->id)                                     
                            ->first();        
                 
         if( (!$cliente_googlemap && $cliente->qtd_geolocation == 0) ||
@@ -407,7 +407,7 @@ class FazendaController extends Controller
                 } else {
                     $new_cliente_googlemap = new ClienteGooglemap();
 
-                    $new_cliente_googlemap->cliente_id = $user->cliente->id;
+                    $new_cliente_googlemap->cliente_id = $user->cliente_user->cliente->id;
                     $new_cliente_googlemap->anomes_referencia = $anomes_referencia;
                     $new_cliente_googlemap->qtd_apimaps = 0;
                     $new_cliente_googlemap->qtd_geolocation = 1;
@@ -448,14 +448,14 @@ class FazendaController extends Controller
 
         $user = Auth()->User();
 
-        // if($user->cliente->tipo == 'AG'){
+        // if($user->cliente_user->cliente->tipo == 'AG'){
         //     $request->session()->flash('message.level', 'warning');
         //     $request->session()->flash('message.content', 'Cadatro permitido somente para o perfil Pecuarista.');
 
         //     return redirect()->route('painel');
         // }             
 
-        if(!$user->cliente ||($user->cliente->id != $fazenda->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $fazenda->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A fazenda não pertence ao cliente informado.');
 

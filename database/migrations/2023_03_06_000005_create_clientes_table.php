@@ -11,7 +11,6 @@ class CreateClientesTable extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id')->unique();
             $table->enum('tipo', ['AG', 'PE', 'AB'])->default('PE');  //AG->Agricultor  PE->Pecuarista  AB->Ambos
             $table->string('nome', 200);
             $table->string('email', 255);
@@ -28,9 +27,7 @@ class CreateClientesTable extends Migration
             $table->integer('qtd_apimaps')->default(0);
             $table->integer('qtd_geolocation')->default(0);
             $table->enum('status', ['A', 'I'])->default('A');  //A->Ativo  I->Inativo
-            $table->enum('menu_aberto', ['S', 'N'])->default('N');  //S->Sim  N->Não
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

@@ -13,4 +13,8 @@ class Permission extends Model
         return $this->belongsToMany('App\Models\Role');
     }
 
+    public function perfils(){
+        return $this->belongsToMany('App\Models\Perfil');
+    }    
+
 }

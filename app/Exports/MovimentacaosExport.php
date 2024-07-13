@@ -108,7 +108,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
         $user = Auth()->User();
 
-        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
+        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($search){
                                             if($search['tipo_cliente'] == 'AG'){
                                                 $query->where('segmento', 'MF');
@@ -116,13 +116,13 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                                                 $query->where('segmento', $search['segmento']);
                                             }
 
-                                            if($search['movimentacao']){
-                                                if($search['movimentacao'] == 'F'){
-                                                    $query->whereNull('data_pagamento');
-                                                }else if($search['movimentacao'] == 'E'){
-                                                    $query->whereNotNull('data_pagamento');
-                                                }
-                                            }                                            
+                                            // if($search['movimentacao']){
+                                            //     if($search['movimentacao'] == 'F'){
+                                            //         $query->whereNull('data_pagamento');
+                                            //     }else if($search['movimentacao'] == 'E'){
+                                            //         $query->whereNotNull('data_pagamento');
+                                            //     }
+                                            // }                                            
 
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
@@ -147,18 +147,125 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                                             if($search['nota']){
                                                 $query->where('nota', 'like', '%' . $search['nota'] . '%');
                                             }                                                 
+                                            
+                                            // if($search['data_inicio'] && $search['data_fim']){
+                                            //     if($search['movimentacao']){
+                                            //         if($search['movimentacao'] == 'F'){
+                                            //             $query->where('data_programada', '>=', $search['data_inicio']);
+                                            //             $query->where('data_programada', '<=', $search['data_fim']);
+                                            //             $query->orderBy('data_programada', 'desc');
+                                            //         }else if($search['movimentacao'] == 'E'){
+                                            //             $query->where('data_pagamento', '>=', $search['data_inicio']);
+                                            //             $query->where('data_pagamento', '<=', $search['data_fim']);
+                                            //             $query->orderBy('data_pagamento', 'desc');
+                                            //         }
+                                            //     } else {
+                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
+                                            //         $query->where('data_programada', '<=', $search['data_fim']);
+                                            //         $query->orderBy('data_programada', 'desc');
+                                            //     }        
+                                            // } elseif($search['data_inicio']){
+                                            //     if($search['movimentacao']){
+                                            //         if($search['movimentacao'] == 'F'){
+                                            //             $query->where('data_programada', '>=', $search['data_inicio']);
+                                            //             $query->orderBy('data_programada', 'desc');
+                                            //         }else if($search['movimentacao'] == 'E'){
+                                            //             $query->where('data_pagamento', '>=', $search['data_inicio']);
+                                            //             $query->orderBy('data_pagamento', 'desc');
+                                            //         }
+                                            //     } else{
+                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
+                                            //         $query->orderBy('data_programada', 'desc');
+                                            //     }   
+                                            // } elseif($search['data_fim']){
+                                            //     if($search['movimentacao']){
+                                            //         if($search['movimentacao'] == 'F'){
+                                            //             $query->where('data_programada', '<=', $search['data_fim']);
+                                            //             $query->orderBy('data_programada', 'desc');
+                                            //         }else if($search['movimentacao'] == 'E'){
+                                            //             $query->where('data_pagamento', '<=', $search['data_fim']);
+                                            //             $query->orderBy('data_pagamento', 'desc');
+                                            //         }
+                                            //     } else{
+                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
+                                            //         $query->orderBy('data_programada', 'desc');
+                                            //     }     
+                                            // } else {
+                                            //     $query->orderBy('data_programada', 'desc');
+                                            // }
 
                                             if($search['data_inicio'] && $search['data_fim']){
-                                                $query->where('data_programada', '>=', $search['data_inicio']);
-                                                $query->where('data_programada', '<=', $search['data_fim']);
+                                                if($search['movimentacao']){
+                                                    if($search['movimentacao'] == 'F'){
+                                                        $query->whereNull('data_pagamento');
+                                                        $query->where('data_programada', '>=', $search['data_inicio']);
+                                                        $query->where('data_programada', '<=', $search['data_fim']);
+                                                        $query->orderBy('data_programada', 'desc');
+                                                    }else if($search['movimentacao'] == 'E'){
+                                                        $query->whereNotNull('data_pagamento');
+                                                        $query->where('data_pagamento', '>=', $search['data_inicio']);
+                                                        $query->where('data_pagamento', '<=', $search['data_fim']);
+                                                        $query->orderBy('data_pagamento', 'desc');
+                                                    }else if($search['movimentacao'] == 'G'){
+                                                        $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
+                                                        $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
+                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                    }
+                                                } else {
+                                                    $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
+                                                    $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
+                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                }        
                                             } elseif($search['data_inicio']){
-                                                $query->where('data_programada', '>=', $search['data_inicio']);
+                                                if($search['movimentacao']){
+                                                    if($search['movimentacao'] == 'F'){
+                                                        $query->whereNull('data_pagamento');
+                                                        $query->where('data_programada', '>=', $search['data_inicio']);
+                                                        $query->orderBy('data_programada', 'desc');
+                                                    }else if($search['movimentacao'] == 'E'){
+                                                        $query->whereNotNull('data_pagamento');
+                                                        $query->where('data_pagamento', '>=', $search['data_inicio']);
+                                                        $query->orderBy('data_pagamento', 'desc');
+                                                    }else if($search['movimentacao'] == 'G'){
+                                                        $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
+                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                    }
+                                                } else{
+                                                    $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
+                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                }   
                                             } elseif($search['data_fim']){
-                                                $query->where('data_programada', '<=', $search['data_fim']);
-                                            }
+                                                if($search['movimentacao']){
+                                                    if($search['movimentacao'] == 'F'){
+                                                        $query->whereNull('data_pagamento');
+                                                        $query->where('data_programada', '<=', $search['data_fim']);
+                                                        $query->orderBy('data_programada', 'desc');
+                                                    }else if($search['movimentacao'] == 'E'){
+                                                        $query->whereNotNull('data_pagamento');
+                                                        $query->where('data_pagamento', '<=', $search['data_fim']);
+                                                        $query->orderBy('data_pagamento', 'desc');
+                                                    }else if($search['movimentacao'] == 'G'){
+                                                        $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
+                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                    }
+                                                } else{
+                                                    $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
+                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                }     
+                                            } else {
+                                                if($search['movimentacao'] == 'F'){
+                                                    $query->whereNull('data_pagamento');
+                                                    $query->orderBy('data_programada', 'desc');
+                                                }else if($search['movimentacao'] == 'E'){
+                                                    $query->whereNotNull('data_pagamento');
+                                                    $query->orderBy('data_pagamento', 'desc');
+                                                }else if($search['movimentacao'] == 'G'){
+                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                                                }                                                
+                                            }                                            
                                         })
-                                        ->orderBy('movimentacaos.tipo', 'desc') // primeiro por Despesa, depois por Receita
-                                        ->orderBy('movimentacaos.data_programada', 'asc');
+                                        ->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
+                                        //->orderBy('data_programada', 'asc');
         
         return $movimentacaos;
     }

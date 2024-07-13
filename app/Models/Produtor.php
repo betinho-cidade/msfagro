@@ -81,4 +81,9 @@ class Produtor extends Model
         return $email_reduzido;
     }
 
+    public function getHasLancamentoAttribute(){
+
+        return ($this->movimentacaos()->count() > 0) ? true : false;
+    }
+
 }

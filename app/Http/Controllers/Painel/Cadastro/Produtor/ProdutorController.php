@@ -36,7 +36,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -44,13 +44,13 @@ class ProdutorController extends Controller
         }
 
         $produtors_AT = Produtor::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
 
         $produtors_IN = Produtor::where('status','I')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
@@ -69,7 +69,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -89,7 +89,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -104,7 +104,7 @@ class ProdutorController extends Controller
 
             $produtor = new Produtor();
 
-            $produtor->cliente_id = $user->cliente->id;
+            $produtor->cliente_id = $user->cliente_user->cliente->id;
             $produtor->nome = $request->nome;
             $produtor->email = $request->email;
             $produtor->tipo_pessoa = $request->tipo_pessoa;
@@ -159,13 +159,13 @@ class ProdutorController extends Controller
     public function show(Produtor $produtor, Request $request)
     {
 
-        if(Gate::denies('edit_produtor')){
+        if(Gate::denies('view_produtor')){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $produtor->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $produtor->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Produtor não pertence ao cliente informado.');
 
@@ -185,7 +185,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $produtor->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $produtor->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Produtor não pertence ao cliente informado.');
 
@@ -198,10 +198,12 @@ class ProdutorController extends Controller
 
             DB::beginTransaction();
 
-            $produtor->nome = $request->nome;
+            if(!$produtor->has_lancamento){
+                $produtor->nome = $request->nome;
+                $produtor->tipo_pessoa = $request->tipo_pessoa;
+                $produtor->cpf_cnpj = $request->cpf_cnpj;
+            }
             $produtor->email = $request->email;
-            $produtor->tipo_pessoa = $request->tipo_pessoa;
-            $produtor->cpf_cnpj = $request->cpf_cnpj;
             $produtor->telefone = $request->telefone;
             $produtor->inscricao_estadual = $request->inscricao_estadual;
             $produtor->inscricao_representante = $request->inscricao_representante;
@@ -256,7 +258,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $produtor->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $produtor->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Produtor não pertence ao cliente informado.');
 
@@ -304,7 +306,7 @@ class ProdutorController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $produtor->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $produtor->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'O Produtor não pertence ao cliente informado.');
 

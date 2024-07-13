@@ -77,7 +77,7 @@ class PainelController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -88,11 +88,9 @@ class PainelController extends Controller
 
             DB::beginTransaction();
 
-            $cliente = Cliente::where('user_id', $user->id)->first();
+            $user->cliente_user->menu_aberto = ($user->cliente_user->menu_aberto == 'N') ? 'S' : 'N';
 
-            $cliente->menu_aberto = ($cliente->menu_aberto == 'N') ? 'S' : 'N';
-
-            $cliente->save();
+            $user->cliente_user->save();
             
             DB::commit();
 
@@ -113,7 +111,7 @@ class PainelController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -155,7 +153,7 @@ class PainelController extends Controller
                                     ->whereRaw('(notificacaos.data_inicio <= now())')
                                     ->where(function($query) use ($user)
                                     {
-                                        $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente->id);
+                                        $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente_user->cliente->id);
                                         $query->orWhere('notificacaos.todos', 'S');
                                     })
                                     ->orderBy('notificacaos.data_fim', 'desc')

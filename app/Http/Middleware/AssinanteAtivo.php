@@ -24,8 +24,10 @@ class AssinanteAtivo extends Middleware
         $roles = $user->roles;
 
         if($roles->count() > 0){
-            
-            if(!$user->cliente && $user->roles->contains('name', 'Cliente')){
+
+            if($user->roles->contains('name', 'Cliente') && 
+               ($user->cliente_user()->count() == 0 ||
+               ($user->cliente_user && $user->cliente_user->cliente->status == 'I'))){
                 return redirect()->route('logout');
             }  
 

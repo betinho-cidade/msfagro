@@ -17,7 +17,7 @@ class Empresa extends Model
 
     public function efetivos()
     {
-        return $this->hasMany('App\Models\Efetivos');
+        return $this->hasMany('App\Models\Efetivo');
     }
 
     public function movimentacaos()
@@ -66,6 +66,11 @@ class Empresa extends Model
         $nome_empresa_reduzido =  Str::limit($this->getNomeEmpresaAttribute(), 15, '...');
 
         return $nome_empresa_reduzido;
+    }
+
+    public function getHasLancamentoAttribute(){
+
+        return ($this->movimentacaos()->count() > 0 || $this->efetivos()->count() > 0) ? true : false;
     }
 
 

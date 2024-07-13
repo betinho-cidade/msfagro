@@ -43,12 +43,14 @@
 
             <h4 class="card-title">Formulário de Atualização - Fazenda {{$fazenda->nome}}</h4>
             <p class="card-title-desc">A Fazenda cadastrada estará disponível para os lançamentos no sistema.</p>
-
+            
+            @can('edit_fazenda')
             <form name="edit_fazenda" method="POST" action="{{route('fazenda.update', compact('fazenda'))}}"  class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
+            @endcan
 
-                <input type="hidden" id="tipo_cliente" name="tipo_cliente" value="{{$user->cliente->tipo}}">
+                <input type="hidden" id="tipo_cliente" name="tipo_cliente" value="{{$user->cliente_user->cliente->tipo}}">
 
                 <!-- Dados Pessoais - INI -->
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
@@ -136,7 +138,7 @@
                         </div>
                     </div>                    
 
-                    @if($user->cliente && $user->cliente->tipo != 'AG')
+                    @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_macho" class="{{($errors->first('qtd_macho') ? 'form-error-label' : '')}}">Qtd. Machos</label>
@@ -170,9 +172,10 @@
                 </div>
 
                 <!-- Dados Pessoais -- FIM -->
-
+            @can('edit_fazenda')
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>
             </form>
+            @endcan
 
             <!-- FORMULÁRIO - FIM -->
             </div>

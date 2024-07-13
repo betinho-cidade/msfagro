@@ -50,9 +50,9 @@
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
                             <select id="movimentacao" name="movimentacao" class="form-control">
-                                <option value="">---</option>
                                 <option value="E" {{($search && $search['movimentacao'] == 'E') ? 'selected' : '' }}>Efetiva</option>
                                 <option value="F" {{($search && $search['movimentacao'] == 'F') ? 'selected' : '' }}>Futura</option>
+                                <option value="G" {{($search && $search['movimentacao'] == 'G') ? 'selected' : '' }}>Global</option>
                             </select>
                         </div>                        
                         

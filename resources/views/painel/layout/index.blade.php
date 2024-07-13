@@ -7,8 +7,8 @@
 
     <!-- <body data-sidebar="dark" class="sidebar-enable vertical-collpsed"> -->
     <body data-sidebar="dark" 
-        @if($user && $user->cliente) 
-            class="{{($user->cliente->menu_aberto == 'S') ? 'sidebar-enable vertical-collpsed' : ''}}"
+        @if($user && $user->cliente_user) 
+            class="{{($user->cliente_user->menu_aberto == 'S') ? 'sidebar-enable vertical-collpsed' : ''}}"
         @endif
     >
 

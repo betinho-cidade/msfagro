@@ -69,7 +69,6 @@
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
-                            <th>Usuário</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -83,7 +82,6 @@
                             <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{$cliente->nome_reduzido}}</td>
                             <td data-toggle="tooltip" title="{{ $cliente->email }}">{{$cliente->email_reduzido}}</td>
                             <td class="mask_telefone">{{$cliente->telefone}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->user->name }}">{{Str::limit($cliente->user->name, 150, '...')}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_cliente')
@@ -110,7 +108,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8">Nenhum registro encontrado</td>
+                            <td colspan="7">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -130,7 +128,6 @@
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
-                            <th>Usuário</th>
                             <th style="text-align:center;">Ações</th>
                         </tr>
                         </thead>
@@ -144,7 +141,6 @@
                             <td data-toggle="tooltip" title="{{ $cliente->nome }}">{{$cliente->nome_reduzido}}</td>
                             <td data-toggle="tooltip" title="{{ $cliente->email }}">{{$cliente->email_reduzido}}</td>
                             <td class="mask_telefone">{{$cliente->telefone}}</td>
-                            <td data-toggle="tooltip" title="{{ $cliente->user->name }}">{{Str::limit($cliente->user->name, 150, '...')}}</td>
                             <td style="text-align:center;">
 
                             @can('edit_cliente')
@@ -171,7 +167,7 @@
                           </tr>
                         @empty
                         <tr>
-                            <td colspan="8">Nenhum registro encontrado</td>
+                            <td colspan="7">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>

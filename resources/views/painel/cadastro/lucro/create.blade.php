@@ -47,7 +47,7 @@
                 @csrf
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
-                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Distribuição de Lucro  <span class="text-danger font-size-12 float-right">{{($user->cliente->saldo_global < 0) ? 'Atencão: O caixa está negativo R$ '. number_format($user->cliente->saldo_global, 2, ',', '.') .' caso queira continuar com o registro da distribuição de lucros' : ''}}</span></h5>
+                    <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Distribuição de Lucro  <span class="text-danger font-size-12 float-right">{{($user->cliente_user->cliente->saldo_global < 0) ? 'Atencão: O caixa está negativo R$ '. number_format($user->cliente_user->cliente->saldo_global, 2, ',', '.') .' caso queira continuar com o registro da distribuição de lucros' : ''}}</span></h5>
                 </div>
 
                 <div class="row">
@@ -91,7 +91,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor (R$)</label>
-                            <input type="number" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{old('valor')}}" placeholder="Valor" required>                            
+                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>                            
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -147,68 +147,86 @@
 
 
     <script>
-    $(document).ready(function(){
-        $('.select2').select2();
+        $(document).ready(function(){
+            $('.select2').select2();
 
-        $('.dynamic_produtor').change(function(){
-            refreshList('FP');
-        });   
-    });
+            $('.dynamic_produtor').change(function(){
+                refreshList('FP');
+            });   
+        });
 
-    function refreshList(tipo) {
+        function refreshList(tipo) {
 
-        var _token = $('input[name="_token"]').val();
-        var _tipo = tipo;
-        var objectList;
-        var objectName;
-        var objectValue;
+            var _token = $('input[name="_token"]').val();
+            var _tipo = tipo;
+            var objectList;
+            var objectName;
+            var objectValue;
 
-        if(tipo == 'FP'){
-            objectList = $('#forma_pagamento');
-            objectName = 'forma_pagamento';
-            objectValue = document.getElementById("produtor").value;
-        }
-
-        if(tipo == 'PT'){
-            objectList = $('#produtor');
-            objectName = 'produtor';
-            objectValue = '';
-        }
-
-        document.getElementById("img-loading-"+objectName).style.display = '';
-
-        $.ajax({
-            url: "{{route('lucro.refreshList')}}",
-            method: "POST",
-            dataType: "json",
-            data: {_token:_token, tipo:_tipo, produtor:objectValue},
-            success:function(response){
-
-                var len = 0;
-
-                if (response.mensagem != null) {
-                    len = response.mensagem.length;
-                }
-
-                if (len>0) {
-                    objectList.find('option').not(':first').remove();
-                    for (var i = 0; i<len; i++) {
-                        var id = response.mensagem[i].id;
-                        var nome = response.mensagem[i].nome;
-                        var option = "<option value='"+id+"'>"+nome+"</option>";
-                        objectList.append(option);
-                    }
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                } else {
-                    objectList.find('option').not(':first').remove();
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                }
-            },
-            error:function(erro){
-                document.getElementById("img-loading-"+objectName).style.display = 'none';
+            if(tipo == 'FP'){
+                objectList = $('#forma_pagamento');
+                objectName = 'forma_pagamento';
+                objectValue = document.getElementById("produtor").value;
             }
-        })
-    }
+
+            if(tipo == 'PT'){
+                objectList = $('#produtor');
+                objectName = 'produtor';
+                objectValue = '';
+            }
+
+            document.getElementById("img-loading-"+objectName).style.display = '';
+
+            $.ajax({
+                url: "{{route('lucro.refreshList')}}",
+                method: "POST",
+                dataType: "json",
+                data: {_token:_token, tipo:_tipo, produtor:objectValue},
+                success:function(response){
+
+                    var len = 0;
+
+                    if (response.mensagem != null) {
+                        len = response.mensagem.length;
+                    }
+
+                    if (len>0) {
+                        objectList.find('option').not(':first').remove();
+                        for (var i = 0; i<len; i++) {
+                            var id = response.mensagem[i].id;
+                            var nome = response.mensagem[i].nome;
+                            var option = "<option value='"+id+"'>"+nome+"</option>";
+                            objectList.append(option);
+                        }
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    } else {
+                        objectList.find('option').not(':first').remove();
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    }
+                },
+                error:function(erro){
+                    document.getElementById("img-loading-"+objectName).style.display = 'none';
+                }
+            })
+        }
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.value
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.value = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }   
+
     </script>
 
 @endsection

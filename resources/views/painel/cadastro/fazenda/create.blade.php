@@ -46,7 +46,7 @@
             <form name="create_fazenda" method="POST" action="{{route('fazenda.store')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
 
-                <input type="hidden" id="tipo_cliente" name="tipo_cliente" value="{{$user->cliente->tipo}}">
+                <input type="hidden" id="tipo_cliente" name="tipo_cliente" value="{{$user->cliente_user->cliente->tipo}}">
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados da Fazenda</h5>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
 
-                    @if($user->cliente && $user->cliente->tipo != 'AG')
+                    @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="qtd_macho" class="{{($errors->first('qtd_macho') ? 'form-error-label' : '')}}">Qtd. Machos</label>

@@ -150,4 +150,9 @@ class FormaPagamento extends Model
         return $nome_conta_resumida;
     }    
 
+    public function getHasLancamentoAttribute(){
+
+        return ($this->movimentacaos()->count() > 0) ? true : false;
+    }
+
 }

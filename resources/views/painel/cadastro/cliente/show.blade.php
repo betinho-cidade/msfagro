@@ -191,19 +191,6 @@
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados Acesso</h5>
                 </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="usuario" class="{{($errors->first('usuario') ? 'form-error-label' : '')}}">Usuário para acesso ao sistema</label>
-                                <select id="usuario" name="usuario" class="form-control {{($errors->first('usuario') ? 'form-error-field' : '')}} select2" required>
-                                    <option value="">---</option>
-                                    @foreach($usuarios as $usuario)
-                                        <option value="{{ $usuario->id }}" {{($cliente->user_id == $usuario->id) ? 'selected' : '' }}>{{ $usuario->name }}</option>
-                                    @endforeach
-                                    <div class="valid-feedback">ok!</div>
-                                    <div class="invalid-feedback">Inválido!</div>
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="situacao" class="{{($errors->first('situacao') ? 'form-error-label' : '')}}">Situação</label>
@@ -222,6 +209,79 @@
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>
             </form>
 
+
+            <div class="bg-soft-primary p-3 rounded" style="margin-top:60px;margin-bottom:10px;">
+                <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados de Acesso</h5>
+            </div>
+
+            <!-- Nav tabs - LISTA AULA/BANNER/AVALIAÇÃO - INI -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#usuarios" role="tab">
+                        <span class="d-block d-sm-none"><i class="ri-checkbox-circle-line"></i></span>
+                        <span class="d-none d-sm-block">
+                            <i onClick="location.href='{{route('cliente.user_create', compact('cliente'))}}';" class="fa fa-plus-square" style="color: goldenrod; margin-right:5px;" title="Novo Usuário Vinculado"></i>
+                            Usuários ( <code class="highlighter-rouge">{{ $cliente_users->count() }}</code> )
+                        </span>
+                    </a>
+                </li>
+           </ul>
+            <!-- Nav tabs - LISTA AULA/BANNER/AVALIAÇÃO - FIM -->      
+            
+            <!-- Tab panes - INI -->
+            <div class="tab-content p-3 text-muted">
+                <div class="tab-pane active" id="usuarios" role="tabpanel">
+                    <table id="dt_usuarios" class="table table-striped table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Perfil</th>
+                                <th style="text-align:center;">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($cliente_users as $cliente_user)
+                                <tr>
+                                    <td>{{ $cliente_user->id }}</td>
+                                    <td>{{ $cliente_user->user->name }}</td>
+                                    <td>{{ $cliente_user->perfil->description }}</td>
+                                    <td style="text-align:center;">
+                                        @can('delete_cliente_user')
+                                            <a href="javascript:;" data-toggle="modal"
+                                            onclick="deleteData('{{$cliente_user->cliente->id}}', '{{$cliente_user->id}}');"
+                                                data-target="#modal-delete"><i class="fa fa-minus-circle"
+                                                    style="color: crimson" title="Excluir o Usuário Vinculado"></i></a>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4">Nenhum registro encontrado</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <!-- Nav tabs - LISTA AULA - FIM -->
+                </div>    
+
+            </div>
+            <!-- FORMULÁRIO - FIM -->
+
+            @section('modal_target')"formSubmit();"@endsection
+            @section('modal_type')@endsection
+            @section('modal_name')"modal-delete"@endsection
+            @section('modal_msg_title')Deseja excluir o registro ? @endsection
+            @section('modal_msg_description')O registro selecionado será excluído definitivamente. @endsection
+            @section('modal_close')Fechar @endsection
+            @section('modal_save')Excluir @endsection
+
+            <form action="" id="deleteForm" method="post">
+                @csrf
+                @method('DELETE')
+            </form>
 
             <!-- FORMULÁRIO - FIM -->
             </div>
@@ -243,6 +303,15 @@
 
     <!-- form mask -->
     <script src="{{asset('nazox/assets/libs/select2/js/select2.min.js')}}"></script>
+
+    <!-- Required datatable js -->
+    <script src="{{ asset('nazox/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('nazox/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Responsive examples -->
+    <script src="{{ asset('nazox/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('nazox/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+    <!-- Datatable init js -->
+    <script src="{{ asset('nazox/assets/js/pages/datatables.init.js') }}"></script>        
 
     <script>
 		$(document).ready(function(){
@@ -330,6 +399,36 @@
             });
         });
     </script>
+
+    @if ($cliente_users->count() > 0)
+        <script>
+            var table = $('#dt_usuarios').DataTable({
+                language: {
+                    url: '{{ asset('nazox/assets/localisation/pt_br.json') }}'
+                },
+                "order": [
+                    [1, "asc"]
+                ]
+            });
+        </script>
+    @endif  				    
+
+
+    <script>
+        function formSubmit() {
+            $("#deleteForm").submit();
+        }
+
+        function deleteData(cliente, cliente_user) {
+            var cliente = cliente;
+            var cliente_user = cliente_user;
+
+            var url = '{{ route('cliente.user_destroy', [':cliente', ':cliente_user']) }}';
+            url = url.replace(':cliente', cliente);
+            url = url.replace(':cliente_user', cliente_user);
+            $("#deleteForm").attr('action', url);
+        }
+    </script>    
 
 
 @endsection

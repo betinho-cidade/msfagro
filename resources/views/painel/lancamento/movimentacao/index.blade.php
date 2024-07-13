@@ -72,7 +72,7 @@
                             <th>ID</th>
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
-                            <th style="text-align:right;">Valor (R$)</th>
+                            <th style="text-align:right;">Valor</th>
                             <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
@@ -86,13 +86,13 @@
                             <td>{{$movimentacao->id}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td style="text-align:right;">{{number_format($movimentacao->valor,2,',','.')}}</td>
+                            <td style="text-align:right;" class="valor_mask" onLoad="mascaraMoeda(event);">{{$movimentacao->valor}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_movimentacao')
-                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação Financeira"></i></a>
+                            @can('view_movimentacao')
+                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Movimentação Financeira"></i></a>
                             @endcan
 
                             @can('delete_movimentacao')
@@ -120,7 +120,7 @@
                             <th>ID</th>
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
-                            <th style="text-align:right;">Valor (R$)</th>
+                            <th style="text-align:right;">Valor</th>
                             <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Ações</th>
@@ -134,13 +134,13 @@
                             <td>{{$movimentacao->id}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td style="text-align:right;">{{number_format($movimentacao->valor,2,',','.')}}</td>
+                            <td style="text-align:right;" class="valor_mask" onLoad="mascaraMoeda(event);">{{$movimentacao->valor}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_movimentacao')
-                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Movimentação Fiscal"></i></a>
+                            @can('view_movimentacao')
+                                <a href="{{route('movimentacao.show', compact('movimentacao'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Movimentação Fiscal"></i></a>
                             @endcan
 
                             @can('delete_movimentacao')
@@ -244,8 +244,25 @@
 
     <script>
 		$(document).ready(function(){
-            $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
+            $('.valor_mask').trigger('load');  
 		});
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.innerHTML
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.innerHTML = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }
 	</script>
 
     @if($movimentacaos->where('tipo', 'R')->count() > 0)

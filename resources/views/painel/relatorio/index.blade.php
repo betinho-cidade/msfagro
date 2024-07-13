@@ -55,9 +55,9 @@
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
                             <select id="movimentacao" name="movimentacao" class="form-control"> 
-                                <option value="">---</option>
                                 <option value="E" {{($search && $search['movimentacao'] == 'E') ? 'selected' : '' }}>Efetiva</option>
                                 <option value="F" {{($search && $search['movimentacao'] == 'F') ? 'selected' : '' }}>Futura</option>
+                                <option value="G" {{($search && $search['movimentacao'] == 'G') ? 'selected' : '' }}>Global</option>
                             </select>
                         </div>                           
                     </div>
@@ -93,7 +93,7 @@
 
                     <div class="row" style="margin-top: 10px;width: 100%;">
 
-                        @if($user->cliente->tipo != 'AG')
+                        @if($user->cliente_user->cliente->tipo != 'AG')
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="segmento" name="segmento" class="form-control select2">
                                 <option value="">Selecione: Segmento</option>
@@ -158,7 +158,7 @@
                             <th>Segmento</th>
                             <th>Empresa</th>
                             <th>Item Fiscal</th>
-                            <th style="text-align:right;">Valor (R$)</th>
+                            <th style="text-align:right;">Valor</th>
                             <th style="text-align:center;">Programada</th>
                             <th style="text-align:center;">Pagamento</th>
                             <th style="text-align:center;">Nota</th>
@@ -175,7 +175,7 @@
                             <td>{{$movimentacao->segmento_texto}}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->empresa->nome_empresa ?? '...' }}">{{ $movimentacao->empresa->nome_empresa_reduzido ?? '...' }}</td>
                             <td data-toggle="tooltip" title="{{ $movimentacao->item_texto }}">{{$movimentacao->item_texto_reduzido}}</td>
-                            <td style="text-align:right;">{{number_format($movimentacao->valor,2,',','.')}}</td>
+                            <td style="text-align:right;" class="valor_mask" onLoad="mascaraMoeda(event);">{{$movimentacao->valor}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_programada_formatada}}</td>
                             <td style="text-align:center;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
@@ -235,9 +235,26 @@
 
     <script>
 		$(document).ready(function(){
-            $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
             $('.select2').select2();
+            $('.valor_mask').trigger('load');  
 		});
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.innerHTML
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.innerHTML = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }    
 	</script>
 
     @if($movimentacaos && $movimentacaos->count() > 0)

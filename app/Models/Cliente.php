@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class Cliente extends Model
 {
-    public function user()
-    {
-        return $this->belongsTo('App\Models\User');
-    }
-
     public function forma_pagamentos(){
 
         return $this->hasMany('App\Models\FormaPagamento');
@@ -58,6 +53,10 @@ class Cliente extends Model
 
         return $this->hasMany('App\Models\Lucro');
     }    
+
+    public function cliente_users(){
+        return $this->hasMany('App\Models\ClienteUser');
+    }            
 
     public function getTipoClienteAttribute()
     {
@@ -132,11 +131,9 @@ class Cliente extends Model
 
     public function getSaldoGlobalAttribute(){
 
-        $user = $this->user;
-
         $saldo_global = $this->movimentacaos()->where('movimentacaos.cliente_id', $this->id)
-                                        ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                        ->where(function($query){
+                                            if($this->tipo == 'AG'){
                                                 $query->where('segmento', 'MF');
                                             }
                                         })

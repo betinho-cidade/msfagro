@@ -39,32 +39,50 @@ class FinanceiroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        $movimentacao_global = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
+        $movimentacao_global = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->where('segmento', 'MF');
                                             }
                                         })
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
-                                        ->select(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0)) AS mes_ordem,
-                                                concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)))'))
+                                        ->select(DB::raw('concat(YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0)) AS mes_ordem,
+                                                concat(LPAD(MONTH(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)), 2, 0), \'-\', YEAR(COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada))) AS mes_referencia,
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) - SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) AS saldo,
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) as despesa'))
-                                        ->orderBy('movimentacaos.data_programada', 'desc')
+                                        ->orderBy(DB::raw('COALESCE(movimentacaos.data_pagamento, movimentacaos.data_programada)'), 'desc')
                                         ->get();
 
-        $movimentacao_efetiva = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->whereIn('movimentacaos.situacao', ['PG'])
+        $movimentacao_efetiva = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+                                        //->whereIn('movimentacaos.situacao', ['PG'])
+                                        ->whereNotNull('movimentacaos.data_pagamento')
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
+                                                $query->whereIn('movimentacaos.segmento', ['MF']);
+                                            }
+                                        })
+                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_pagamento), 2, 0), \'-\', YEAR(movimentacaos.data_pagamento))'))
+                                        ->select(DB::raw('concat(YEAR(movimentacaos.data_pagamento), LPAD(MONTH(movimentacaos.data_pagamento), 2, 0)) AS mes_ordem,
+                                                concat(LPAD(MONTH(movimentacaos.data_pagamento), 2, 0), \'-\', YEAR(movimentacaos.data_pagamento)) AS mes_referencia,
+                                                SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) - SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) AS saldo,
+                                                SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
+                                                SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) as despesa'))
+                                        ->orderBy('movimentacaos.data_pagamento', 'desc')
+                                        ->get();
+
+        $movimentacao_futura = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+                                        //->whereIn('movimentacaos.situacao', ['PD'])
+                                        ->whereNull('movimentacaos.data_pagamento')
+                                        ->where(function($query) use ($user){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
@@ -77,25 +95,9 @@ class FinanceiroController extends Controller
                                         ->orderBy('movimentacaos.data_programada', 'desc')
                                         ->get();
 
-        $movimentacao_futura = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->whereIn('movimentacaos.situacao', ['PD'])
+        $saldo_global = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
-                                                $query->whereIn('movimentacaos.segmento', ['MF']);
-                                            }
-                                        })
-                                        ->groupBy(DB::raw('concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada))'))
-                                        ->select(DB::raw('concat(YEAR(movimentacaos.data_programada), LPAD(MONTH(movimentacaos.data_programada), 2, 0)) AS mes_ordem,
-                                                concat(LPAD(MONTH(movimentacaos.data_programada), 2, 0), \'-\', YEAR(movimentacaos.data_programada)) AS mes_referencia,
-                                                SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) - SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) AS saldo,
-                                                SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) as receita,
-                                                SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) as despesa'))
-                                        ->orderBy('movimentacaos.data_programada', 'desc')
-                                        ->get();
-
-        $saldo_global = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
@@ -104,10 +106,11 @@ class FinanceiroController extends Controller
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'R\') THEN movimentacaos.valor ELSE 0 END) - SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) AS saldo'))
                                         ->first();
 
-        $saldo_efetivo = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->whereIn('movimentacaos.situacao', ['PG'])
+        $saldo_efetivo = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+                                        //->whereIn('movimentacaos.situacao', ['PG'])
+                                        ->whereNotNull('movimentacaos.data_pagamento')
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
@@ -115,10 +118,11 @@ class FinanceiroController extends Controller
                                                 SUM(CASE WHEN movimentacaos.tipo = (\'D\') THEN movimentacaos.valor ELSE 0 END) as despesa'))
                                         ->first();
 
-        $saldo_futuro = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->whereIn('movimentacaos.situacao', ['PD'])
+        $saldo_futuro = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+                                        //->whereIn('movimentacaos.situacao', ['PD'])
+                                        ->whereNull('movimentacaos.data_pagamento')
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
                                         })
@@ -138,7 +142,7 @@ class FinanceiroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -184,33 +188,46 @@ class FinanceiroController extends Controller
             }
         }
 
-        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where(function($query) use ($status_movimentacao){
-                                            if($status_movimentacao != 'GB'){
-                                                $query->where('situacao', $status_movimentacao);
-                                            }
-                                        })
+        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($user){
-                                            if($user->cliente->tipo == 'AG'){
+                                            if($user->cliente_user->cliente->tipo == 'AG'){
                                                 $query->whereIn('movimentacaos.segmento', ['MF']);
                                             }
+                                        })        
+                                        ->where(function($query) use ($status_movimentacao, $data_programada_vetor){
+                                            if($status_movimentacao == 'GB'){
+                                                //$query->where('situacao', $status_movimentacao);
+                                                $query->whereRaw(DB::raw('YEAR(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[1].'"'));
+                                                $query->whereRaw(DB::raw('MONTH(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[0].'"'));
+                                                $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'asc');
+                                            }else if($status_movimentacao == 'PD'){
+                                                $query->whereNull('data_pagamento');
+                                                $query->whereYear('data_programada', $data_programada_vetor[1]);
+                                                $query->whereMonth('data_programada', $data_programada_vetor[0]);
+                                                $query->orderBy('data_programada', 'desc');                                       
+                                            }else if($status_movimentacao == 'PG'){
+                                                $query->whereNotNull('data_pagamento');
+                                                $query->whereYear('data_pagamento', $data_programada_vetor[1]);
+                                                $query->whereMonth('data_pagamento', $data_programada_vetor[0]);
+                                                $query->orderBy('movimentacaos.data_pagamento', 'desc');                                       
+                                            }
                                         })
-                                        ->whereYear('data_programada', $data_programada_vetor[1])
-                                        ->whereMonth('data_programada', $data_programada_vetor[0])
-                                        ->orderBy('movimentacaos.data_programada', 'desc')
+                                        // ->whereYear('data_programada', $data_programada_vetor[1])
+                                        // ->whereMonth('data_programada', $data_programada_vetor[0])
+                                        // ->orderBy('movimentacaos.data_programada', 'desc')
                                         ->get();
 
-        $empresas = Empresa::where('cliente_id', $user->cliente->id)
+        $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
@@ -231,7 +248,7 @@ class FinanceiroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -315,21 +332,21 @@ class FinanceiroController extends Controller
 
         $empresa = '';
         if($request->empresa){
-            $empresa = Empresa::where('cliente_id', $user->cliente->id)
+            $empresa = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('id', $request->empresa)
                             ->first();
         }
 
         $produtor = '';
         if($request->produtor){
-            $produtor = Produtor::where('cliente_id', $user->cliente->id)
+            $produtor = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('id', $request->produtor)
                             ->first();
         }
 
         $forma_pagamento = '';
         if($request->forma_pagamento){
-            $forma_pagamento = FormaPagamento::where('cliente_id', $user->cliente->id)
+            $forma_pagamento = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('id', $request->forma_pagamento)
                             ->first();
         }
@@ -342,7 +359,7 @@ class FinanceiroController extends Controller
             $request->has('empresa')
         ){
             $search = [
-                'tipo_cliente' => ['param_key' => $user->cliente->tipo, 'param_value' => $user->cliente->tipo_cliente],
+                'tipo_cliente' => ['param_key' => $user->cliente_user->cliente->tipo, 'param_value' => $user->cliente_user->cliente->tipo_cliente],
                 'tipo_movimentacao' => ['param_key' => ($request->tipo_movimentacao) ? $request->tipo_movimentacao : '', 'param_value' => ($request->tipo_movimentacao) ? $tipo_movimentacao : ''],
                 'produtor' => ['param_key' => ($request->produtor) ? $request->produtor : '', 'param_value' => ($request->produtor) ? $produtor->nome_reduzido : ''],
                 'forma_pagamento' => ['param_key' => ($request->forma_pagamento) ? $request->forma_pagamento : '', 'param_value' => ($request->forma_pagamento) ? $forma_pagamento->forma : ''],
@@ -353,10 +370,28 @@ class FinanceiroController extends Controller
             $search = [];
         }
 
-        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente->id)
-                                        ->where(function($query) use ($status_movimentacao){
-                                            if($status_movimentacao != 'GB'){
-                                                $query->where('situacao', $status_movimentacao);
+        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+                                        // ->where(function($query) use ($status_movimentacao){
+                                        //     if($status_movimentacao != 'GB'){
+                                        //         $query->where('situacao', $status_movimentacao);
+                                        //     }
+                                        // })
+                                        ->where(function($query) use ($status_movimentacao, $data_programada_vetor){
+                                            if($status_movimentacao == 'GB'){
+                                                //$query->where('situacao', $status_movimentacao);
+                                                $query->whereRaw(DB::raw('YEAR(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[1].'"'));
+                                                $query->whereRaw(DB::raw('MONTH(COALESCE(data_pagamento, data_programada)) = "'.$data_programada_vetor[0].'"'));
+                                                $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'asc');
+                                            }else if($status_movimentacao == 'PD'){
+                                                $query->whereNull('data_pagamento');
+                                                $query->whereYear('data_programada', $data_programada_vetor[1]);
+                                                $query->whereMonth('data_programada', $data_programada_vetor[0]);
+                                                $query->orderBy('data_programada', 'desc');                                       
+                                            }else if($status_movimentacao == 'PG'){
+                                                $query->whereNotNull('data_pagamento');
+                                                $query->whereYear('data_pagamento', $data_programada_vetor[1]);
+                                                $query->whereMonth('data_pagamento', $data_programada_vetor[0]);
+                                                $query->orderBy('movimentacaos.data_pagamento', 'desc');                                       
                                             }
                                         })
                                         ->where(function($query) use ($search){
@@ -382,22 +417,22 @@ class FinanceiroController extends Controller
                                                 $query->where('forma_pagamento_id', $search['forma_pagamento']['param_key']);
                                             }
                                         })
-                                        ->whereYear('data_programada', $data_programada_vetor[1])
-                                        ->whereMonth('data_programada', $data_programada_vetor[0])
-                                        ->orderBy('movimentacaos.data_programada', 'desc')
+                                        // ->whereYear('data_programada', $data_programada_vetor[1])
+                                        // ->whereMonth('data_programada', $data_programada_vetor[0])
+                                        // ->orderBy('movimentacaos.data_programada', 'desc')
                                         ->get();
 
-        $empresas = Empresa::where('cliente_id', $user->cliente->id)
+        $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
                                     ->get();
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')

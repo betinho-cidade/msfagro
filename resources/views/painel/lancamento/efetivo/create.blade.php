@@ -45,6 +45,7 @@
             <p class="card-title-desc">O Lançamento cadastrado estará disponível para os movimentos no sistema.</p>
             <form name="create_efetivo" method="POST" action="{{route('efetivo.store')}}"  class="needs-validation"  accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
+                @safeSubmit
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Lançamento do Efetivo Pecuário</h5>
@@ -259,7 +260,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="number" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" min="0.01" step="0.01" value="{{old('valor')}}" placeholder="Valor" required>                            
+                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>    
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -337,243 +338,261 @@
 
     <script>
 
-    $(document).ready(function(){
+        $(document).ready(function(){
 
-        $('.select2').select2();
+            $('.select2').select2();
 
-        $('.dynamic_tipo').change(function(){
+            $('.dynamic_tipo').change(function(){
 
-            let tipo = document.getElementById('tipo').value;
-            let origem = document.getElementById('origem');
-            let origem_lbl = document.getElementById('origem_lbl');
-            let destino = document.getElementById('destino');
-            let destino_lbl = document.getElementById('destino_lbl');
-            let empresa = document.getElementById('empresa');
-            let produtor = document.getElementById('produtor');
-            let forma_pagamento = document.getElementById('forma_pagamento');
-            let valor = document.getElementById('valor');
-            let path_comprovante = document.getElementById('path_comprovante');
-            let path_comprovante_lbl = document.getElementById('path_comprovante_lbl');
-            let nota = document.getElementById('nota');
-            let path_nota = document.getElementById('path_nota');
-            let path_nota_lbl = document.getElementById('path_nota_lbl');
-            let data_pagamento = document.getElementById('data_pagamento');
+                let tipo = document.getElementById('tipo').value;
+                let origem = document.getElementById('origem');
+                let origem_lbl = document.getElementById('origem_lbl');
+                let destino = document.getElementById('destino');
+                let destino_lbl = document.getElementById('destino_lbl');
+                let empresa = document.getElementById('empresa');
+                let produtor = document.getElementById('produtor');
+                let forma_pagamento = document.getElementById('forma_pagamento');
+                let valor = document.getElementById('valor');
+                let path_comprovante = document.getElementById('path_comprovante');
+                let path_comprovante_lbl = document.getElementById('path_comprovante_lbl');
+                let nota = document.getElementById('nota');
+                let path_nota = document.getElementById('path_nota');
+                let path_nota_lbl = document.getElementById('path_nota_lbl');
+                let data_pagamento = document.getElementById('data_pagamento');
 
-            switch(tipo){
-                case 'CP':
-                    origem.options.selectedIndex = 0;
-                    $('#origem').val(null).trigger('change');
-                    origem.disabled = true;
-                    origem_lbl.innerHTML = 'Origem - Empresa';
+                switch(tipo){
+                    case 'CP':
+                        origem.options.selectedIndex = 0;
+                        $('#origem').val(null).trigger('change');
+                        origem.disabled = true;
+                        origem_lbl.innerHTML = 'Origem - Empresa';
 
-                    destino.disabled = false;
-                    destino_lbl.innerHTML = 'Destino - Fazenda';
+                        destino.disabled = false;
+                        destino_lbl.innerHTML = 'Destino - Fazenda';
 
-                    empresa.disabled = false;
-                    produtor.disabled = false;
-                    forma_pagamento.disabled = false;
-                    valor.disabled = false;
-                    valor.style.backgroundColor = 'white';
-                    nota.disabled = false;
-                    nota.style.backgroundColor = 'white';
-                    path_nota_lbl.style.backgroundColor = 'white';
-                    path_nota.disabled = false;
-                    path_comprovante_lbl.style.backgroundColor = 'white';
-                    path_comprovante.disabled = false;
-                    data_pagamento.disabled = false;
-                    data_pagamento.style.backgroundColor = 'white';
-                    break;
+                        empresa.disabled = false;
+                        produtor.disabled = false;
+                        forma_pagamento.disabled = false;
+                        valor.disabled = false;
+                        valor.style.backgroundColor = 'white';
+                        nota.disabled = false;
+                        nota.style.backgroundColor = 'white';
+                        path_nota_lbl.style.backgroundColor = 'white';
+                        path_nota.disabled = false;
+                        path_comprovante_lbl.style.backgroundColor = 'white';
+                        path_comprovante.disabled = false;
+                        data_pagamento.disabled = false;
+                        data_pagamento.style.backgroundColor = 'white';
+                        break;
 
-                case 'VD':
-                    origem.disabled = false;
-                    origem_lbl.innerHTML = 'Origem - Fazenda';
+                    case 'VD':
+                        origem.disabled = false;
+                        origem_lbl.innerHTML = 'Origem - Fazenda';
 
-                    destino.options.selectedIndex = 0;
-                    $('#destino').val(null).trigger('change');
-                    destino.disabled = true;
-                    destino_lbl.innerHTML = 'Destino - Empresa';
+                        destino.options.selectedIndex = 0;
+                        $('#destino').val(null).trigger('change');
+                        destino.disabled = true;
+                        destino_lbl.innerHTML = 'Destino - Empresa';
 
-                    empresa.disabled = false;
-                    produtor.disabled = false;
-                    forma_pagamento.disabled = false;
-                    valor.disabled = false;
-                    valor.style.backgroundColor = 'white';
-                    nota.disabled = false;
-                    nota.style.backgroundColor = 'white';
-                    path_nota_lbl.style.backgroundColor = 'white';
-                    path_nota.disabled = false;
-                    path_comprovante_lbl.style.backgroundColor = 'white';
-                    path_comprovante.disabled = false;
-                    data_pagamento.disabled = false;
-                    data_pagamento.style.backgroundColor = 'white';
-                    break;
+                        empresa.disabled = false;
+                        produtor.disabled = false;
+                        forma_pagamento.disabled = false;
+                        valor.disabled = false;
+                        valor.style.backgroundColor = 'white';
+                        nota.disabled = false;
+                        nota.style.backgroundColor = 'white';
+                        path_nota_lbl.style.backgroundColor = 'white';
+                        path_nota.disabled = false;
+                        path_comprovante_lbl.style.backgroundColor = 'white';
+                        path_comprovante.disabled = false;
+                        data_pagamento.disabled = false;
+                        data_pagamento.style.backgroundColor = 'white';
+                        break;
 
-                case 'EG':
-                    origem.disabled = false;
-                    origem_lbl.innerHTML = 'Origem - Fazenda';
+                    case 'EG':
+                        origem.disabled = false;
+                        origem_lbl.innerHTML = 'Origem - Fazenda';
 
-                    destino.disabled = false;
-                    destino_lbl.innerHTML = 'Destino - Fazenda';
+                        destino.disabled = false;
+                        destino_lbl.innerHTML = 'Destino - Fazenda';
 
-                    empresa.options.selectedIndex = 0;
-                    $('#empresa').val(null).trigger('change');
-                    empresa.disabled = true;
+                        empresa.options.selectedIndex = 0;
+                        $('#empresa').val(null).trigger('change');
+                        empresa.disabled = true;
 
-                    forma_pagamento.options.selectedIndex = 0;
-                    $('#forma_pagamento').val(null).trigger('change');
-                    forma_pagamento.disabled = true;
+                        forma_pagamento.options.selectedIndex = 0;
+                        $('#forma_pagamento').val(null).trigger('change');
+                        forma_pagamento.disabled = true;
 
-                    valor.value = '';
-                    valor.disabled = true;
-                    valor.style.backgroundColor = '#D3D3D3';
+                        valor.value = '';
+                        valor.disabled = true;
+                        valor.style.backgroundColor = '#D3D3D3';
 
-                    produtor.disabled = true;
+                        produtor.disabled = true;
 
-                    nota.value = '';
-                    nota.disabled = true;
-                    nota.style.backgroundColor = '#D3D3D3';
+                        nota.value = '';
+                        nota.disabled = true;
+                        nota.style.backgroundColor = '#D3D3D3';
 
-                    path_nota_lbl.innerHTML = 'Selecionar Nota';
-                    path_nota_lbl.style.backgroundColor = '#D3D3D3';
+                        path_nota_lbl.innerHTML = 'Selecionar Nota';
+                        path_nota_lbl.style.backgroundColor = '#D3D3D3';
 
-                    path_nota.value = '';
-                    path_nota.disabled = true;
-                    path_nota.style.color = '#D3D3D3';
+                        path_nota.value = '';
+                        path_nota.disabled = true;
+                        path_nota.style.color = '#D3D3D3';
 
-                    path_comprovante_lbl.innerHTML = 'Selecionar Comprovante';
-                    path_comprovante_lbl.style.backgroundColor = '#D3D3D3';
+                        path_comprovante_lbl.innerHTML = 'Selecionar Comprovante';
+                        path_comprovante_lbl.style.backgroundColor = '#D3D3D3';
 
-                    path_comprovante.value = '';
-                    path_comprovante.disabled = true;
-                    path_comprovante.style.color = '#D3D3D3';
-                    data_pagamento.disabled = true;
-                    data_pagamento.style.backgroundColor = '#D3D3D3';
-                    break;
-            }
-
-        });
-
-        $('.dynamic_categoria').change(function(){
-
-            let categoria = document.getElementById('categoria');
-            let categoria_value = categoria.options[categoria.selectedIndex].value;
-
-            let item_macho = document.getElementById('item_macho');
-            let qtd_macho = document.getElementById('qtd_macho');
-            let item_femea = document.getElementById('item_femea');
-            let qtd_femea = document.getElementById('qtd_femea'); // 1->Macho 2->Fêna 3->Macho/Fêmea
-
-            switch(categoria_value){
-                case '1':
-                    item_macho.disabled = false;
-                    qtd_macho.disabled = false;
-                    qtd_macho.style.backgroundColor = 'white';
-
-                    item_femea.options.selectedIndex = 0;
-                    $('#item_femea').val(null).trigger('change');
-                    item_femea.disabled = true;
-
-                    qtd_femea.value = '';
-                    qtd_femea.disabled = true;
-                    qtd_femea.style.backgroundColor = '#D3D3D3';
-                    break;
-
-                case '2':
-                    item_macho.options.selectedIndex = 0;
-                    $('#item_macho').val(null).trigger('change');
-                    item_macho.disabled = true;
-
-                    qtd_macho.value = '';
-                    qtd_macho.disabled = true;
-                    qtd_macho.style.backgroundColor = '#D3D3D3';
-
-                    item_femea.disabled = false;
-                    qtd_femea.disabled = false;
-                    qtd_femea.style.backgroundColor = 'white';
-                    break;
-
-                case '3':
-                    item_macho.disabled = false;
-                    qtd_macho.disabled = false;
-                    qtd_macho.style.backgroundColor = 'white';
-
-                    item_femea.disabled = false;
-                    qtd_femea.disabled = false;
-                    qtd_femea.style.backgroundColor = 'white';
-                    break;
-            }
-
-        });
-
-        $('.dynamic_tipo').trigger('change');
-        $('.dynamic_categoria').trigger('change');
-    });
-
-
-    function refreshList(tipo) {
-
-        var _token = $('input[name="_token"]').val();
-        var _tipo = tipo;
-        var objectList;
-        var objectName;
-
-        if(tipo == 'EP'){
-            objectList = $('#empresa');
-            objectName = 'empresa';
-        }
-
-        if(tipo == 'FP'){
-            objectList = $('#forma_pagamento');
-            objectName = 'forma_pagamento';
-        }
-
-        if(tipo == 'PT'){
-            objectList = $('#produtor');
-            objectName = 'produtor';
-        }
-
-        if(tipo == 'OG'){
-            objectList = $('#origem');
-            objectName = 'origem';
-        }
-
-        if(tipo == 'DT'){
-            objectList = $('#destino');
-            objectName = 'destino';
-        }
-
-        document.getElementById("img-loading-"+objectName).style.display = '';
-
-        $.ajax({
-            url: "{{route('lancamento.refreshList')}}",
-            method: "POST",
-            dataType: "json",
-            data: {_token:_token, tipo:_tipo},
-            success:function(response){
-
-                var len = 0;
-                if (response.mensagem != null) {
-                    len = response.mensagem.length;
+                        path_comprovante.value = '';
+                        path_comprovante.disabled = true;
+                        path_comprovante.style.color = '#D3D3D3';
+                        data_pagamento.disabled = true;
+                        data_pagamento.style.backgroundColor = '#D3D3D3';
+                        break;
                 }
 
-                if (len>0) {
-                    objectList.find('option').not(':first').remove();
-                    for (var i = 0; i<len; i++) {
-                        var id = response.mensagem[i].id;
-                        var nome = response.mensagem[i].nome;
-                        var option = "<option value='"+id+"'>"+nome+"</option>";
-                        objectList.append(option);
+            });
+
+            $('.dynamic_categoria').change(function(){
+
+                let categoria = document.getElementById('categoria');
+                let categoria_value = categoria.options[categoria.selectedIndex].value;
+
+                let item_macho = document.getElementById('item_macho');
+                let qtd_macho = document.getElementById('qtd_macho');
+                let item_femea = document.getElementById('item_femea');
+                let qtd_femea = document.getElementById('qtd_femea'); // 1->Macho 2->Fêna 3->Macho/Fêmea
+
+                switch(categoria_value){
+                    case '1':
+                        item_macho.disabled = false;
+                        qtd_macho.disabled = false;
+                        qtd_macho.style.backgroundColor = 'white';
+
+                        item_femea.options.selectedIndex = 0;
+                        $('#item_femea').val(null).trigger('change');
+                        item_femea.disabled = true;
+
+                        qtd_femea.value = '';
+                        qtd_femea.disabled = true;
+                        qtd_femea.style.backgroundColor = '#D3D3D3';
+                        break;
+
+                    case '2':
+                        item_macho.options.selectedIndex = 0;
+                        $('#item_macho').val(null).trigger('change');
+                        item_macho.disabled = true;
+
+                        qtd_macho.value = '';
+                        qtd_macho.disabled = true;
+                        qtd_macho.style.backgroundColor = '#D3D3D3';
+
+                        item_femea.disabled = false;
+                        qtd_femea.disabled = false;
+                        qtd_femea.style.backgroundColor = 'white';
+                        break;
+
+                    case '3':
+                        item_macho.disabled = false;
+                        qtd_macho.disabled = false;
+                        qtd_macho.style.backgroundColor = 'white';
+
+                        item_femea.disabled = false;
+                        qtd_femea.disabled = false;
+                        qtd_femea.style.backgroundColor = 'white';
+                        break;
+                }
+
+            });
+
+            $('.dynamic_tipo').trigger('change');
+            $('.dynamic_categoria').trigger('change');
+        });
+
+
+        function refreshList(tipo) {
+
+            var _token = $('input[name="_token"]').val();
+            var _tipo = tipo;
+            var objectList;
+            var objectName;
+
+            if(tipo == 'EP'){
+                objectList = $('#empresa');
+                objectName = 'empresa';
+            }
+
+            if(tipo == 'FP'){
+                objectList = $('#forma_pagamento');
+                objectName = 'forma_pagamento';
+            }
+
+            if(tipo == 'PT'){
+                objectList = $('#produtor');
+                objectName = 'produtor';
+            }
+
+            if(tipo == 'OG'){
+                objectList = $('#origem');
+                objectName = 'origem';
+            }
+
+            if(tipo == 'DT'){
+                objectList = $('#destino');
+                objectName = 'destino';
+            }
+
+            document.getElementById("img-loading-"+objectName).style.display = '';
+
+            $.ajax({
+                url: "{{route('lancamento.refreshList')}}",
+                method: "POST",
+                dataType: "json",
+                data: {_token:_token, tipo:_tipo},
+                success:function(response){
+
+                    var len = 0;
+                    if (response.mensagem != null) {
+                        len = response.mensagem.length;
                     }
-                    document.getElementById("img-loading-"+objectName).style.display = 'none';
-                } else {
+
+                    if (len>0) {
+                        objectList.find('option').not(':first').remove();
+                        for (var i = 0; i<len; i++) {
+                            var id = response.mensagem[i].id;
+                            var nome = response.mensagem[i].nome;
+                            var option = "<option value='"+id+"'>"+nome+"</option>";
+                            objectList.append(option);
+                        }
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    } else {
+                        document.getElementById("img-loading-"+objectName).style.display = 'none';
+                    }
+                },
+                error:function(erro){
                     document.getElementById("img-loading-"+objectName).style.display = 'none';
                 }
-            },
-            error:function(erro){
-                document.getElementById("img-loading-"+objectName).style.display = 'none';
-            }
-        })
-    }
+            })
+        }
+
+        const mascaraMoeda = (event) => {
+            const onlyDigits = event.target.value
+                .split("")
+                .filter(s => /\d/.test(s))
+                .join("")
+                .padStart(3, "0")
+            const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+            event.target.value = maskCurrency(digitsFloat)
+        }
+
+        const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency
+            }).format(valor)
+        }   
+
     </script>
 
 @endsection

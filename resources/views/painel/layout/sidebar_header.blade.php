@@ -31,9 +31,9 @@
 
                     </div> 
 
-                    @if($user->roles->contains('name', 'Cliente') && $user->cliente)
+                    @if($user->roles->contains('name', 'Cliente') && $user->cliente_user)
                         <div style="text-align: center;">
-                            <span class="tag-cliente">{{ $user->cliente->nome ?? '...'}}</span>
+                            <span class="tag-cliente">{{ $user->cliente_user->cliente->nome ?? '...'}}</span>
                             
                             <!-- Notificação Destaque - INI -->
                             @includeif('painel.layout.sub_path.path_notificacao_destaque')
@@ -43,7 +43,7 @@
                     <div class="d-flex">
 
                         <!-- Notificações do Site - INI -->
-                        @if($user && $user->cliente)
+                        @if($user && $user->cliente_user)
                             @includeif('painel.layout.sub_path.path_notificacaos')    
                         @endif
                         <!-- Notificações do Site - FIM -->

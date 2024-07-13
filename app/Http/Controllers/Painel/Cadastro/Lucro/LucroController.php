@@ -36,33 +36,33 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        $lucros = Lucro::where('cliente_id', $user->cliente->id)
+        $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
                         ->orderBy('lucros.data_lancamento', 'desc')
                         ->get();
 
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();      
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id')
                                             ->get();   
             
         $search = []; 
 
-        $graphs = Lucro::where('lucros.cliente_id', $user->cliente->id)
+        $graphs = Lucro::where('lucros.cliente_id', $user->cliente_user->cliente->id)
                         ->join('produtors', 'lucros.produtor_id', '=', 'produtors.id')
-                        ->where('produtors.cliente_id', $user->cliente->id)
+                        ->where('produtors.cliente_id', $user->cliente_user->cliente->id)
                         ->selectRaw('produtors.nome as nome, sum(lucros.valor) as valor')
                         ->groupBy('produtors.nome')
                         ->get();                                        
@@ -84,14 +84,14 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();
@@ -107,7 +107,7 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -122,11 +122,11 @@ class LucroController extends Controller
 
             $lucro = new Lucro();
 
-            $lucro->cliente_id = $user->cliente->id;
+            $lucro->cliente_id = $user->cliente_user->cliente->id;
             $lucro->produtor_id = $request->produtor;
             $lucro->forma_pagamento_id = $request->forma_pagamento;
             $lucro->data_lancamento = $request->data_lancamento;
-            $lucro->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+            $lucro->valor = $request->valor;
             $lucro->observacao = $request->observacao;
 
             $lucro->save();
@@ -137,7 +137,7 @@ class LucroController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/lucros/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/lucros/';
 
                 $nome_arquivo = 'LUCRO_'.$lucro->id.'.'.$request->path_comprovante->getClientOriginalExtension();
                 $lucro->path_comprovante = $nome_arquivo;
@@ -169,13 +169,13 @@ class LucroController extends Controller
     public function show(Lucro $lucro, Request $request)
     {
 
-        if(Gate::denies('edit_lucro')){
+        if(Gate::denies('view_lucro')){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $lucro->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $lucro->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Distribuição de Lucro não pertence ao cliente informado.');
 
@@ -184,12 +184,12 @@ class LucroController extends Controller
 
 
         $produtors = Produtor::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();        
         
         $forma_pagamentos = FormaPagamento::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('produtor_id', $lucro->produtor_id)
                             ->get();        
         
@@ -206,14 +206,14 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $lucro->cliente_id){
+        if($user->cliente_user->cliente->id != $lucro->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Distribuição de Lucro não pertence ao cliente informado.');
 
@@ -229,7 +229,7 @@ class LucroController extends Controller
             $lucro->produtor_id = $request->produtor;
             $lucro->forma_pagamento_id = $request->forma_pagamento;
             $lucro->data_lancamento = $request->data_lancamento;
-            $lucro->valor = ($request->valor) ? str_replace(',', '.', $request->valor) : null;
+            $lucro->valor = $request->valor;
             $lucro->observacao = $request->observacao;
 
             $lucro->save();
@@ -240,7 +240,7 @@ class LucroController extends Controller
 
             if ($request->path_comprovante) {
 
-                $path_comprovante = 'documentos/'. $user->cliente->id . '/lucros/';
+                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/lucros/';
 
                 if($lucro->path_comprovante){
                     if(Storage::exists($path_comprovante)) {
@@ -283,14 +283,14 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $lucro->cliente_id){
+        if($user->cliente_user->cliente->id != $lucro->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Distribuição de Lucro não pertence ao cliente informado.');
 
@@ -344,21 +344,21 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
     
             return redirect()->route('painel');
         }
 
-        if($user->cliente->id != $lucro->cliente_id){
+        if($user->cliente_user->cliente->id != $lucro->cliente_id){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Distribuição de Lucro não pertence ao cliente informado.');
 
             return redirect()->route('lucro.index');
         }
 
-        $path_comprovante = 'documentos/' . $user->cliente->id . '/lucros/' . $lucro->path_comprovante;
+        $path_comprovante = 'documentos/' . $user->cliente_user->cliente->id . '/lucros/' . $lucro->path_comprovante;
 
         return Storage::download($path_comprovante);
     }
@@ -372,7 +372,7 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -396,7 +396,7 @@ class LucroController extends Controller
                     return response()->json(['mensagem' => []]);
                 }
 
-                $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+                $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                                     ->where('produtor_id', $request->produtor)
                                                     ->where('status', 'A')
                                                     ->orderBy('produtor_id', 'desc')
@@ -414,7 +414,7 @@ class LucroController extends Controller
             }
 
             case 'PT': {
-                $produtors = Produtor::where('cliente_id', $user->cliente->id)
+                $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                         ->where('status', 'A')
                                         ->orderBy('nome', 'asc')
                                         ->get();
@@ -443,7 +443,7 @@ class LucroController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -462,14 +462,14 @@ class LucroController extends Controller
 
         $produtor = '';
         if($request->produtor){
-            $produtor = Produtor::where('cliente_id', $user->cliente->id)
+            $produtor = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('id', $request->produtor)
                             ->first();
         }
 
         $forma_pagamento = '';
         if($request->forma_pagamento){
-            $forma_pagamento = FormaPagamento::where('cliente_id', $user->cliente->id)
+            $forma_pagamento = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('id', $request->forma_pagamento)
                             ->first();
         }
@@ -491,7 +491,7 @@ class LucroController extends Controller
             $search = [];
         }      
 
-        $lucros = Lucro::where('cliente_id', $user->cliente->id)
+        $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
                         ->where(function($query) use ($search){
 
                             if($search && $search['produtor']){
@@ -518,20 +518,20 @@ class LucroController extends Controller
                         ->orderBy('lucros.data_lancamento', 'desc')
                         ->get();
 
-        $produtors = Produtor::where('cliente_id', $user->cliente->id)
+        $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
                                             ->get();      
 
-        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente->id)
+        $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id')
                                             ->get();   
             
                                             
-        $graphs = Lucro::where('lucros.cliente_id', $user->cliente->id)
+        $graphs = Lucro::where('lucros.cliente_id', $user->cliente_user->cliente->id)
                         ->join('produtors', 'lucros.produtor_id', '=', 'produtors.id')
-                        ->where('produtors.cliente_id', $user->cliente->id)
+                        ->where('produtors.cliente_id', $user->cliente_user->cliente->id)
                         ->where(function($query) use ($search){
 
                             if($search && $search['produtor']){

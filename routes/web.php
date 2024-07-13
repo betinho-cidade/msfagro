@@ -67,6 +67,15 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::put('/usuario_logado/{user}/update', 'UsuarioLogadoController@update')->name('usuario_logado.update');
             });
 
+            Route::group(['namespace' => 'UsuarioCliente'], function(){
+                Route::get('/usuario_cliente', 'UsuarioClienteController@index')->name('usuario_cliente.index');
+                Route::get('/usuario_cliente/create', 'UsuarioClienteController@create')->name('usuario_cliente.create');
+                Route::post('/usuario_cliente/store', 'UsuarioClienteController@store')->name('usuario_cliente.store');
+                Route::get('/usuario_cliente/{usuario_cliente}', 'UsuarioClienteController@show')->name('usuario_cliente.show');
+                Route::put('/usuario_cliente/{usuario_cliente}/update', 'UsuarioClienteController@update')->name('usuario_cliente.update');
+                Route::delete('/usuario_cliente/{usuario_cliente}/destroy', 'UsuarioClienteController@destroy')->name('usuario_cliente.destroy');
+            });            
+
             Route::group(['namespace' => 'Categoria'], function(){
                 Route::get('/categoria', 'CategoriaController@index')->name('categoria.index');
                 Route::get('/categoria/create', 'CategoriaController@create')->name('categoria.create');
@@ -94,6 +103,10 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::put('/cliente/{cliente}/update', 'ClienteController@update')->name('cliente.update');
                 Route::delete('/cliente/{cliente}/destroy', 'ClienteController@destroy')->name('cliente.destroy');
                 Route::get('/cliente/{cliente}/alterar_status', 'ClienteController@alterar_status')->name('cliente.alterar_status');
+
+                Route::get('/cliente/{cliente}/user_create', 'ClienteController@user_create')->name('cliente.user_create');
+                Route::put('/cliente/{cliente}/user_store', 'ClienteController@user_store')->name('cliente.user_store');    
+                Route::delete('/cliente/{cliente}/user_destroy/{cliente_user}', 'ClienteController@user_destroy')->name('cliente.user_destroy');  
             });
 
             Route::group(['namespace' => 'FormaPagamento'], function(){

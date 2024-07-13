@@ -33,14 +33,13 @@ class DashboardController extends Controller
             abort('403', 'Página não disponível');
             //return redirect()->back();
         }
-
         $user = Auth()->User();
 
         $primeiro_acesso = ($request->has('search') && $request->search == 'BUSCA') ? false : true;
 
         $clientes = Cliente::where(function($query) use ($user){
                                 if($user->roles->contains('name', 'Cliente')){
-                                    $query->where('id', $user->cliente->id);
+                                    $query->where('id', $user->cliente_user->cliente->id);
                                 }                                 
                              })  
                              ->where('status', 'A')
@@ -57,7 +56,7 @@ class DashboardController extends Controller
                             ->first()->id;
             }
         }elseif($user->roles->contains('name', 'Cliente')){
-            $cliente = $user->cliente->id;
+            $cliente = $user->cliente_user->cliente->id;
         }  
         
 

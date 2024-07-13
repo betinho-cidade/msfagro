@@ -6,7 +6,7 @@
                                     ->whereRaw('(now() between notificacaos.data_inicio and notificacaos.data_fim)')
                                     ->where(function($query) use ($user)
                                     {
-                                        $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente->id);
+                                        $query->orWhere('cliente_notificacaos.cliente_id', $user->cliente_user->cliente->id);
                                         $query->orWhere('notificacaos.todos', 'S');
                                     })
                                     ->orderBy('notificacaos.data_fim', 'asc')

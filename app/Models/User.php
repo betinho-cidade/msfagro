@@ -80,22 +80,26 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function cliente_user(){
+        return $this->hasOne('App\Models\ClienteUser');
+    }            
 
-    public function cliente(){
-
-        return $this->hasOne('App\Models\Cliente');
-    }
-
+    // public function hasPermission_role(Permission $permission)
+    // {
+    //     return $this->hasAnyRoles($permission->roles);
+    // }
 
     public function hasPermission(Permission $permission)
     {
-        return $this->hasAnyRoles($permission->roles);
-    }
-
+        if($this->perfil == 'Gestor'){
+            return $this->hasAnyRoles($permission->roles);
+        } else{
+            return $this->hasAnyPerfils($permission->perfils);
+        }
+    }    
 
     public function hasAnyRoles($roles)
     {
-
         if (is_array($roles) || is_object($roles)) {
 
             $return = false;
@@ -111,5 +115,23 @@ class User extends Authenticatable
 
         return $this->roles->contains('name', $roles);
     }
+
+    public function hasAnyPerfils($perfils)
+    {
+        if (is_array($perfils) || is_object($perfils)) {
+
+            $return = false;
+            foreach ($perfils as $perfil) {
+
+                if ($this->cliente_user->perfil->name == $perfil->name) {
+                    $return = true;
+                    continue;
+                }
+            }
+            return $return;
+        }
+
+        return $this->cliente_user->perfil->name == $perfils->name;
+    }    
 
 }

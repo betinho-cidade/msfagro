@@ -36,7 +36,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -44,13 +44,13 @@ class EmpresaController extends Controller
         }
 
         $empresas_AT = Empresa::where('status','A')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
 
         $empresas_IN = Empresa::where('status','I')
-                            ->where('cliente_id', $user->cliente->id)
+                            ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
                             ->get();
 
@@ -69,7 +69,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -89,7 +89,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente){
+        if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
 
@@ -104,7 +104,7 @@ class EmpresaController extends Controller
 
             $empresa = new Empresa();
 
-            $empresa->cliente_id = $user->cliente->id;
+            $empresa->cliente_id = $user->cliente_user->cliente->id;
             $empresa->nome = $request->nome;
             $empresa->tipo_pessoa = $request->tipo_pessoa;
             $empresa->cpf_cnpj = $request->cpf_cnpj;
@@ -147,13 +147,13 @@ class EmpresaController extends Controller
     public function show(Empresa $empresa, Request $request)
     {
 
-        if(Gate::denies('edit_empresa')){
+        if(Gate::denies('view_empresa')){
             abort('403', 'Página não disponível');
         }
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $empresa->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $empresa->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Empresa não pertence ao cliente informado.');
 
@@ -173,7 +173,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente || ($user->cliente->id != $empresa->cliente_id) ){
+        if(!$user->cliente_user || ($user->cliente_user->cliente->id != $empresa->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Empresa não pertence ao cliente informado.');
 
@@ -186,9 +186,12 @@ class EmpresaController extends Controller
 
             DB::beginTransaction();
 
-            $empresa->nome = $request->nome;
-            $empresa->tipo_pessoa = $request->tipo_pessoa;
-            $empresa->cpf_cnpj = $request->cpf_cnpj;
+            if(!$empresa->has_lancamento){
+                $empresa->nome = $request->nome;
+                $empresa->tipo_pessoa = $request->tipo_pessoa;
+                $empresa->cpf_cnpj = $request->cpf_cnpj;
+            }
+
             $empresa->status = $request->situacao;
 
             $empresa->save();
@@ -233,7 +236,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $empresa->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $empresa->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Empresa não pertence ao cliente informado.');
 
@@ -281,7 +284,7 @@ class EmpresaController extends Controller
 
         $user = Auth()->User();
 
-        if(!$user->cliente ||($user->cliente->id != $empresa->cliente_id) ){
+        if(!$user->cliente_user ||($user->cliente_user->cliente->id != $empresa->cliente_id) ){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'A Empresa não pertence ao cliente informado.');
 

@@ -103,8 +103,8 @@
                             <td style="text-align:center;">{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_efetivo')
-                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
+                            @can('view_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar o Efetivo Pecuário"></i></a>
                             @endcan
 
                             @can('delete_efetivo')
@@ -151,8 +151,8 @@
                             <td style="text-align:center;">{{$efetivo->movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_efetivo')
-                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
+                            @can('view_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar o Efetivo Pecuário"></i></a>
                             @endcan
 
                             @can('delete_efetivo')
@@ -197,8 +197,8 @@
                             <td style="text-align:center;">{{$efetivo->data_programada_formatada}}</td>
                             <td style="text-align:center;">
 
-                            @can('edit_efetivo')
-                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
+                            @can('view_efetivo')
+                                <a href="{{route('efetivo.show', compact('efetivo'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar o Efetivo Pecuário"></i></a>
                             @endcan
 
                             @can('delete_efetivo')

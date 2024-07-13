@@ -70,7 +70,7 @@
                             <th>Latitude</th>
                             <th>Longitude</th>
 
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
+                            @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
                             <th>Qtd. Fêmeas</th>
                             @endif
@@ -88,18 +88,21 @@
                             <td data-toggle="tooltip" title="{{ $fazenda->latitude }}">{{Str::limit($fazenda->latitude, 50, '...')}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->longitude }}">{{Str::limit($fazenda->longitude, 50, '...')}}</td>
 
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
+                            @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
                             <td>{{$fazenda->qtd_femea}}</td>
                             @endif
 
                             <td style="text-align:center;">
 
+                            @can('view_fazenda')
+                                <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Fazenda"></i></a>
+                            @endcan                            
+
                             @can('edit_fazenda')
+                                <i onclick="geoMapsData({{$fazenda->id}})" class="fas fa-map-marker-alt" style="color: goldenrod" data-toggle="tooltip" title="Atualizar a Geolocalização (Latitude/Longitude)"></i>                            
                                 <a href="{{route('fazenda.alterar_status', compact('fazenda'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Fazenda"></i></a>
-                                <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Fazenda"></i></a>
-                                <i onclick="geoMapsData({{$fazenda->id}})" class="fas fa-map-marker-alt" style="color: goldenrod" data-toggle="tooltip" title="Atualizar a Geolocalização (Latitude/Longitude)"></i>
-                            @endcan
+                            @endcan                            
 
                             @can('delete_fazenda')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$fazenda->id}})"
@@ -120,7 +123,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -140,7 +143,7 @@
                             <th>Latitude</th>
                             <th>Longitude</th>
 
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
+                            @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                             <th>Qtd. Machos</th>
                             <th>Qtd. Fêmeas</th>
                             @endif
@@ -158,17 +161,20 @@
                             <td data-toggle="tooltip" title="{{ $fazenda->latitude }}">{{Str::limit($fazenda->latitude, 50, '...')}}</td>
                             <td data-toggle="tooltip" title="{{ $fazenda->longitude }}">{{Str::limit($fazenda->longitude, 50, '...')}}</td>
 
-                            @if($user->cliente && $user->cliente->tipo != 'AG')
+                            @if($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG')
                             <td>{{$fazenda->qtd_macho}}</td>
                             <td>{{$fazenda->qtd_femea}}</td>
                             @endif
 
                             <td style="text-align:center;">
 
+                            @can('view_fazenda')
+                                <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Fazenda"></i></a>
+                            @endcan                            
+
                             @can('edit_fazenda')
                                 <a href="{{route('fazenda.alterar_status', compact('fazenda'))}}"><i class="fas fa-exchange-alt" style="color: goldenrod; margin-right:3px;" title="Ativar/Inativar Fazenda"></i></a>
-                                <a href="{{route('fazenda.show', compact('fazenda'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Editar a Fazenda"></i></a>
-                            @endcan
+                            @endcan                            
 
                             @can('delete_fazenda')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$fazenda->id}})"
@@ -189,7 +195,7 @@
                           </tr>
                         @empty
                         <tr>
-                            <td colspan="{{ ($user->cliente && $user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
+                            <td colspan="{{ ($user->cliente_user && $user->cliente_user->cliente->tipo != 'AG') ? '8' : '6' }}">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>

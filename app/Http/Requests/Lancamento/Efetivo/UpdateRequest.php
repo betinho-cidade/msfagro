@@ -15,6 +15,17 @@ class UpdateRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+
+        $this->merge([
+            'valor' => ( \IntlChar::ord(Str::substr(str_replace('R$', '', $this->valor), 0, 1)) == 160) 
+                        ? str_replace(',', '.', str_replace('.', '', Str::substr($this->valor, 3)))
+                        : str_replace(',', '.', str_replace('.', '', str_replace('R$', '', $this->valor))),
+        ]);
+    }    
+
+
     public function rules()
     {
 

@@ -44,9 +44,12 @@
             <h4 class="card-title">Formulário de Atualização - Produtor {{$produtor->nome}}</h4>
             <p class="card-title-desc">O Produtor cadastrado estará disponível para os lançamentos no sistema.</p>
 
+            @can('edit_produtor')
             <form name="edit_produtor" method="POST" action="{{route('produtor.update', compact('produtor'))}}"  class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="liberado" id="liberado" @if($produtor->has_lancamento) value="NAO" style="background-color: #D3D3D3;" disabled @else value=OK @endif required>
+            @endcan
 
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Produtor</h5>
@@ -56,7 +59,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="tipo_pessoa" class="{{($errors->first('tipo_pessoa') ? 'form-error-label' : '')}}">Tipo Pessoa</label>
-                            <select id="tipo_pessoa" name="tipo_pessoa" class="form-control {{($errors->first('tipo_pessoa') ? 'form-error-field' : '')}} dynamic_tipo" required>
+                            <select id="tipo_pessoa" name="tipo_pessoa" class="form-control {{($errors->first('tipo_pessoa') ? 'form-error-field' : '')}} dynamic_tipo" @if($produtor->has_lancamento) style="background-color: #D3D3D3;" disabled @endif required>
                                 <option value="">---</option>
                                 <option value="PF" {{($produtor->tipo_pessoa == 'PF') ? 'selected' : '' }}>Pessoa Física</option>
                                 <option value="PJ" {{($produtor->tipo_pessoa == 'PJ') ? 'selected' : '' }}>Pessoa Jurídica</option>
@@ -68,14 +71,14 @@
                     <div class="col-md-3">
                         <label for="cpf_cnpj" class="{{($errors->first('cpf_cnpj') ? 'form-error-label' : '')}}">CPF/CNPJ</label>
                         <img src="{{asset('images/loading.gif')}}" id="img-loading-cnpj" style="display:none;max-width: 10%; margin-left: 26px;">
-                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} dynamic_cnpj mask_cpf_cnpj" value="{{$produtor->cpf_cnpj}}" placeholder="---" required>
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control {{($errors->first('cpf_cnpj') ? 'form-error-field' : '')}} dynamic_cnpj mask_cpf_cnpj" value="{{$produtor->cpf_cnpj}}" placeholder="---" @if($produtor->has_lancamento) style="background-color: #D3D3D3;" disabled @endif required>
                         <div class="valid-feedback">ok!</div>
                         <div class="invalid-feedback">Inválido!</div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="nome" class="{{($errors->first('nome') ? 'form-error-label' : '')}}">Nome</label>
-                            <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{$produtor->nome}}" placeholder="Nome" required>
+                            <input type="text" class="form-control {{($errors->first('nome') ? 'form-error-field' : '')}}" id="nome" name="nome" value="{{$produtor->nome}}" placeholder="Nome" @if($produtor->has_lancamento) style="background-color: #D3D3D3;" disabled @endif required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -179,8 +182,10 @@
                 <p></p>
             <!-- Dados Endereço - FIM -->
 
+            @can('edit_produtor')
                 <button class="btn btn-primary" type="submit">Atualizar Cadastro</button>
             </form>
+            @endcan
 
 
             <!-- FORMULÁRIO - FIM -->
