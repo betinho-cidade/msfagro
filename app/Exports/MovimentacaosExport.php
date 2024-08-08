@@ -247,8 +247,8 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                                                     $query->whereNotNull('data_pagamento');
                                                 }                                                
                                             }                                            
-                                        });
-                                        //->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
+                                        })
+                                        ->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
                                         //->orderBy('data_programada', 'asc');
 
         if($search['data_inicio'] && $search['data_fim']){
