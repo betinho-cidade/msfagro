@@ -29,7 +29,6 @@ class CreateRequest extends FormRequest
     {
 
         return [
-            'usuario' => 'required|unique:clientes,user_id',
             'tipo' => 'required',
             'situacao' => 'required',
             'nome' => 'required|max:200',
@@ -53,8 +52,6 @@ class CreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'usuario.required' => 'O Usuário de Acesso é requerido',
-            'usuario.unique' => 'O Usuário selecionado já está vinculado à um cliente. Por gentileza, informe outro',
             'tipo.required' => 'O Tipo é requerido',
             'situacao.required' => 'A Situação é requerida',
             'nome.required' => 'O Nome é requerido',

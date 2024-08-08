@@ -108,7 +108,7 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
 
         $user = Auth()->User();
 
-        $movimentacaos = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
+        $dados = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($search){
                                             if($search['tipo_cliente'] == 'AG'){
                                                 $query->where('segmento', 'MF');
@@ -200,72 +200,102 @@ class MovimentacaosExport implements FromQuery, WithHeadings, WithMapping, WithC
                                                         $query->whereNull('data_pagamento');
                                                         $query->where('data_programada', '>=', $search['data_inicio']);
                                                         $query->where('data_programada', '<=', $search['data_fim']);
-                                                        $query->orderBy('data_programada', 'desc');
                                                     }else if($search['movimentacao'] == 'E'){
                                                         $query->whereNotNull('data_pagamento');
                                                         $query->where('data_pagamento', '>=', $search['data_inicio']);
                                                         $query->where('data_pagamento', '<=', $search['data_fim']);
-                                                        $query->orderBy('data_pagamento', 'desc');
                                                     }else if($search['movimentacao'] == 'G'){
                                                         $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
                                                         $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
-                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                     }
                                                 } else {
                                                     $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
                                                     $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
-                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                 }        
                                             } elseif($search['data_inicio']){
                                                 if($search['movimentacao']){
                                                     if($search['movimentacao'] == 'F'){
                                                         $query->whereNull('data_pagamento');
                                                         $query->where('data_programada', '>=', $search['data_inicio']);
-                                                        $query->orderBy('data_programada', 'desc');
                                                     }else if($search['movimentacao'] == 'E'){
                                                         $query->whereNotNull('data_pagamento');
                                                         $query->where('data_pagamento', '>=', $search['data_inicio']);
-                                                        $query->orderBy('data_pagamento', 'desc');
                                                     }else if($search['movimentacao'] == 'G'){
                                                         $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
-                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                     }
                                                 } else{
                                                     $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) >= "'.$search['data_inicio'].'"'));
-                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                 }   
                                             } elseif($search['data_fim']){
                                                 if($search['movimentacao']){
                                                     if($search['movimentacao'] == 'F'){
                                                         $query->whereNull('data_pagamento');
                                                         $query->where('data_programada', '<=', $search['data_fim']);
-                                                        $query->orderBy('data_programada', 'desc');
                                                     }else if($search['movimentacao'] == 'E'){
                                                         $query->whereNotNull('data_pagamento');
                                                         $query->where('data_pagamento', '<=', $search['data_fim']);
-                                                        $query->orderBy('data_pagamento', 'desc');
                                                     }else if($search['movimentacao'] == 'G'){
                                                         $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
-                                                        $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                     }
                                                 } else{
                                                     $query->whereRaw(DB::raw('COALESCE(data_pagamento, data_programada) <= "'.$search['data_fim'].'"'));
-                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                 }     
                                             } else {
                                                 if($search['movimentacao'] == 'F'){
                                                     $query->whereNull('data_pagamento');
-                                                    $query->orderBy('data_programada', 'desc');
                                                 }else if($search['movimentacao'] == 'E'){
                                                     $query->whereNotNull('data_pagamento');
-                                                    $query->orderBy('data_pagamento', 'desc');
-                                                }else if($search['movimentacao'] == 'G'){
-                                                    $query->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
                                                 }                                                
                                             }                                            
-                                        })
-                                        ->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
+                                        });
+                                        //->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
                                         //->orderBy('data_programada', 'asc');
+
+        if($search['data_inicio'] && $search['data_fim']){
+            if($search['movimentacao']){
+                if($search['movimentacao'] == 'F'){
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc');
+                }else if($search['movimentacao'] == 'E'){
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc');
+                }else if($search['movimentacao'] == 'G'){
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                }
+            } else {
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+            }        
+        } elseif($search['data_inicio']){
+            if($search['movimentacao']){
+                if($search['movimentacao'] == 'F'){
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc');
+                }else if($search['movimentacao'] == 'E'){
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc');
+                }else if($search['movimentacao'] == 'G'){
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                }
+            } else{
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+            }   
+        } elseif($search['data_fim']){
+            if($search['movimentacao']){
+                if($search['movimentacao'] == 'F'){
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc');
+                }else if($search['movimentacao'] == 'E'){
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc');
+                }else if($search['movimentacao'] == 'G'){
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+                }
+            } else {
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+            }     
+        } else {
+            if($search['movimentacao'] == 'F'){
+                $movimentacaos = $dados->orderBy('data_programada', 'desc');
+            }else if($search['movimentacao'] == 'E'){
+                $movimentacaos = $dados->orderBy('data_pagamento', 'desc');
+            }else if($search['movimentacao'] == 'G'){
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc');
+            }                                                
+        }                                        
         
         return $movimentacaos;
     }

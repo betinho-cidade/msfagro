@@ -149,7 +149,7 @@ class RelatorioController extends Controller
         } else{
             $search = [];
         }
-        
+
         $dados = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($search){
                                             if($search['tipo_cliente'] == 'AG'){
@@ -246,83 +246,54 @@ class RelatorioController extends Controller
                                         //->whereYear('data_programada', $data_programada_vetor[1])
                                         //->get();
 
+
         if($search['data_inicio'] && $search['data_fim']){
             if($search['movimentacao']){
                 if($search['movimentacao'] == 'F'){
-                    $movimentacaos = $dados->orderBy('data_programada', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_programada desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc')->get();
                 }else if($search['movimentacao'] == 'E'){
-                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_pagamento desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')->get();
                 }else if($search['movimentacao'] == 'G'){
-                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
                 }
             } else {
-                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
             }        
         } elseif($search['data_inicio']){
             if($search['movimentacao']){
                 if($search['movimentacao'] == 'F'){
-                    $movimentacaos = $dados->orderBy('data_programada', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_programada desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc')->get();
                 }else if($search['movimentacao'] == 'E'){
-                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_pagamento desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')->get();
                 }else if($search['movimentacao'] == 'G'){
-                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
                 }
             } else{
-                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
             }   
         } elseif($search['data_fim']){
             if($search['movimentacao']){
                 if($search['movimentacao'] == 'F'){
-                    $movimentacaos = $dados->orderBy('data_programada', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_programada desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_programada', 'desc')->get();
                 }else if($search['movimentacao'] == 'E'){
-                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by data_pagamento desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy('data_pagamento', 'desc')->get();
                 }else if($search['movimentacao'] == 'G'){
-                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                        ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                        ->get();
+                    $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
                 }
             } else {
-                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
             }     
         } else {
             if($search['movimentacao'] == 'F'){
-                $movimentacaos = $dados->orderBy('data_programada', 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by data_programada desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy('data_programada', 'desc')->get();
             }else if($search['movimentacao'] == 'E'){
-                $movimentacaos = $dados->orderBy('data_pagamento', 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by data_pagamento desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy('data_pagamento', 'desc')->get();
             }else if($search['movimentacao'] == 'G'){
-                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')
-                    ->select(DB::raw('ROW_NUMBER() over (order by COALESCE(data_pagamento, data_programada) desc) as ordenacao, movimentacaos.*'))
-                    ->get();
+                $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
             }                                                
         }
 
-                                       
+
         $empresas = Empresa::where('cliente_id', $user->cliente_user->cliente->id)
                                     ->where('status', 'A')
                                     ->orderBy('nome', 'asc')
@@ -612,8 +583,8 @@ class RelatorioController extends Controller
             }else if($search['movimentacao'] == 'G'){
                 $movimentacaos = $dados->orderBy(DB::raw('COALESCE(data_pagamento, data_programada)'), 'desc')->get();
             }                                                
-        }
-
+        }                                        
+                                        
 
         $receita = $movimentacaos->where('tipo', '=', 'R')->sum('valor');
         $despesa = $movimentacaos->where('tipo', '=', 'D')->sum('valor');

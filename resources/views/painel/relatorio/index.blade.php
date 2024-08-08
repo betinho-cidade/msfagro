@@ -169,7 +169,7 @@
                         <tbody>
                         @forelse($movimentacaos as $movimentacao)
                         <tr>
-                            <td>{{$movimentacao->data_programada_ordenacao}}</td>
+                            <td>{{$movimentacao->ordenacao}}</td>
                             <td>{{$movimentacao->id}}</td>
                             <td>{{$movimentacao->tipo_movimentacao_texto}}</td>
                             <td>{{$movimentacao->segmento_texto}}</td>
@@ -263,7 +263,7 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
-                "order": [[ 0, "desc" ]],
+                "order": [[ 0, "asc" ]],
                 columnDefs: [
                     {
                         targets: [ 0 ],

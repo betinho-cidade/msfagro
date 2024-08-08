@@ -93,7 +93,6 @@ class ClienteController extends Controller
 
             $cliente = new Cliente();
 
-            $cliente->user_id = $request->usuario;
             $cliente->tipo = $request->tipo;
             $cliente->nome = $request->nome;
             $cliente->email = $request->email;
@@ -189,7 +188,6 @@ class ClienteController extends Controller
 
             DB::beginTransaction();
 
-            $cliente->user_id = $request->usuario;
             $cliente->tipo = $request->tipo;
             $cliente->nome = $request->nome;
             $cliente->email = $request->email;
