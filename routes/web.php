@@ -46,6 +46,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/gestao/relatorio/search', 'RelatorioController@search')->name('relatorio_gestao.search');
                 Route::get('/gestao/relatorio/excell', 'RelatorioController@excell')->name('relatorio_gestao.excell');
                 Route::get('/gestao/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio_gestao.pdf');
+                Route::post('/gestao/relatorio/refreshCliente', 'RelatorioController@refreshCliente')->name('relatorio_gestao.refreshCliente');
             });   
 
         });
@@ -229,6 +230,9 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
             Route::get('/relatorio/excell', 'RelatorioController@excell')->name('relatorio.excell');
             Route::get('/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio.pdf');
             Route::get('/relatorio/geomaps', 'RelatorioController@geomaps')->name('relatorio.geomaps');
+
+            Route::delete('/relatorio/efetivo/{efetivo}/destroy_efetivo', 'RelatorioController@destroy_efetivo')->name('relatorio.destroy_efetivo');
+            Route::delete('/relatorio/movimentacao/{movimentacao}/destroy_movimentacao', 'RelatorioController@destroy_movimentacao')->name('relatorio.destroy_movimentacao');
         });        
 
     });

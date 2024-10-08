@@ -13,7 +13,7 @@ class CreateNotificacaosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('movimentacao_id')->nullable();
             $table->string('nome', 300);
-            $table->string('resumo', 500);
+            $table->longtext('resumo');
             $table->string('url_notificacao', 1000)->nullable();
             $table->datetime('data_inicio');
             $table->datetime('data_fim');            

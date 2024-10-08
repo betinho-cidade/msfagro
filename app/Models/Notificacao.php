@@ -20,7 +20,7 @@ class Notificacao extends Model
     public function cliente_notificacaos()
     {
         return $this->hasMany('App\Models\ClienteNotificacao');
-    }    
+    }
 
     public function getDataInicioFormatadaAttribute()
     {
@@ -40,7 +40,12 @@ class Notificacao extends Model
     public function getDataInicioReduzidaAttribute()
     {
         return ($this->data_inicio) ? date('d/m/Y', strtotime($this->data_inicio)) : '';
-    }       
+    }
+
+    public function getDataInicioOrdenacaoAttribute()
+    {
+        return ($this->data_inicio) ? date('YmdHis', strtotime($this->data_inicio)) : '';
+    }
 
     public function getDataFimFormatadaAttribute()
     {
@@ -55,22 +60,22 @@ class Notificacao extends Model
     public function getDataFimReduzidaAttribute()
     {
         return ($this->data_fim) ? date('d/m/Y', strtotime($this->data_fim)) : '';
-    }       
+    }
 
     public function getDataFimCompactaAttribute()
     {
         return ($this->data_fim) ? date('d/m/y', strtotime($this->data_fim)) : '';
-    }           
+    }
 
     public function getHoraFimAjustadaAttribute()
     {
         return ($this->data_fim) ? date('H:i', strtotime($this->data_fim)): '';
-    }    
+    }
 
     public function getTerminaEmAttribute()
     {
         return ($this->data_fim) ? date('H:i d/m', strtotime($this->data_fim)) : '';
-    }    
+    }
 
     public function getNomeReduzidoAttribute()
     {
@@ -84,8 +89,8 @@ class Notificacao extends Model
         $resumo_reduzido =  Str::limit($this->resumo, 150, '...');
 
         return $resumo_reduzido;
-    } 
-    
+    }
+
     public function getTempoInicioAttribute()
     {
         $data_inicio = new Carbon($this->data_inicio);
@@ -93,8 +98,8 @@ class Notificacao extends Model
         $tempo_inicio = $data_inicio->locale('pt-BR')->diffForHumans(now(), CarbonInterface::DIFF_ABSOLUTE);
 
         return $tempo_inicio;
-    }    
-    
+    }
+
     public function getAoVivoAttribute()
     {
         $data_inicio = new Carbon($this->data_inicio);
@@ -106,5 +111,5 @@ class Notificacao extends Model
         } else {
             return false;
         }
-    }            
+    }
 }

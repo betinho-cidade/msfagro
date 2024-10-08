@@ -176,7 +176,8 @@
                     <table id="dt_lancamentos" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr style="background-color:#CECECE">
-                            <th style="align:center">Data</th>
+                            <th style="align:center">Dt.Prog</th>
+                            <th style="align:center">Dt.Pagto</th>
                             <th style="align:center">Cliente</th>
                             <th style="align:center">Tipo</th>
                             <th style="align:center">Categoria</th>
@@ -193,17 +194,27 @@
                         @foreach($movimentacaos as $movimentacao)
                         <tr style="background-color:{{($movimentacao->tipo == 'D') ? '#FF7171' : '#73FD76'}}">
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->data_programada_formatada}}</td>
+                            <td style="text-align:center;font-size:12px;">{{$movimentacao->data_pagamento_formatada}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->cliente->nome_cliente ?? '...' }}</td>
-                            <td style="text-align:center;font-size:12px;">{{$movimentacao->tipo_movimentacao_texto}}</td>                            
-                            <td style="text-align:center;font-size:12px;">{{$movimentacao->categoria->nome ?? '...'}}</td>                                                        
-                            <td style="text-align:center;font-size:12px;">R$ {{number_format($movimentacao->valor, 2, ',', '.')}}</td>                            
+                            <td style="text-align:center;font-size:12px;">{{$movimentacao->tipo_movimentacao_texto}}</td>
+                            <td style="text-align:center;font-size:12px;">{{$movimentacao->categoria->nome ?? '...'}}</td>
+                            <td style="text-align:center;font-size:12px;">R$ {{number_format($movimentacao->valor, 2, ',', '.')}}</td>
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->item_texto}}</td>
                             <td style="text-align:center;font-size:12px;">{{$movimentacao->empresa->nome_empresa ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->forma_pagamento->forma ?? '...'}}</td>
                             <td style="text-align:center;font-size:12px;">{{ $movimentacao->produtor->nome_produtor ?? '...' }}</td>
                             <td style="text-align:center;font-size:12px;">
                               @if($movimentacao->link_nota)
-                                <a href="{{$movimentacao->link_nota_guest}}"><img src="https://adm.mfsagro.com.br/images/clips.png" style="max-width:17px;"></a>
+                                <a href="{{$movimentacao->link_nota_guest}}" title="Download Nota Fiscal" ><img src="https://login.mfsagro.com.br/images/nota-fiscal.png" style="max-width:17px;" alt="Download Nota Fiscal"></a>
+                              @endif
+                              @if($movimentacao->link_comprovante)
+                                <a href="{{$movimentacao->link_comprovante_guest}}" title="Download Comprovante Pagamwento"><img src="https://login.mfsagro.com.br/images/comprovante-pagamento.png" style="max-width:17px;" alt="Download Comprovante Pagamwento"></a>
+                              @endif
+                              @if($movimentacao->link_anexo)
+                                <a href="{{$movimentacao->link_anexo_guest}}" title="Download Anexo"><img src="https://login.mfsagro.com.br/images/clips.png" style="max-width:17px;" alt="Download Anexo"></a>
+                              @endif
+                              @if($movimentacao->efetivo && $movimentacao->efetivo->link_gta)
+                                <a href="{{$movimentacao->efetivo->link_gta_guest}}" title="Download GTA"><img src="https://login.mfsagro.com.br/images/GTA.png" style="max-width:17px;" alt="Download GTA"></a>
                               @endif
                             </td>
                         </tr>
@@ -211,8 +222,8 @@
                         </tbody>
                     </table>
                     <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
-    </div>                  
-    
+    </div>
+
     <br><br>
 
     <div class="tab-pane active" id="lancamento" role="tabpanel">
@@ -229,11 +240,11 @@
                         <tr>
                             <td style="text-align:center;color: #548235">R$ {{number_format($resultado_final['receita'], 2, ',', '.')}}</td>
                             <td style="text-align:center;color: #FF0000">R$ {{number_format($resultado_final['despesa'], 2, ',', '.')}}</td>
-                            <td style="text-align:center;color: {{($resultado_final['saldo'] == 'P') ? '#548235' : '#FF0000'}}">R$ {{number_format($resultado_final['total'], 2, ',', '.')}}</td>                            
+                            <td style="text-align:center;color: {{($resultado_final['saldo'] == 'P') ? '#548235' : '#FF0000'}}">R$ {{number_format($resultado_final['total'], 2, ',', '.')}}</td>
                         </tr>
                         </tbody>
                     </table>
                     <!-- Nav tabs - LISTA lancamento - ATIVA - FIM -->
-    </div>   
+    </div>
 
   </body></html>

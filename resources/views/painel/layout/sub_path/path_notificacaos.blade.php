@@ -15,12 +15,12 @@
 
 @if($notificacaos && $notificacaos->count() > 0)
 <div class="dropdown d-inline-block">
-     <button type="button" class="btn header-item noti-icon waves-effect" 
+     <button type="button" class="btn header-item noti-icon waves-effect"
        id="page-header-notificacaos-dropdown" data-toggle="dropdown" aria-expanded="false">
          <i class="ri-notification-3-line"></i>
          <span class="noti-dot"></span>
      </button>
-     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0" 
+     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
             aria-labelledby="page-header-notificacaos-dropdown" style="">
          <div class="p-3" style="background: #f1f6f57a;padding: 12px 10px !important;">
              <div class="row align-items-center">
@@ -46,21 +46,18 @@
 				 <!-- <a href="" class="text-reset notification-item"> -->
 					 <div class="d-block">
 						 <div class="flex-1" style="margin: 0 10px 10px; padding-bottom: 10px; border-bottom: 1px solid #5f9c8c3d;">
-                            @if($notificacao->url_notificacao)
-                                <h6 class="mb-1">
-                                    <a href="javascript:goUrl('{{ $notificacao->url_notificacao }}');">
-                                        {{$notificacao->nome_reduzido}}
-                                    </a>
-                                </h6>
-                            @else
-                                <h6 class="mb-1">{{$notificacao->nome_reduzido}}</h6>
-                            @endif
+                            <h6 class="mb-1">
+                                <a href="{{ route('painel.notificacao')}}">
+                                    {{$notificacao->nome_reduzido}}
+                                </a>
+                            </h6>
+
                             <div class="font-size-12 text-muted">
-                                    <p class="mb-1">{{$notificacao->resumo_reduzido}}</p>
+                                    <p class="mb-1">{!!$notificacao->resumo!!}</p>
                                     <p class="mb-0" style="background: #5f9c8c17; padding: 3px 10px; border-radius: 6px;"><i class="mdi mdi-clock-outline"></i> {{$notificacao->tempo_inicio}}
                                     <span style="float:right;text-size:6px;">término {{$notificacao->termina_em}}</span>
                                     </p>
-                            </div>  
+                            </div>
 						 </div>
 					 </div>
 				 <!-- </a>				 -->

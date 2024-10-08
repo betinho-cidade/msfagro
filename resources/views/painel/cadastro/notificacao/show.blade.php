@@ -62,8 +62,9 @@
                     </div>
                     <div class="col-md-7">
                         <div class="form-group">
-                            <label for="resumo">Resumo</label>
-                            <textarea class="form-control" name="resumo" id="resumo" rows="3" maxlength="500" placeholder="Informe o resumo da Notificação" required>{{$notificacao->resumo}}</textarea>
+                            <label for="descricao">Editor HTML</label>
+                            <span style="font-weight: 400;">(Edite as informações do resumo da notificação)</span>
+                            <textarea class="form-control" name="resumo" id="resumo"resumo placeholder="Informe o resumo da Notificação" required>{{$notificacao->resumo}}</textarea>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -256,6 +257,29 @@
 
     <script src="{{asset('nazox/assets/libs/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('nazox/assets/js/pages/lightbox.init.js')}}"></script>
+
+    <!-- Summernote js -->
+    <script src="{{ asset('plugins/summernote-0.8.18-dist/summernote.min.js') }}"></script>
+    <script src="{{ asset('plugins/summernote-0.8.18-dist/lang/summernote-pt-BR.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#resumo').summernote({
+                lang: 'pt-BR',
+                placeholder: 'Informe aqui o resumo da notificação que irá aparecer no site',
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link']],
+                    ['view', ['codeview', 'help']]
+                  ]
+            });
+        });
+    </script>        
 
     @if ($cliente_notificacaos->count() > 0)
         <script>

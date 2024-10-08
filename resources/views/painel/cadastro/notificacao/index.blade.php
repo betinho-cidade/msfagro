@@ -11,7 +11,7 @@
             <div class="page-title-right">
                 <a href="{{route("notificacao.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Notificação</a>
             </div>
-            @endcan                        
+            @endcan
         </div>
     </div>
 </div>
@@ -62,6 +62,7 @@
                     <table id="dt_notificacaos_AT" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
+                            <th>Ordenação</th>
                             <th>Nome</th>
                             <th>Data Início</th>
                             <th>Data Fim</th>
@@ -72,6 +73,7 @@
                         <tbody>
                         @forelse($notificacaos_AT as $notificacao)
                         <tr>
+                            <td>{{$notificacao->data_inicio_ordenacao}}</td>
                             <td>{{$notificacao->nome}}</td>
                             <td>{{$notificacao->data_inicio_formatada}}</td>
                             <td>{{$notificacao->data_fim_formatada}}</td>
@@ -101,7 +103,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4">Nenhum registro encontrado</td>
+                            <td colspan="5">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -114,6 +116,7 @@
                     <table id="dt_notificacaos_IN" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
+                            <th>Ordenação</th>
                             <th>Nome</th>
                             <th>Data Início</th>
                             <th>Data Fim</th>
@@ -124,6 +127,7 @@
                         <tbody>
                         @forelse($notificacaos_IN as $notificacao)
                         <tr>
+                            <td>{{$notificacao->data_inicio_ordenacao}}</td>
                             <td>{{$notificacao->nome}}</td>
                             <td>{{$notificacao->data_inicio_formatada}}</td>
                             <td>{{$notificacao->data_fim_formatada}}</td>
@@ -153,7 +157,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4">Nenhum registro encontrado</td>
+                            <td colspan="5">Nenhum registro encontrado</td>
                         </tr>
                         @endforelse
                         </tbody>
@@ -187,7 +191,12 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
-                "order": [[ 1, "desc" ],[ 2, "asc" ]]
+                "deferRender": true,
+                "columnDefs": [
+                    { targets: [0], visible: false },
+                    { targets: [1,2,3], orderable: false },
+                ],
+                "order": [[ 0, "desc" ]]
             });
         </script>
     @endif
@@ -198,7 +207,12 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
-                "order": [[ 1, "desc" ],[ 2, "asc" ]]
+                "deferRender": true,
+                "columnDefs": [
+                    { targets: [0], visible: false },
+                    { targets: [1,2,3], orderable: false },
+                ],
+                "order": [[ 0, "desc" ]]
             });
         </script>
     @endif

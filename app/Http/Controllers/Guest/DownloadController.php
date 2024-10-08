@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Movimentacao;
+use App\Models\Efetivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -19,12 +20,36 @@ class DownloadController extends Controller
 
     public function download(Request $request){
 
-        $id = Crypt::decryptString($request->nota);
+        $path_documento = '';
 
-        $movimentacao = Movimentacao::where('id', $id)->first();
+        if($request->has('comprovante')){
+            $id = Crypt::decryptString($request->comprovante);
+            $movimentacao = Movimentacao::where('id', $id)->first();
+        
+            $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
+            $path_documento = $path_documento . 'comprovantes/' . $movimentacao->path_comprovante;
 
-        $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
-        $path_documento = $path_documento . 'notas/' . $movimentacao->path_nota;
+        }else if($request->has('nota')){
+            $id = Crypt::decryptString($request->nota);
+            $movimentacao = Movimentacao::where('id', $id)->first();
+        
+            $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
+            $path_documento = $path_documento . 'notas/' . $movimentacao->path_nota;
+
+        }else if($request->has('anexo')){
+            $id = Crypt::decryptString($request->anexo);
+            $movimentacao = Movimentacao::where('id', $id)->first();
+        
+            $path_documento = 'documentos/' . $movimentacao->cliente_id . '/';
+            $path_documento = $path_documento . 'anexos/' . $movimentacao->path_anexo;
+
+        }else if($request->has('gta')){
+            $id = Crypt::decryptString($request->gta);
+            $efetivo = Efetivo::where('id', $id)->first();
+            
+            $path_documento = 'documentos/' . $efetivo->cliente_id . '/';
+            $path_documento = $path_documento . 'gtas/' . $efetivo->path_gta;
+        }                    
 
         return Storage::download($path_documento);
     }    

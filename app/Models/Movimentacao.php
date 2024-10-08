@@ -70,8 +70,6 @@ class Movimentacao extends Model
         return $segmento;
     }
 
-
-
     public function getTipoMovimentacaoTextoAttribute()
     {
         $tipo_movimentacao = '';
@@ -148,7 +146,7 @@ class Movimentacao extends Model
             return $link;            
 
         } else {
-            return '';
+            return ' ';
         }
     }    
 
@@ -223,6 +221,42 @@ class Movimentacao extends Model
             Notificacao::whereIn('id', $ids_notificacao)->delete();
         }
     }
+
+    public function getLinkComprovanteAttribute()
+    {
+        return ($this->path_comprovante) ? route('movimentacao.download', ['movimentacao' => $this->id, 'tipo_documento' => 'CP']) : '';
+    }
+
+    public function getLinkComprovanteGuestAttribute()
+    {
+        if($this->path_comprovante){
+
+            $link = route('download', ['comprovante' => Crypt::encryptString($this->id)]);
+
+            return $link;            
+
+        } else {
+            return ' ';
+        }
+    }      
+
+    public function getLinkAnexoAttribute()
+    {
+        return ($this->path_anexo) ? route('movimentacao.download', ['movimentacao' => $this->id, 'tipo_documento' => 'AN']) : '';
+    }
+
+    public function getLinkAnexoGuestAttribute()
+    {
+        if($this->path_anexo){
+
+            $link = route('download', ['anexo' => Crypt::encryptString($this->id)]);
+
+            return $link;            
+
+        } else {
+            return ' ';
+        }
+    }     
 
 }
 

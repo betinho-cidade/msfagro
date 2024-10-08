@@ -194,6 +194,18 @@
                                     <a href="{{route('efetivo.show', ['efetivo' => $movimentacao->efetivo->id])}}" target="_blank"><i class="fa fa-edit" style="color: goldenrod" title="Editar o Efetivo Pecuário"></i></a>
                                 @endif
                             @endcan
+
+                            @can('delete_movimentacao')
+                                @if($movimentacao->segmento == 'MF')
+                                    <a href="javascript:;" data-toggle="modal" onclick="deleteMovimentacao({{$movimentacao->id}})"
+                                    data-target="#modal-delete-movimentacao"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir a Movimentação Financeira"></i></a>
+                                @else
+                                    @can('delete_efetivo')
+                                        <a href="javascript:;" data-toggle="modal" onclick="deleteEfetivo({{$movimentacao->efetivo->id}})"
+                                        data-target="#modal-delete-efetivo"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Efetivo Pecuário"></i></a>
+                                    @endcan
+                                @endif
+                            @endcan                            
                             </td>
                         </tr>
                         @empty
@@ -211,6 +223,64 @@
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
+
+<!-- Cityinbag - Modal Info INI-->
+<form action="" id="deleteEfetivo" method="post">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" id="search_efetivo" name="search_efetivo" value="{{json_encode($search)}}">
+</form>
+
+<div class="modal fade" id="modal-delete-efetivo" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deseja excluir o registro de Efetivo Pecuário ? </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>O registro selecionado será excluído definitivamente. Também será excluída a movimentação fiscal de compra/venda, bem como as operações de atualização de estoque realizadas anterioremente nas respectivas Fazendas, serão desfeitas. Deseja Continuar ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Fechar </button>
+                <button type="button" onclick="formSubmitEfetivo();" class="btn btn-primary waves-effect waves-light">Excluir </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cityinbag - Modal Info FIM-->
+
+
+<!-- Cityinbag - Modal Info INI-->
+<form action="" id="deleteMovimentacao" method="post">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" id="search_movimentacao" name="search_movimentacao" value="{{json_encode($search)}}">
+</form>
+
+<div class="modal fade" id="modal-delete-movimentacao" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deseja excluir o registro da Movimentação Fiscal ? </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>O registro selecionado será excluído definitivamente. Deseja Continuar ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Fechar </button>
+                <button type="button" onclick="formSubmitMovimentacao();" class="btn btn-primary waves-effect waves-light">Excluir </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cityinbag - Modal Info FIM-->
 
 @endsection
 
@@ -263,15 +333,44 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
+                "deferRender": true,
+                "columnDefs": [
+                    { targets: [7,8,10], orderable: false },
+                    { targets: [0], visible: false },
+                ],                
                 "order": [[ 0, "asc" ]],
-                columnDefs: [
-                    {
-                        targets: [ 0 ],
-                        visible: false,
-                    },
-                ],
             });
         </script>
     @endif
+
+    <script>
+       function deleteEfetivo(id)
+       {
+           var id = id;
+           var url = '{{ route("relatorio.destroy_efetivo", ":id") }}';
+           url = url.replace(':id', id);
+           $("#deleteEfetivo").attr('action', url);
+       }
+
+       function formSubmitEfetivo()
+       {
+           $("#deleteEfetivo").submit();
+       }
+
+       function deleteMovimentacao(id)
+       {
+           var id = id;
+           var url = '{{ route("relatorio.destroy_movimentacao", ":id") }}';
+           url = url.replace(':id', id);
+           $("#deleteMovimentacao").attr('action', url);
+       }
+
+       function formSubmitMovimentacao()
+       {
+           $("#deleteMovimentacao").submit();
+       }
+    </script>
+
+    </script>
 
 @endsection

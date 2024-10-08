@@ -466,6 +466,7 @@ class MovimentacaoController extends Controller
         return redirect()->route('movimentacao.index', ['mes_referencia' => $mes_referencia]);
     }
 
+    // REPLICADA na controller RelatorioController (destroy_movimentacao) - App\Http\Controllers\Painel\Relatorio
     public function destroy(Movimentacao $movimentacao, Request $request)
     {
         if(Gate::denies('delete_movimentacao')){
@@ -651,6 +652,7 @@ class MovimentacaoController extends Controller
         return redirect()->route('movimentacao.index', compact('mes_referencia'));
     }
 
+    // REPLICADA na controller RelatorioController (destroy_files_movimentacao) - App\Http\Controllers\Painel\Relatorio
     protected function destroy_files(Array $movimentacao_arquivos){
 
         foreach($movimentacao_arquivos as $movimentacao){
@@ -737,6 +739,10 @@ class MovimentacaoController extends Controller
                 $path_documento = $path_documento . 'anexos/' . $movimentacao->path_anexo;
                 break;
             }            
+            case 'GT':{
+                $path_documento = $path_documento . 'gtas/' . $movimentacao->efetivo->path_gta;
+                break;
+            }
         }
 
         return Storage::download($path_documento);

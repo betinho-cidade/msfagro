@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 
 class Efetivo extends Model
@@ -88,7 +89,6 @@ class Efetivo extends Model
         return $tipo_efetivo;
     }
 
-
     public function getClassificacaoMachoAttribute(){
 
         $classificacao = '...';
@@ -118,7 +118,6 @@ class Efetivo extends Model
 
         return $classificacao;
     }
-
 
     public function getClassificacaoFemeaAttribute(){
 
@@ -150,7 +149,6 @@ class Efetivo extends Model
         return $classificacao;
     }
 
-
     public function getTextoEfetivoAttribute(){
 
         if($this->tipo == 'VD'){
@@ -166,18 +164,15 @@ class Efetivo extends Model
         return $tipo_efetivo . $texto_macho . $texto_femea;
     }
 
-
     public function getTotalBovinosAttribute()
     {
         return number_format($this->qtd_macho + $this->qtd_femea, 0, ',', '.');
     }
 
-
     public function getDataProgramadaOrdenacaoAttribute()
     {
         return ($this->data_programada) ? date('YmdHis', strtotime($this->data_programada)) : '';
     }
-
 
     public function getDataProgramadaFormatadaAttribute()
     {
@@ -189,7 +184,6 @@ class Efetivo extends Model
         return ($this->data_programada) ? date('Y-m-d', strtotime($this->data_programada)) : '';
     }
 
-
     public function getMesReferenciaListagemAttribute (){
 
         $mes_referencia =  Carbon::parse($this->data_programada); 
@@ -197,6 +191,24 @@ class Efetivo extends Model
         return Str::padLeft($mes_referencia->month, 2, '0') . '-' . $mes_referencia->year;
 
     }
+
+    public function getLinkGtaAttribute()
+    {
+        return ($this->path_gta) ? route('efetivo.download', ['efetivo' => $this->id, 'tipo_documento' => 'GT']) : '';
+    }
+
+    public function getLinkGtaGuestAttribute()
+    {
+        if($this->path_gta){
+
+            $link = route('download', ['gta' => Crypt::encryptString($this->id)]);
+
+            return $link;            
+
+        } else {
+            return ' ';
+        }
+    }    
 
 
 }

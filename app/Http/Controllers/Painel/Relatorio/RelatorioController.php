@@ -121,7 +121,6 @@ class RelatorioController extends Controller
                             ->first();
         }
 
-
         if($request->has('data_inicio') ||
             $request->has('data_fim') ||
             $request->has('item_texto') ||
@@ -146,10 +145,29 @@ class RelatorioController extends Controller
                 'segmento' => ($request->segmento) ? $request->segmento : '',
                 'empresa' => ($request->empresa) ? $request->empresa : '',
             ];
-        } else{
-            $search = [];
+        } else {
+            if($request->has('search')){
+
+                $params = json_decode($request->search);
+
+                $search = [
+                    'tipo_cliente' => $user->cliente_user->cliente->tipo,
+                    'data_inicio' => ($params->data_inicio) ? $params->data_inicio : '',
+                    'data_fim' => ($params->data_fim) ? $params->data_fim : '',
+                    'item_texto' => ($params->item_texto) ? $params->item_texto : '',
+                    'nota' => ($params->nota) ? $params->nota : '',
+                    'movimentacao' => ($params->movimentacao) ? $params->movimentacao : '',
+                    'tipo_movimentacao' => ($params->tipo_movimentacao) ? $params->tipo_movimentacao : '',
+                    'produtor' => ($params->produtor) ? $params->produtor : '',
+                    'forma_pagamento' => ($params->forma_pagamento) ? $params->forma_pagamento : '',
+                    'segmento' => ($params->segmento) ? $params->segmento : '',
+                    'empresa' => ($params->empresa) ? $params->empresa : '',
+                ];
+            }else{
+                $search = [];
+            }
         }
-        
+
         $dados = Movimentacao::where('movimentacaos.cliente_id', $user->cliente_user->cliente->id)
                                         ->where(function($query) use ($search){
                                             if($search['tipo_cliente'] == 'AG'){
@@ -157,13 +175,6 @@ class RelatorioController extends Controller
                                             } else if($search['segmento']){
                                                 $query->where('segmento', $search['segmento']);
                                             }
-                                            // if($search['movimentacao']){
-                                            //     if($search['movimentacao'] == 'F'){
-                                            //         $query->whereNull('data_pagamento');
-                                            //     }else if($search['movimentacao'] == 'E'){
-                                            //         $query->whereNotNull('data_pagamento');
-                                            //     }
-                                            // }                                           
 
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
@@ -339,10 +350,8 @@ class RelatorioController extends Controller
                                             ->orderBy('tipo_conta', 'asc')
                                             ->get();
 
-        
         return view('painel.relatorio.index', compact('user', 'movimentacaos', 'empresas', 'produtors', 'forma_pagamentos', 'search'));
     }
-
 
     public function excell(Request $request)
     {
@@ -370,34 +379,6 @@ class RelatorioController extends Controller
 
         return Excel::download(new MovimentacaosExport($request->search), 'movimentos.xlsx');
     }    
-
-
-    // public function pdf(Request $request)
-    // {
-    //     if(Gate::denies('view_relatorio')){
-    //         abort('403', 'Página não disponível');
-    //         //return redirect()->back();
-    //     }
-
-    //     $user = Auth()->User();
-
-    //     if(!$user->cliente_user){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-
-    //         return redirect()->route('painel');
-    //     }
-
-    //     if(!$request->search){
-    //         $request->session()->flash('message.level', 'warning');
-    //         $request->session()->flash('message.content', 'Necessário realizar uma busca inicialmente.');
-
-    //         return redirect()->route('relatorio.index');
-    //     }
-
-    //     return Excel::download(new MovimentacaosPdfExport($request->search), 'movimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
-    // }        
-
 
     public function pdf(Request $request)
     {
@@ -432,14 +413,6 @@ class RelatorioController extends Controller
                                                 $query->where('segmento', $search['segmento']);
                                             }    
 
-                                            // if($search['movimentacao']){
-                                            //     if($search['movimentacao'] == 'F'){
-                                            //         $query->whereNull('data_pagamento');
-                                            //     }else if($search['movimentacao'] == 'E'){
-                                            //         $query->whereNotNull('data_pagamento');
-                                            //     }
-                                            // }                                            
-
                                             if($search['tipo_movimentacao']){
                                                 $query->where('tipo', $search['tipo_movimentacao']);
                                             }
@@ -464,52 +437,6 @@ class RelatorioController extends Controller
                                                 $query->where('nota', 'like', '%' . $search['nota'] . '%');
                                             }        
                                             
-                                            // if($search['data_inicio'] && $search['data_fim']){
-                                            //     if($search['movimentacao']){
-                                            //         if($search['movimentacao'] == 'F'){
-                                            //             $query->where('data_programada', '>=', $search['data_inicio']);
-                                            //             $query->where('data_programada', '<=', $search['data_fim']);
-                                            //             $query->orderBy('data_programada', 'desc');
-                                            //         }else if($search['movimentacao'] == 'E'){
-                                            //             $query->where('data_pagamento', '>=', $search['data_inicio']);
-                                            //             $query->where('data_pagamento', '<=', $search['data_fim']);
-                                            //             $query->orderBy('data_pagamento', 'desc');
-                                            //         }
-                                            //     } else {
-                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
-                                            //         $query->where('data_programada', '<=', $search['data_fim']);
-                                            //         $query->orderBy('data_programada', 'desc');
-                                            //     }        
-                                            // } elseif($search['data_inicio']){
-                                            //     if($search['movimentacao']){
-                                            //         if($search['movimentacao'] == 'F'){
-                                            //             $query->where('data_programada', '>=', $search['data_inicio']);
-                                            //             $query->orderBy('data_programada', 'desc');
-                                            //         }else if($search['movimentacao'] == 'E'){
-                                            //             $query->where('data_pagamento', '>=', $search['data_inicio']);
-                                            //             $query->orderBy('data_pagamento', 'desc');
-                                            //         }
-                                            //     } else{
-                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
-                                            //         $query->orderBy('data_programada', 'desc');
-                                            //     }   
-                                            // } elseif($search['data_fim']){
-                                            //     if($search['movimentacao']){
-                                            //         if($search['movimentacao'] == 'F'){
-                                            //             $query->where('data_programada', '<=', $search['data_fim']);
-                                            //             $query->orderBy('data_programada', 'desc');
-                                            //         }else if($search['movimentacao'] == 'E'){
-                                            //             $query->where('data_pagamento', '<=', $search['data_fim']);
-                                            //             $query->orderBy('data_pagamento', 'desc');
-                                            //         }
-                                            //     } else{
-                                            //         $query->where('data_programada', '>=', $search['data_inicio']);
-                                            //         $query->orderBy('data_programada', 'desc');
-                                            //     }     
-                                            // } else {
-                                            //     $query->orderBy('data_programada', 'desc');
-                                            // }
-
                                             if($search['data_inicio'] && $search['data_fim']){
                                                 if($search['movimentacao']){
                                                     if($search['movimentacao'] == 'F'){
@@ -563,10 +490,8 @@ class RelatorioController extends Controller
                                                     $query->whereNotNull('data_pagamento');
                                                 }                                                
                                             }                                            
-                                        });
-                                        //->orderBy('tipo', 'desc') // primeiro por Despesa, depois por Receita
-                                        //->orderBy('movimentacaos.data_programada', 'asc')
-                                        //->get();         
+                                        })
+                                        ->orderBy('tipo', 'desc'); // primeiro por Despesa, depois por Receita
                                         
         if($search['data_inicio'] && $search['data_fim']){
             if($search['movimentacao']){
@@ -721,5 +646,367 @@ class RelatorioController extends Controller
 
         return view('painel.relatorio.geomaps', compact('user', 'fazendas'));        
     }
+
+    // REPLICADA na controller EfetivoController (destroy) - App\Http\Controllers\Painel\Lancamento\Efetivo
+    public function destroy_efetivo(Efetivo $efetivo, Request $request)
+    {
+        if(Gate::denies('delete_efetivo')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $search = $request->search_efetivo;
+
+        if(!$user->cliente_user){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente_user->cliente->tipo == 'AG'){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Lançamentos permitidos somente para o perfil Pecuarista.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente_user->cliente->id != $efetivo->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'O Efetivo Pecuário não pertence ao cliente informado.');
+
+            return redirect()->route('relatorio.search', ['search' => $search]);
+        }
+
+        $message = '';
+        $efetivo_id = $efetivo->id;
+        $efetivo_tipo_texto = $efetivo->tipo_efetivo_texto;
+
+        $ano_mes = Carbon::createFromFormat('Y-m-d', $efetivo->data_programada_ajustada);
+        $mes_referencia = Str::padLeft($ano_mes->month, 2, '0') . '-' . $ano_mes->year;
+
+        try {
+            DB::beginTransaction();
+
+            $retorno_estoque = $this->atualizaEstoqueEfetivo($efetivo, true);
+
+            if($retorno_estoque && $retorno_estoque != 'SALDO_OK') {
+                $request->session()->flash('message.level', 'danger');
+                $request->session()->flash('message.content', $retorno_estoque);
+
+                DB::rollBack();
+
+                return redirect()->route('relatorio.search', ['search' => $search]);
+            }
+
+            $efetivo_arquivos = [];
+            $efetivo_arquivos[0]['cliente_id'] = $efetivo->cliente_id;
+            $efetivo_arquivos[0]['efetivo_id'] = $efetivo->id;
+            $efetivo_arquivos[0]['movimentacao_id'] = ($efetivo->movimentacao) ? $efetivo->movimentacao->id : 0;
+            $efetivo_arquivos[0]['path_gta'] = $efetivo->path_gta;
+
+            if($efetivo->movimentacao){
+
+                if($efetivo->movimentacao->tipo == 'D') {
+                    $efetivo->movimentacao->delete_notification();
+                }            
+
+                $efetivo_arquivos[0]['path_nota'] = $efetivo->movimentacao->path_nota;
+                $efetivo_arquivos[0]['path_comprovante'] = $efetivo->movimentacao->path_comprovante;
+                $efetivo_arquivos[0]['path_anexo'] = $efetivo->movimentacao->path_anexo;
+                $efetivo->movimentacao->delete();
+            }
+
+            $efetivo->delete();
+
+            $this->destroy_files_efetivo($efetivo_arquivos);
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
+                $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
+
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'O Efetivo Pecuário ('.$efetivo_tipo_texto.') com ID <span style="color: #af1e1e;">'. $efetivo_id .'</span> foi excluído com sucesso');
+        }
+
+        return redirect()->route('relatorio.search', ['search' => $search]);
+    }    
+
+    // REPLICADA na controller EfetivoController (atualizaEstoque) - App\Http\Controllers\Painel\Lancamento\Efetivo
+    protected function atualizaEstoqueEfetivo(Efetivo $efetivo, bool $desfazerefetivo){
+
+        $message = 'SALDO_OK';
+
+        if($desfazerefetivo){ //Desfaz o Lançamento de quantidades de bovinos originalmente realizado.
+            switch ($efetivo->tipo){
+                case 'CP' : {
+
+                    $destino = Fazenda::where('id', $efetivo->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho - $efetivo->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea - $efetivo->qtd_femea;
+
+                    if($destino->qtd_macho < 0){
+                        $message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($destino->qtd_macho + $efetivo->qtd_macho).') - movimentação ('.$efetivo->qtd_macho.')';
+                        return $message;
+                    }
+
+                    if($destino->qtd_femea < 0){
+                        $message = 'A quantidade de FÊMEAS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($destino->qtd_femea + $efetivo->qtd_femea).') - movimentação ('.$efetivo->qtd_femea.')';
+                        return $message;
+                    }
+
+                    $destino->save();
+                    break;
+                }
+
+                case 'VD' : {
+
+                    $origem = Fazenda::where('id', $efetivo->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho + $efetivo->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea + $efetivo->qtd_femea;
+                    $origem->save();
+                    break;
+                }
+
+                case 'EG' : {
+
+                    $origem = Fazenda::where('id', $efetivo->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho + $efetivo->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea + $efetivo->qtd_femea;
+                    $origem->save();
+
+                    $destino = Fazenda::where('id', $efetivo->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho - $efetivo->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea - $efetivo->qtd_femea;
+
+                    if($destino->qtd_macho < 0){
+                        $message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($destino->qtd_macho + $efetivo->qtd_macho).') - movimentação ('.$efetivo->qtd_macho.')';
+                        return $message;
+                    }
+
+                    if($destino->qtd_femea < 0){
+                        $message = 'A quantidade de FÊMEAS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($destino->qtd_femea + $efetivo->qtd_femea).') - movimentação ('.$efetivo->qtd_femea.')';
+                        return $message;
+                    }
+
+                    $destino->save();
+                    break;
+                }
+            }
+
+        } else{
+            switch ($efetivo->tipo){
+                case 'CP' : {
+
+                    $destino = Fazenda::where('id', $efetivo->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho + $efetivo->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea + $efetivo->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+
+                case 'VD' : {
+
+                    $origem = Fazenda::where('id', $efetivo->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho - $efetivo->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea - $efetivo->qtd_femea;
+
+                    if($origem->qtd_macho < 0){
+                        $message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($origem->qtd_macho + $efetivo->qtd_macho).') - movimentação ('.$efetivo->qtd_macho.')';
+                        return $message;
+                    }
+
+                    if($origem->qtd_femea < 0){
+                        $message = 'A quantidade de FÊMEAS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($origem->qtd_femea + $efetivo->qtd_femea).') - movimentação ('.$efetivo->qtd_femea.')';
+                        return $message;
+                    }
+
+                    $origem->save();
+                    break;
+                }
+
+                case 'EG' : {
+
+                    $origem = Fazenda::where('id', $efetivo->origem_id)->first();
+                    $origem->qtd_macho = $origem->qtd_macho - $efetivo->qtd_macho;
+                    $origem->qtd_femea = $origem->qtd_femea - $efetivo->qtd_femea;
+
+                    if($origem->qtd_macho < 0){
+                        $message = 'A quantidade de MACHOS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($origem->qtd_macho + $efetivo->qtd_macho).') - movimentação ('.$efetivo->qtd_macho.')';
+                        return $message;
+                    }
+
+                    if($origem->qtd_femea < 0){
+                        $message = 'A quantidade de FÊMEAS na Fazenda é inferior a que está sendo movimentada. Fazenda ('.($origem->qtd_femea + $efetivo->qtd_femea).') - movimentação ('.$efetivo->qtd_femea.')';
+                        return $message;
+                    }
+
+                    $origem->save();
+
+                    $destino = Fazenda::where('id', $efetivo->destino_id)->first();
+                    $destino->qtd_macho = $destino->qtd_macho + $efetivo->qtd_macho;
+                    $destino->qtd_femea = $destino->qtd_femea + $efetivo->qtd_femea;
+                    $destino->save();
+                    break;
+                }
+            }
+        }
+
+        return $message;
+    }
+
+    // REPLICADA na controller EfetivoController (destroy_files) - App\Http\Controllers\Painel\Lancamento\Efetivo
+    protected function destroy_files_efetivo(Array $efetivo_arquivos){
+
+        foreach($efetivo_arquivos as $efetivo){
+
+            $path_gta = 'documentos/'. $efetivo['cliente_id'] . '/gtas/';
+            if($efetivo['path_gta']){
+                if(Storage::exists($path_gta)) {
+                    Storage::delete($path_gta . $efetivo['path_gta']);
+                }
+            }
+
+            $path_nota = 'documentos/'. $efetivo['cliente_id'] . '/notas/';
+            if($efetivo['movimentacao_id'] != 0 && $efetivo['path_nota']){
+                if(Storage::exists($path_nota)) {
+                    Storage::delete($path_nota . $efetivo['path_nota']);
+                }
+            }
+
+            $path_comprovante = 'documentos/'. $efetivo['cliente_id'] . '/comprovantes/';
+            if($efetivo['movimentacao_id'] != 0 && $efetivo['path_comprovante']){
+                if(Storage::exists($path_comprovante)) {
+                    Storage::delete($path_comprovante . $efetivo['path_comprovante']);
+                }
+            }
+
+            $path_anexo = 'documentos/'. $efetivo['cliente_id'] . '/anexos/';
+            if($efetivo['movimentacao_id'] != 0 && $efetivo['path_anexo']){
+                if(Storage::exists($path_anexo)) {
+                    Storage::delete($path_anexo . $efetivo['path_anexo']);
+                }
+            }            
+
+        }
+    }
+
+    // REPLICADA na controller MovimentacaoController (destroy) - App\Http\Controllers\Painel\Lancamento\Movimentacao
+    public function destroy_movimentacao(Movimentacao $movimentacao, Request $request)
+    {
+        if(Gate::denies('delete_movimentacao')){
+            abort('403', 'Página não disponível');
+        }
+
+        $user = Auth()->User();
+
+        $search = $request->search_movimentacao;
+        
+        if(!$user->cliente_user){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if($user->cliente_user->cliente->id != $movimentacao->cliente_id){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'A Movimentação Fiscal não pertence ao cliente informado.');
+
+            return redirect()->route('relatorio.search', ['search' => $search]);
+        }
+
+        $message = '';
+        $movimentacao_id = $movimentacao->id;
+        $movimentacao_tipo_texto = $movimentacao->tipo_movimentacao_texto;
+
+        $ano_mes = Carbon::createFromFormat('Y-m-d', $movimentacao->data_programada_ajustada);
+        $mes_referencia = Str::padLeft($ano_mes->month, 2, '0') . '-' . $ano_mes->year;
+
+        try {
+            DB::beginTransaction();
+
+            $movimentacao_arquivos = [];
+            $movimentacao_arquivos[0]['cliente_id'] = $movimentacao->cliente_id;
+            $movimentacao_arquivos[0]['movimentacao_id'] = $movimentacao->id;
+            $movimentacao_arquivos[0]['path_nota'] = $movimentacao->path_nota;
+            $movimentacao_arquivos[0]['path_comprovante'] = $movimentacao->path_comprovante;
+            $movimentacao_arquivos[0]['path_anexo'] = $movimentacao->path_anexo;
+
+            if($movimentacao->tipo == 'D') {
+                $movimentacao->delete_notification();
+            }            
+            
+            $movimentacao->delete();
+            
+            $this->destroy_files_movimentacao($movimentacao_arquivos);
+
+            DB::commit();
+
+        } catch (Exception $ex){
+
+            DB::rollBack();
+
+            if(strpos($ex->getMessage(), 'Integrity constraint violation') !== false){
+                $message = "Não foi possível excluir o registro, pois existem referências ao mesmo em outros processos.";
+            } else{
+                $message = "Erro desconhecido, por gentileza, entre em contato com o administrador. ".$ex->getMessage();
+            }
+
+        }
+
+        if ($message && $message !='') {
+            $request->session()->flash('message.level', 'danger');
+            $request->session()->flash('message.content', $message);
+        } else {
+            $request->session()->flash('message.level', 'success');
+            $request->session()->flash('message.content', 'A Movimentação Fiscal ('.$movimentacao_tipo_texto.') com ID <span style="color: #af1e1e;">'. $movimentacao_id .'</span> foi excluída com sucesso');
+        }
+
+        return redirect()->route('relatorio.search', ['search' => $search]);
+    }
+
+    // REPLICADA na controller MovimentacaoController (destroy_files) - App\Http\Controllers\Painel\Lancamento\Movimentacao
+    protected function destroy_files_movimentacao(Array $movimentacao_arquivos){
+
+        foreach($movimentacao_arquivos as $movimentacao){
+
+            $path_nota = 'documentos/'. $movimentacao['cliente_id'] . '/notas/';
+            if($movimentacao['movimentacao_id'] != 0 && $movimentacao['path_nota']){
+                if(Storage::exists($path_nota)) {
+                    Storage::delete($path_nota . $movimentacao['path_nota']);
+                }
+            }
+
+            $path_comprovante = 'documentos/'. $movimentacao['cliente_id'] . '/comprovantes/';
+            if($movimentacao['movimentacao_id'] != 0 && $movimentacao['path_comprovante']){
+                if(Storage::exists($path_comprovante)) {
+                    Storage::delete($path_comprovante . $movimentacao['path_comprovante']);
+                }
+            }
+
+            $path_anexo = 'documentos/'. $movimentacao['cliente_id'] . '/anexos/';
+            if($movimentacao['movimentacao_id'] != 0 && $movimentacao['path_anexo']){
+                if(Storage::exists($path_anexo)) {
+                    Storage::delete($path_anexo . $movimentacao['path_anexo']);
+                }
+            }            
+        }
+    }    
 
 }

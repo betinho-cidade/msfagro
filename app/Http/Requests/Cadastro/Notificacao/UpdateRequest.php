@@ -18,7 +18,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'nome' => 'required|max:300',
-            'resumo' => 'required|max:500',
+            'resumo' => 'required',
             'data_inicio' => 'required|date',
             'hora_inicio' => 'required|date_format:H:i',
             'data_fim' => 'required|date|after_or_equal:data_inicio',
@@ -35,7 +35,6 @@ class UpdateRequest extends FormRequest
             'nome.required' => 'O nome é requerido',
             'nome.max' => 'O tamanho permitido para o nome é de 300 caracteres',
             'resumo.required' => 'O resumo da Notificação é requerido',
-            'resumo.max' => 'O tamanho permitido para o resumo é de 500 caracteres',
             'todos.required' => 'A informação se a notificação será para todos os clientes é requerida',
             'situacao.required' => 'A situação é requerida',
             'data_inicio.required' => 'A data de início da Notificação é requerida',

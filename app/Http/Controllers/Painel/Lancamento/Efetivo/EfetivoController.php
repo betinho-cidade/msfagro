@@ -617,6 +617,7 @@ class EfetivoController extends Controller
         return redirect()->route('efetivo.index', ['mes_referencia' => $mes_referencia]);
     }
 
+    // REPLICADA na controller RelatorioController (destroy_efetivo) - App\Http\Controllers\Painel\Relatorio
     public function destroy(Efetivo $efetivo, Request $request)
     {
         if(Gate::denies('delete_efetivo')){
@@ -858,6 +859,7 @@ class EfetivoController extends Controller
         return redirect()->route('efetivo.index', compact('mes_referencia'));
     }
 
+    // REPLICADA na controller RelatorioController (destroy_files_efetivo) - App\Http\Controllers\Painel\Relatorio
     protected function destroy_files(Array $efetivo_arquivos){
 
         foreach($efetivo_arquivos as $efetivo){
@@ -970,6 +972,7 @@ class EfetivoController extends Controller
         return Storage::download($path_documento);
     }
 
+    // REPLICADA na controller RelatorioController (atualizaEstoque_efetivo) - App\Http\Controllers\Painel\Relatorio
     protected function atualizaEstoque(Efetivo $efetivo, bool $desfazerefetivo){
 
         $message = 'SALDO_OK';

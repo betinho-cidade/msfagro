@@ -42,10 +42,15 @@
                             <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
                         </div>                          
 
-                        <div class="col-md-4"  style="padding-right: 0;">
+                        <div class="col-md-2"  style="padding-right: 0;">
                             <label for="item_texto" style="margin: 0 0 0 2px;">Item Fiscal</label>
                             <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
                         </div>  
+
+                        <div class="col-md-2"  style="padding-right: 0;">
+                            <label for="nota" style="margin: 0 0 0 2px;">Nota Fiscal</label>
+                            <input type="text" class="form-control" id="nota" name="nota" value="{{$search['nota'] ?? ''}}" placeholder="Nota Fiscal">
+                        </div>                                        
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
@@ -61,14 +66,45 @@
                     <div class="row" style="margin-top: 10px;width: 100%;">
 
                         <div class="col-md-4" style="padding-right: 0;">
-                            <select id="cliente" name="cliente" class="form-control select2">
+                            <img src="{{asset('images/loading.gif')}}" id="img-loading-cliente" style="display:none;max-width: 17%; margin-left: 26px;">
+                            <select id="cliente" name="cliente" class="form-control select2 dynamic_cliente">
                                 <option value="">Selecione: Cliente</option>
                                 @foreach($clientes as $cliente)
                                     <option value="{{ $cliente->id }}" {{($search && $search['cliente'] == $cliente->id) ? 'selected' : '' }}>{{ $cliente->nome_cliente }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div>                    
 
+                        <div class="col-md-4" style="padding-right: 0;">
+                            <select id="produtor" name="produtor" class="form-control select2">
+                                <option value="">Selecione: Produtor</option>
+                                @foreach($produtors as $produtor)
+                                    <option value="{{ $produtor->id }}" {{($search && $search['produtor'] == $produtor->id) ? 'selected' : '' }}>{{ $produtor->nome_produtor }}</option>
+                                @endforeach
+                            </select>
+                        </div>       
+                        
+
+                        <div class="col-md-4"  style="padding-right: 0;">
+                            <select id="forma_pagamento" name="forma_pagamento" class="form-control select2">
+                                <option value="">Selecione: Forma Pagamento</option>
+                                @foreach($forma_pagamentos as $forma_pagamento)
+                                    <option value="{{ $forma_pagamento->id }}" {{($search && $search['forma_pagamento'] == $forma_pagamento->id) ? 'selected' : '' }}>{{ $forma_pagamento->forma }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>                        
+
+                    <div class="row" style="margin-top: 10px;width: 100%;">
+
+                        <div class="col-md-4"  style="padding-right: 0;">
+                            <select id="empresa" name="empresa" class="form-control select2">
+                                <option value="">Selecione: Empresa</option>
+                                @foreach($empresas as $empresa)
+                                    <option value="{{ $empresa->id }}" {{($search && $search['empresa'] == $empresa->id) ? 'selected' : '' }}>{{ $empresa->nome_empresa }}</option>
+                                @endforeach
+                            </select>
+                        </div>           
 
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="tipo_movimentacao" name="tipo_movimentacao" class="form-control select2">
@@ -76,14 +112,16 @@
                                 <option value="R" {{($search && $search['tipo_movimentacao'] == 'R') ? 'selected' : '' }}>Receita</option>
                                 <option value="D" {{($search && $search['tipo_movimentacao'] == 'D') ? 'selected' : '' }}>Despesa</option>
                             </select>
-                        </div>
+                        </div>                          
+
                         <div class="col-md-4"  style="padding-right: 0;">
                             <select id="segmento" name="segmento" class="form-control select2">
                                 <option value="">Selecione: Segmento</option>
                                 <option value="MG" {{($search && $search['segmento'] == 'MG') ? 'selected' : '' }}>Movimentação Bovina</option>
                                 <option value="MF" {{($search && $search['segmento'] == 'MF') ? 'selected' : '' }}>Movimentação Fiscal</option>
                             </select>
-                        </div>                        
+                        </div>     
+                        
                     </div>
 
                     <div class="row" style="margin-top: 10px;width: 100%;">
@@ -228,6 +266,61 @@
 		$(document).ready(function(){
             $(".valor_mask").inputmask("R$ (.999){+|1},99",{numericInput:true, placeholder:"0"});
             $('.select2').select2();
+
+            $('.dynamic_cliente').change(function(){
+
+                objectListForma = $('#forma_pagamento');
+                objectListEmpresa = $('#empresa');
+                objectListProdutor = $('#produtor');
+
+                objectListForma.find('option').not(':first').remove();
+                objectListEmpresa.find('option').not(':first').remove();
+                objectListProdutor.find('option').not(':first').remove();
+
+                if ($(this).val() != ''){
+                    document.getElementById("img-loading-cliente").style.display = '';
+
+                    var cliente = $('#cliente').val();
+                    var _token = $('input[name="_token"]').val();
+
+                    $.ajax({
+                        url: "{{route('relatorio_gestao.refreshCliente')}}",
+                        method: "POST",
+                        data: {_token:_token, cliente:cliente},
+                        success:function(result){
+
+                            var len = 0;
+                            if (result.mensagem != null) {
+                                len = result.mensagem.length;
+                            }   
+
+                            console.log(len);
+                            console.log(result.mensagem);
+                            
+                            if (len>0) {     
+                                for(var i = 0; i<len; i++) {
+                                    var id = result.mensagem[i].id;
+                                    var nome = result.mensagem[i].nome;
+                                    var select = result.mensagem[i].select;
+                                    var option = "<option value='"+id+"'>"+nome+"</option>";
+                                    if(select == 'forma_pagamento'){
+                                        objectListForma.append(option);
+                                    }else if(select == 'empresa'){
+                                        objectListEmpresa.append(option);
+                                    }else if(select == 'produtor'){
+                                        objectListProdutor.append(option);
+                                    }                                                                        
+                                }
+
+                                document.getElementById("img-loading-cliente").style.display = 'none';
+                            }
+                        },
+                        error:function(erro){
+                            document.getElementById("img-loading-cliente").style.display = 'none';
+                        }
+                    })
+                }
+            });            
 		});
 	</script>
 
@@ -237,13 +330,12 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
+                "deferRender": true,
+                "columnDefs": [
+                    { targets: [7,8,9], orderable: false },
+                    { targets: [0], visible: false },
+                ],                
                 "order": [[ 0, "asc" ]],
-                columnDefs: [
-                    {
-                        targets: [ 0 ],
-                        visible: false,
-                    },
-                ],
             });
         </script>
     @endif

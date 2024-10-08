@@ -214,7 +214,7 @@
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {'packages':['corechart'],'language': 'pt'});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
@@ -226,9 +226,10 @@
             var options = {
                 title: 'Distribuição Lucro x Produtor',
                 pieHole: 0.8,
-                chartArea:{left:20,top:20,width:'110%',height:'100%'},
+                //chartArea:{left:20,top:20,width:'100%',height:'100%'},
                 is3D:true,
                 fontSize:12,
+                sliceVisibilityThreshold: .02,
                 //pieSliceText: 'value',
                 legend:{position: 'labeled',alignment:'center', textStyle:{fontSize:10,top:5}},
             };
@@ -268,13 +269,12 @@
                 language: {
                     url: '{{asset('nazox/assets/localisation/pt_br.json')}}'
                 },
-                "order": [[ 0, "desc" ]],
-                columnDefs: [
-                    {
-                        targets: [ 0 ],
-                        visible: false,
-                    },
-                ],
+                "deferRender": true,
+                "columnDefs": [
+                    { targets: [4,5], orderable: false },
+                    { targets: [0], visible: false },
+                ],                
+                "order": [[ 0, "asc" ]],
             });
         </script>
     @endif
