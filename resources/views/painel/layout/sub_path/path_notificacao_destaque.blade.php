@@ -13,6 +13,7 @@
                                     ->first();
 @endphp
 
+@can('view_notificacao')
 @if($notificacao_destaque)
     <a href="{{ route('painel.notificacao') }}" style=" color: #252b3b !important;">
         <div style="margin-bottom: -6px; background: #252b3b38; padding: 0 20px 0 15px; margin-top: 8px; color: #252b3b; border-radius: 5px; font-size: 13px;">
@@ -21,3 +22,4 @@
         </div>
     </a>
 @endif
+@endcan
