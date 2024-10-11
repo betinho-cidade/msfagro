@@ -13,7 +13,7 @@
                         ->get();
 @endphp
 
-@can('view_notificacao')
+@can('cliente_notificacao')
 @if($notificacaos && $notificacaos->count() > 0)
 <div class="dropdown d-inline-block">
      <button type="button" class="btn header-item noti-icon waves-effect"
