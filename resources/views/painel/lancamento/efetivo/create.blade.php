@@ -218,7 +218,6 @@
                 </div>
 
                 <br>
-
                 <div class="bg-soft-primary p-3 rounded" style="margin-bottom:10px;">
                     <h5 class="text-primary font-size-14" style="margin-bottom: 0px;">Dados do Pagamento para Movimentação Fiscal</h5>
                 </div>
@@ -260,7 +259,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor</label>
-                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>    
+                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
@@ -310,7 +309,7 @@
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
-                </div>                
+                </div>
 
                 <br>
             <!-- Dados Pessoais -- FIM -->
@@ -359,6 +358,9 @@
                 let path_nota = document.getElementById('path_nota');
                 let path_nota_lbl = document.getElementById('path_nota_lbl');
                 let data_pagamento = document.getElementById('data_pagamento');
+                let path_anexo = document.getElementById('path_anexo');
+                let path_anexo_lbl = document.getElementById('path_anexo_lbl');
+
 
                 switch(tipo){
                     case 'CP':
@@ -381,6 +383,8 @@
                         path_nota.disabled = false;
                         path_comprovante_lbl.style.backgroundColor = 'white';
                         path_comprovante.disabled = false;
+                        path_anexo_lbl.style.backgroundColor = 'white';
+                        path_anexo.disabled = false;
                         data_pagamento.disabled = false;
                         data_pagamento.style.backgroundColor = 'white';
                         break;
@@ -405,6 +409,8 @@
                         path_nota.disabled = false;
                         path_comprovante_lbl.style.backgroundColor = 'white';
                         path_comprovante.disabled = false;
+                        path_anexo_lbl.style.backgroundColor = 'white';
+                        path_anexo.disabled = false;
                         data_pagamento.disabled = false;
                         data_pagamento.style.backgroundColor = 'white';
                         break;
@@ -449,6 +455,15 @@
                         path_comprovante.style.color = '#D3D3D3';
                         data_pagamento.disabled = true;
                         data_pagamento.style.backgroundColor = '#D3D3D3';
+
+                        path_anexo_lbl.innerHTML = 'Selecionar Anexo';
+                        path_anexo_lbl.style.backgroundColor = '#D3D3D3';
+
+                        path_anexo.value = '';
+                        path_anexo.disabled = true;
+                        path_anexo.style.color = '#D3D3D3';
+                        path_anexo.disabled = true;
+                        path_anexo.style.backgroundColor = '#D3D3D3';
                         break;
                 }
 
@@ -591,7 +606,7 @@
                 style: 'currency',
                 currency
             }).format(valor)
-        }   
+        }
 
     </script>
 

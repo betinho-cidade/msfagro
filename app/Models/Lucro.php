@@ -22,7 +22,7 @@ class Lucro extends Model
     }
 
     public function forma_pagamento()
-    { 
+    {
         return $this->belongsTo('App\Models\FormaPagamento');
     }
 
@@ -51,6 +51,19 @@ class Lucro extends Model
     public function getLinkComprovanteAttribute()
     {
         return ($this->path_comprovante) ? route('lucro.download', ['lucro' => $this->id]) : '';
+    }
+
+    public function getLinkComprovanteGuestAttribute()
+    {
+        if($this->path_comprovante){
+
+            $link = route('download_lucro', ['comprovante' => Crypt::encryptString($this->id)]);
+
+            return $link;
+
+        } else {
+            return ' ';
+        }
     }
 }
 

@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Cadastro\Lucro\CreateRequest;
 use App\Http\Requests\Cadastro\Lucro\UpdateRequest;
 use Carbon\Carbon;
-
+use Excel;
+use App\Exports\LucrosExport;
+use PDF;
 
 
 class LucroController extends Controller
@@ -43,38 +45,37 @@ class LucroController extends Controller
             return redirect()->route('painel');
         }
 
-        $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
-                        ->orderBy('lucros.data_lancamento', 'desc')
-                        ->get();
-
+        // $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
+        //                 ->orderBy('lucros.data_lancamento', 'desc')
+        //                 ->get();
+        $lucros = [];
 
         $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
-                                            ->get();      
+                                            ->get();
 
         $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id')
-                                            ->get();   
-            
-        $search = []; 
+                                            ->get();
+
+        $search = [];
 
         $graphs = Lucro::where('lucros.cliente_id', $user->cliente_user->cliente->id)
                         ->join('produtors', 'lucros.produtor_id', '=', 'produtors.id')
                         ->where('produtors.cliente_id', $user->cliente_user->cliente->id)
                         ->selectRaw('produtors.nome as nome, sum(lucros.valor) as valor')
                         ->groupBy('produtors.nome')
-                        ->get();                                        
-        
+                        ->get();
+
         $lucro_produtors = [['Produtor', 'Valor']];
         foreach($graphs as $graph){
             array_push($lucro_produtors, [$graph->nome, intval($graph->valor)]);
-        }        
-        
+        }
+
         return view('painel.cadastro.lucro.index', compact('user', 'lucros', 'produtors', 'forma_pagamentos', 'search', 'lucro_produtors'));
     }
-
 
     public function create(Request $request)
     {
@@ -98,7 +99,7 @@ class LucroController extends Controller
 
         return view('painel.cadastro.lucro.create', compact('user', 'produtors'));
     }
- 
+
     public function store(CreateRequest $request)
     {
         if(Gate::denies('create_lucro')){
@@ -186,13 +187,13 @@ class LucroController extends Controller
         $produtors = Produtor::where('status','A')
                             ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->orderBy('nome', 'asc')
-                            ->get();        
-        
+                            ->get();
+
         $forma_pagamentos = FormaPagamento::where('status','A')
                             ->where('cliente_id', $user->cliente_user->cliente->id)
                             ->where('produtor_id', $lucro->produtor_id)
-                            ->get();        
-        
+                            ->get();
+
 
         return view('painel.cadastro.lucro.show', compact('user', 'lucro', 'produtors', 'forma_pagamentos'));
     }
@@ -307,7 +308,7 @@ class LucroController extends Controller
                 if(Storage::exists($path_comprovante)) {
                     Storage::delete($path_comprovante . $lucro->path_comprovante);
                 }
-            }            
+            }
 
             $lucro->delete();
 
@@ -347,7 +348,7 @@ class LucroController extends Controller
         if(!$user->cliente_user){
             $request->session()->flash('message.level', 'warning');
             $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
-    
+
             return redirect()->route('painel');
         }
 
@@ -432,7 +433,7 @@ class LucroController extends Controller
         }
 
         return response()->json(['mensagem' => $mensagem]);
-    }    
+    }
 
     public function search(Request $request)
     {
@@ -489,7 +490,7 @@ class LucroController extends Controller
             ];
         } else{
             $search = [];
-        }      
+        }
 
         $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
                         ->where(function($query) use ($search){
@@ -504,7 +505,7 @@ class LucroController extends Controller
 
                             if($search && $search['observacao']){
                                 $query->where('observacao', 'like', '%' . $search['observacao'] . '%');
-                            }                                            
+                            }
 
                             if($search && $search['data_inicio'] && $search['data_fim']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
@@ -521,14 +522,14 @@ class LucroController extends Controller
         $produtors = Produtor::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('nome', 'asc')
-                                            ->get();      
+                                            ->get();
 
         $forma_pagamentos = FormaPagamento::where('cliente_id', $user->cliente_user->cliente->id)
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id')
-                                            ->get();   
-            
-                                            
+                                            ->get();
+
+
         $graphs = Lucro::where('lucros.cliente_id', $user->cliente_user->cliente->id)
                         ->join('produtors', 'lucros.produtor_id', '=', 'produtors.id')
                         ->where('produtors.cliente_id', $user->cliente_user->cliente->id)
@@ -544,7 +545,7 @@ class LucroController extends Controller
 
                             if($search && $search['observacao']){
                                 $query->where('observacao', 'like', '%' . $search['observacao'] . '%');
-                            }                                            
+                            }
 
                             if($search && $search['data_inicio'] && $search['data_fim']){
                                 $query->where('data_lancamento', '>=', $search['data_inicio']);
@@ -557,14 +558,99 @@ class LucroController extends Controller
                         })
                         ->selectRaw('produtors.nome as nome, sum(lucros.valor) as valor')
                         ->groupBy('produtors.nome')
-                        ->get();                                        
-        
+                        ->get();
+
         $lucro_produtors = [['Produtor', 'Valor']];
         foreach($graphs as $graph){
             array_push($lucro_produtors, [$graph->nome, intval($graph->valor)]);
         }
 
         return view('painel.cadastro.lucro.index', compact('user', 'lucros', 'produtors', 'forma_pagamentos', 'search', 'lucro_produtors'));
+    }
+
+    public function excell(Request $request)
+    {
+        if(Gate::denies('view_lucro')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        if(!$user->cliente_user){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Não foi possível associar o cliente.');
+
+            return redirect()->route('painel');
+        }
+
+        if(!$request->search){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Necessário realizar uma busca inicialmente.');
+
+            return redirect()->route('lucro.index');
+        }
+
+        return Excel::download(new LucrosExport($request->search), 'lucros.xlsx');
+    }
+
+
+    public function pdf(Request $request)
+    {
+        if(Gate::denies('view_lucro')){
+            abort('403', 'Página não disponível');
+            //return redirect()->back();
+        }
+
+        $user = Auth()->User();
+
+        if(!$request->search){
+            $request->session()->flash('message.level', 'warning');
+            $request->session()->flash('message.content', 'Necessário realizar uma busca inicialmente.');
+
+            return redirect()->route('lucro.index');
+        }
+
+        $search = $request->search;
+
+        $lucros = Lucro::where('cliente_id', $user->cliente_user->cliente->id)
+                        ->where(function($query) use ($search){
+
+                            if($search && $search['produtor']){
+                                $query->where('produtor_id', $search['produtor']);
+                            }
+
+                            if($search && $search['forma_pagamento']){
+                                $query->where('forma_pagamento_id', $search['forma_pagamento']);
+                            }
+
+                            if($search && $search['observacao']){
+                                $query->where('observacao', 'like', '%' . $search['observacao'] . '%');
+                            }
+
+                            if($search && $search['data_inicio'] && $search['data_fim']){
+                                $query->where('data_lancamento', '>=', $search['data_inicio']);
+                                $query->where('data_lancamento', '<=', $search['data_fim']);
+                            } elseif($search && $search['data_inicio']){
+                                $query->where('data_lancamento', '>=', $search['data_inicio']);
+                            } elseif($search && $search['data_fim']){
+                                $query->where('data_lancamento', '<=', $search['data_fim']);
+                            }
+                        })
+                        ->orderBy('lucros.data_lancamento', 'desc')
+                        ->get();
+
+        $total = $lucros->sum('valor');
+
+        $resultado_final = [
+            'total' => $total,
+        ];
+
+        $download = '';
+        $dompdf = PDF::loadView('painel.cadastro.lucro.relatorio', compact('lucros','resultado_final','user'));
+        $dompdf->setPaper('a4', 'landscape');
+
+        return $dompdf->download('lucros.pdf');
     }
 
 }

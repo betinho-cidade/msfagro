@@ -64,7 +64,7 @@
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
-                    </div>                    
+                    </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-4">
                         <label for="data_lancamento">Data Lançamento</label>
@@ -91,23 +91,23 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="valor" class="{{($errors->first('valor') ? 'form-error-label' : '')}}">Valor (R$)</label>
-                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>                            
+                            <input type="text" class="form-control {{($errors->first('valor') ? 'form-error-field' : '')}}" id="valor" name="valor" value="{{old('valor')}}" placeholder="Valor" onInput="mascaraMoeda(event);" required>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
-                    </div>   
-                    
+                    </div>
+
                     <div class="col-md-4">
                         <label for="path_comprovante" class="{{($errors->first('path_comprovante') ? 'form-error-label' : '')}}">Comprovante Pagamento (imagem/pdf)</label>
                         <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input {{($errors->first('path_comprovante') ? 'form-error-field' : '')}}" id="path_comprovante" name="path_comprovante" accept="image/*, application/pdf">
+                            <input type="file" class="custom-file-input {{($errors->first('path_comprovante') ? 'form-error-field' : '')}}" id="path_comprovante" name="path_comprovante" accept="image/*, application/pdf" required>
                             <label id="path_comprovante_lbl" class="custom-file-label" for="path_comprovante">Selecionar Comprovante</label>
                             <div class="valid-feedback">ok!</div>
                             <div class="invalid-feedback">Inválido!</div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -152,7 +152,7 @@
 
             $('.dynamic_produtor').change(function(){
                 refreshList('FP');
-            });   
+            });
         });
 
         function refreshList(tipo) {
@@ -225,7 +225,7 @@
                 style: 'currency',
                 currency
             }).format(valor)
-        }   
+        }
 
     </script>
 

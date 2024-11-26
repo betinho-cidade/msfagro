@@ -1,7 +1,7 @@
 @extends('painel.layout.index')
 
 
-@section('content') 
+@section('content')
 
 <div class="row">
     <div class="col-12">
@@ -12,7 +12,7 @@
             <div class="page-title-right">
                 <a href="{{route("lucro.create")}}" class="btn btn-outline-secondary waves-effect" style="background: #4CAF50; border: #4CAF50; color: #fff !important; font-weight: 800;">Nova Distribuição de Lucro</a>
             </div>
-            @endcan                                      
+            @endcan
         </div>
     </div>
 </div>
@@ -45,18 +45,18 @@
                                     <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
                                         <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
                                         <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
-                                    </div>  
-                                
+                                    </div>
+
                                     <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
                                         <label for="data_fim" style="margin: 0 0 0 2px;">Data Final</label>
                                         <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
-                                    </div>                          
+                                    </div>
 
                                     <div class="col-md-4"  style="padding-right: 0;margin-bottom: 10px;">
                                         <label for="observacao" style="margin: 0 0 0 2px;">Observação</label>
                                         <input type="text" class="form-control" id="observacao" name="observacao" value="{{$search['observacao'] ?? ''}}" placeholder="Observação">
-                                    </div>  
-                                    
+                                    </div>
+
                                     <div class="col-md-4" style="padding-right: 0;margin-bottom: 10px;">
                                         <select id="produtor" name="produtor" class="form-control select2">
                                             <option value="">Selecione: Produtor</option>
@@ -93,11 +93,20 @@
                     </form>
                 </div>
 
-                <span style="float: right">
-                    <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
-                </span>
-                <h4 class="card-title">Listagem da Distribuição de Lucro registrada para o Cliente</h4>
-                <p class="card-title-desc"></p>
+                <div class="titulo-com-icones" style="margin-top: 25px;">
+                    <div class="exportar-titulo-e-icones" style="padding-bottom: 10px; margin-top: -10px;">
+                        <span style="float: right">
+                            <span style="display: block;">Exportar para</span>
+                        <a href="{{route('lucro.excell', compact('search'))}}" style="font-size: 20px;border-right: 1px solid #e1e1e1; margin-right: 5px; padding-right: 5px;"><i class="nav-icon fas fa-file-excel" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="Excell"></i></a>
+                        <a href="{{route('lucro.pdf', compact('search'))}}" style="font-size: 20px;border-right: 1px solid #e1e1e1; margin-right: 5px; padding-right: 5px;"><i class="nav-icon fas fa-file-pdf" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="PDF"></i></a>
+                        <a href="{{route('lucro.index')}}"><i class="nav-icon fas fa-sync-alt" style="color: goldenrod; font-size: 20px;margin-right: 4px;" title="Limpar pesquisa"></i></a>
+
+                        <a href="{{route('painel')}}"><i class="nav-icon fas fa-home" style="color: goldenrod; font-size: 14px;margin-right: 4px;" title="Home"></i></a>
+                        </span>
+                    </div>
+                    <h4 class="card-title">Listagem da Distribuição de Lucro registrada para o Cliente</h4>
+                    <p class="card-title-desc"></p>
+                </div>
 
                 <!-- Nav tabs - LISTA lucro - INI -->
                 <ul class="nav nav-tabs" role="tablist">
@@ -145,7 +154,7 @@
 
                             @can('view_lucro')
                                 <a href="{{route('lucro.show', compact('lucro'))}}"><i class="fa fa-edit" style="color: goldenrod" title="Visualizar a Distribuição de Lucro"></i></a>
-                            @endcan                            
+                            @endcan
 
                             @can('delete_lucro')
                                 <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$lucro->id}})"
@@ -236,13 +245,17 @@
 
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
+            //var formatter = new google.visualization.NumberFormat({pattern: 'R$ #,###.##',});
+            //formatter.format(newData, 1);
+            //chart.draw(newData, options);
+
             chart.draw(data, options);
         }
-    </script>    
+    </script>
 
     <script>
 		$(document).ready(function(){
-            $('.valor_mask').trigger('load');  
+            $('.valor_mask').trigger('load');
 		});
 
         const mascaraMoeda = (event) => {
@@ -260,7 +273,7 @@
                 style: 'currency',
                 currency
             }).format(valor)
-        }            
+        }
 	</script>
 
     @if($lucros && $lucros->count() > 0)
@@ -273,7 +286,7 @@
                 "columnDefs": [
                     { targets: [4,5], orderable: false },
                     { targets: [0], visible: false },
-                ],                
+                ],
                 "order": [[ 0, "asc" ]],
             });
         </script>

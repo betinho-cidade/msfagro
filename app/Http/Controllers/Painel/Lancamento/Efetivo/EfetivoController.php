@@ -83,28 +83,28 @@ class EfetivoController extends Controller
                                 ->where('efetivos.segmento', 'MG')
                                 ->whereRaw(DB::raw('
                                                 CASE WHEN efetivos.tipo in (\'EG\')
-                                                    THEN 
-                                                        YEAR(efetivos.data_programada) = "'.$data_programada_vetor[1].'" 
-                                                    ELSE  
-                                                        YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[1].'" 
+                                                    THEN
+                                                        YEAR(efetivos.data_programada) = "'.$data_programada_vetor[1].'"
+                                                    ELSE
+                                                        YEAR(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[1].'"
                                                     END
                                                 '))
                                 ->whereRaw(DB::raw('
                                                 CASE WHEN efetivos.tipo in (\'EG\')
-                                                    THEN 
-                                                        MONTH(efetivos.data_programada) = "'.$data_programada_vetor[0].'" 
-                                                    ELSE  
-                                                        MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[0].'" 
+                                                    THEN
+                                                        MONTH(efetivos.data_programada) = "'.$data_programada_vetor[0].'"
+                                                    ELSE
+                                                        MONTH(COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)) = "'.$data_programada_vetor[0].'"
                                                     END
                                                 '))
                                 ->orderBy(DB::raw('
                                                     CASE WHEN efetivos.tipo in (\'EG\')
-                                                        THEN `efetivos`.`data_programada` 
-                                                        ELSE COALESCE(movimentacaos.data_pagamento, efetivos.data_programada) 
-                                                    END 
+                                                        THEN `efetivos`.`data_programada`
+                                                        ELSE COALESCE(movimentacaos.data_pagamento, efetivos.data_programada)
+                                                    END
                                                 '), 'desc')
                                 ->select('efetivos.*')
-                                ->get();                                
+                                ->get();
 
         return view('painel.lancamento.efetivo.index', compact('user', 'mes_referencia', 'data_programada', 'efetivos'));
     }
@@ -196,10 +196,10 @@ class EfetivoController extends Controller
             if($request->data_pagamento > $today){
                 $request->session()->flash('message.level', 'warning');
                 $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
-    
+
                 return redirect()->back()->withInput();
-            }    
-        }        
+            }
+        }
 
         $message = '';
 
@@ -294,45 +294,48 @@ class EfetivoController extends Controller
                 Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
             }
 
-            if ($request->path_nota) {
+            if($request->tipo != 'EG'){
 
-                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
+                if ($request->path_nota) {
 
-                $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
-                $movimentacao->path_nota = $nome_arquivo;
-                $movimentacao->save();
+                    $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
 
-                Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
-            }
+                    $nome_arquivo = 'NOTA_'.$movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                    $movimentacao->path_nota = $nome_arquivo;
+                    $movimentacao->save();
 
-            if ($request->path_comprovante) {
-
-                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
-
-                $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
-                $movimentacao->path_comprovante = $nome_arquivo;
-                $movimentacao->situacao = 'PG';
-
-                if($movimentacao->tipo == 'D') {
-                    $movimentacao->delete_notification();
+                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
                 }
 
-                $movimentacao->save();
+                if ($request->path_comprovante) {
 
-                Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+                    $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
+
+                    $nome_arquivo = 'COMPROVANTE_'.$movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                    $movimentacao->path_comprovante = $nome_arquivo;
+                    $movimentacao->situacao = 'PG';
+
+                    if($movimentacao->tipo == 'D') {
+                        $movimentacao->delete_notification();
+                    }
+
+                    $movimentacao->save();
+
+                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+                }
+
+                if ($request->path_anexo) {
+
+                    $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
+
+                    $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                    $movimentacao->path_anexo = $nome_arquivo;
+
+                    $movimentacao->save();
+
+                    Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+                }
             }
-
-            if ($request->path_anexo) {
-
-                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
-
-                $nome_arquivo = 'ANEXO_'.$movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
-                $movimentacao->path_anexo = $nome_arquivo;
-
-                $movimentacao->save();
-
-                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
-            }            
 
             DB::commit();
 
@@ -397,7 +400,7 @@ class EfetivoController extends Controller
                                             ->where('status', 'A')
                                             ->orderBy('produtor_id', 'desc')
                                             ->orderBy('tipo_conta', 'asc')
-                                            ->get();        
+                                            ->get();
 
         return view('painel.lancamento.efetivo.show', compact('user', 'efetivo', 'forma_pagamentos'));
     }
@@ -441,38 +444,34 @@ class EfetivoController extends Controller
 
         $today = Carbon::today();
 
-        if($request->has('data_pagamento') && $request->data_pagamento){
-            if($request->tipo == 'EG'){
-                $request->session()->flash('message.level', 'warning');
-                $request->session()->flash('message.content', 'A Data de Pagamento não é permitida para movimentações de Engorda.');
+        if($request->tipo != 'EG'){
 
-                return redirect()->route('painel');
+            if($request->has('data_pagamento') && $request->data_pagamento){
+
+                if($request->data_pagamento > $today){
+                    $request->session()->flash('message.level', 'warning');
+                    $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
+
+                    return redirect()->back()->withInput();
+                }
+
+                if(!$request->has('path_comprovante') && !$efetivo->movimentacao->path_comprovante){
+                    $request->session()->flash('message.level', 'warning');
+                    $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
+
+                    return redirect()->back()->withInput();
+                }
             }
 
-            if($request->data_pagamento > $today){
-                $request->session()->flash('message.level', 'warning');
-                $request->session()->flash('message.content', 'A Data de Pagamento não pode ser maior que a data atual.');
-    
-                return redirect()->back()->withInput();
-            }    
+            if(!$request->data_pagamento && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante) ){
+                if($request->tipo != 'EG'){
+                    $request->session()->flash('message.level', 'warning');
+                    $request->session()->flash('message.content', 'A Data de Pagamento é requerida com o Comprovante de Pagamento.');
 
-            if(!$request->has('path_comprovante') && !$efetivo->movimentacao->path_comprovante){
-                $request->session()->flash('message.level', 'warning');
-                $request->session()->flash('message.content', 'O Comprovante de Pagamento é requerido com a Data de Pagamento.');
-    
-                return redirect()->back()->withInput();
-            }                
-        }     
-
-
-        if(!$request->data_pagamento && ($request->path_comprovante || $efetivo->movimentacao->path_comprovante) ){
-            if($request->tipo != 'EG'){
-                $request->session()->flash('message.level', 'warning');
-                $request->session()->flash('message.content', 'A Data de Pagamento é requerida com o Comprovante de Pagamento.');
-
-                return redirect()->route('efetivo.show', compact('efetivo'));
+                    return redirect()->route('efetivo.show', compact('efetivo'));
+                }
             }
-        }        
+        }
 
         $message = '';
 
@@ -483,10 +482,12 @@ class EfetivoController extends Controller
 
             DB::beginTransaction();
 
-            if($efetivo->movimentacao){
-                $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
-                $item_texto_old = $efetivo->movimentacao->item_texto;
-                $valor_old = $efetivo->movimentacao->valor;
+            if($request->tipo != 'EG'){
+                if($efetivo->movimentacao){
+                    $data_programada_old = $efetivo->movimentacao->data_programada_ajustada;
+                    $item_texto_old = $efetivo->movimentacao->item_texto;
+                    $valor_old = $efetivo->movimentacao->valor;
+                }
             }
 
             $efetivo->data_programada = $request->data_programada;
@@ -531,71 +532,74 @@ class EfetivoController extends Controller
                 Storage::putFileAs($path_gta, $request->file('path_gta'), $nome_arquivo);
             }
 
-            if ($request->path_nota) {
+            if($request->tipo != 'EG'){
 
-                $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
+                if ($request->path_nota) {
 
-                if($efetivo->movimentacao->path_nota){
-                    if(Storage::exists($path_nota)) {
-                        Storage::delete($path_nota . $efetivo->movimentacao->path_nota);
+                    $path_nota = 'documentos/'. $user->cliente_user->cliente->id . '/notas/';
+
+                    if($efetivo->movimentacao->path_nota){
+                        if(Storage::exists($path_nota)) {
+                            Storage::delete($path_nota . $efetivo->movimentacao->path_nota);
+                        }
                     }
+
+                    $nome_arquivo = 'NOTA_'.$efetivo->movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
+                    $efetivo->movimentacao->path_nota = $nome_arquivo;
+                    $efetivo->movimentacao->save();
+
+                    Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
                 }
 
-                $nome_arquivo = 'NOTA_'.$efetivo->movimentacao->id.'.'.$request->path_nota->getClientOriginalExtension();
-                $efetivo->movimentacao->path_nota = $nome_arquivo;
-                $efetivo->movimentacao->save();
+                if ($request->path_comprovante) {
 
-                Storage::putFileAs($path_nota, $request->file('path_nota'), $nome_arquivo);
+                    $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
+
+                    if($efetivo->movimentacao->path_comprovante){
+                        if(Storage::exists($path_comprovante)) {
+                            Storage::delete($path_comprovante . $efetivo->movimentacao->path_comprovante);
+                        }
+                    }
+
+                    $nome_arquivo = 'COMPROVANTE_'.$efetivo->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
+                    $efetivo->movimentacao->path_comprovante = $nome_arquivo;
+                    $efetivo->movimentacao->situacao = 'PG';
+                    $efetivo->movimentacao->save();
+
+                    Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
+                }
+
+                if ($request->path_anexo) {
+
+                    $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
+
+                    if($efetivo->movimentacao->path_anexo){
+                        if(Storage::exists($path_anexo)) {
+                            Storage::delete($path_anexo . $efetivo->movimentacao->path_anexo);
+                        }
+                    }
+
+                    $nome_arquivo = 'ANEXO_'.$efetivo->movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
+                    $efetivo->movimentacao->path_anexo = $nome_arquivo;
+                    $efetivo->movimentacao->save();
+
+                    Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
+                }
+
+                if($efetivo->movimentacao && ($efetivo->movimentacao->data_programada != $data_programada_old ||
+                    $efetivo->movimentacao->item_texto != $item_texto_old ||
+                    $efetivo->movimentacao->valor != $valor_old) &&
+                    $efetivo->movimentacao->situacao == 'PD' &&
+                    $efetivo->movimentacao->tipo == 'D') {
+
+                    $efetivo->movimentacao->delete_notification();
+                    $efetivo->movimentacao->create_notification();
+                }
+
+                if($efetivo->movimentacao->tipo == 'D' && $efetivo->movimentacao->situacao == 'PG') {
+                    $efetivo->movimentacao->delete_notification();
+                }
             }
-
-            if ($request->path_comprovante) {
-
-                $path_comprovante = 'documentos/'. $user->cliente_user->cliente->id . '/comprovantes/';
-
-                if($efetivo->movimentacao->path_comprovante){
-                    if(Storage::exists($path_comprovante)) {
-                        Storage::delete($path_comprovante . $efetivo->movimentacao->path_comprovante);
-                    }
-                }
-
-                $nome_arquivo = 'COMPROVANTE_'.$efetivo->movimentacao->id.'.'.$request->path_comprovante->getClientOriginalExtension();
-                $efetivo->movimentacao->path_comprovante = $nome_arquivo;
-                $efetivo->movimentacao->situacao = 'PG';
-                $efetivo->movimentacao->save();
-
-                Storage::putFileAs($path_comprovante, $request->file('path_comprovante'), $nome_arquivo);
-            }
-
-            if ($request->path_anexo) {
-
-                $path_anexo = 'documentos/'. $user->cliente_user->cliente->id . '/anexos/';
-
-                if($efetivo->movimentacao->path_anexo){
-                    if(Storage::exists($path_anexo)) {
-                        Storage::delete($path_anexo . $efetivo->movimentacao->path_anexo);
-                    }
-                }
-
-                $nome_arquivo = 'ANEXO_'.$efetivo->movimentacao->id.'.'.$request->path_anexo->getClientOriginalExtension();
-                $efetivo->movimentacao->path_anexo = $nome_arquivo;
-                $efetivo->movimentacao->save();
-
-                Storage::putFileAs($path_anexo, $request->file('path_anexo'), $nome_arquivo);
-            }            
-
-            if($efetivo->movimentacao && ($efetivo->movimentacao->data_programada != $data_programada_old || 
-                $efetivo->movimentacao->item_texto != $item_texto_old ||   
-                $efetivo->movimentacao->valor != $valor_old) && 
-                $efetivo->movimentacao->situacao == 'PD' && 
-                $efetivo->movimentacao->tipo == 'D') {
-
-                $efetivo->movimentacao->delete_notification();
-                $efetivo->movimentacao->create_notification();
-            }     
-
-            if($efetivo->movimentacao->tipo == 'D' && $efetivo->movimentacao->situacao == 'PG') {
-                $efetivo->movimentacao->delete_notification();
-            }        
 
             DB::commit();
 
@@ -679,7 +683,7 @@ class EfetivoController extends Controller
 
                 if($efetivo->movimentacao->tipo == 'D') {
                     $efetivo->movimentacao->delete_notification();
-                }            
+                }
 
                 $efetivo_arquivos[0]['path_nota'] = $efetivo->movimentacao->path_nota;
                 $efetivo_arquivos[0]['path_comprovante'] = $efetivo->movimentacao->path_comprovante;
@@ -823,7 +827,7 @@ class EfetivoController extends Controller
 
                     if($efetivo->movimentacao->tipo == 'D') {
                         $efetivo->movimentacao->delete_notification();
-                    }        
+                    }
 
                     $efetivo->movimentacao->delete();
                 }
@@ -890,7 +894,7 @@ class EfetivoController extends Controller
                 if(Storage::exists($path_anexo)) {
                     Storage::delete($path_anexo . $efetivo['path_anexo']);
                 }
-            }            
+            }
 
         }
     }
@@ -940,15 +944,15 @@ class EfetivoController extends Controller
                 return redirect()->route('lancamento.index', ['aba' => 'EP']);
             } else{
                 return redirect()->route('painel');
-            }            
+            }
         }
-       
+
 
         if((Gate::denies('view_relatorio_gestao'))){
             $path_documento = 'documentos/' . $user->cliente_user->cliente->id . '/';
         } else {
             $path_documento = 'documentos/' . $efetivo->movimentacao->cliente_id . '/';
-        }        
+        }
 
         switch($tipo_documento){
             case 'CP':{
@@ -966,7 +970,7 @@ class EfetivoController extends Controller
             case 'AN':{
                 $path_documento = $path_documento . 'anexos/' . $efetivo->movimentacao->path_anexo;
                 break;
-            }            
+            }
         }
 
         return Storage::download($path_documento);

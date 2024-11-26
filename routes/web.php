@@ -47,7 +47,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/gestao/relatorio/excell', 'RelatorioController@excell')->name('relatorio_gestao.excell');
                 Route::get('/gestao/relatorio/pdf', 'RelatorioController@pdf')->name('relatorio_gestao.pdf');
                 Route::post('/gestao/relatorio/refreshCliente', 'RelatorioController@refreshCliente')->name('relatorio_gestao.refreshCliente');
-            });   
+            });
 
         });
 
@@ -75,7 +75,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/usuario_cliente/{usuario_cliente}', 'UsuarioClienteController@show')->name('usuario_cliente.show');
                 Route::put('/usuario_cliente/{usuario_cliente}/update', 'UsuarioClienteController@update')->name('usuario_cliente.update');
                 Route::delete('/usuario_cliente/{usuario_cliente}/destroy', 'UsuarioClienteController@destroy')->name('usuario_cliente.destroy');
-            });            
+            });
 
             Route::group(['namespace' => 'Categoria'], function(){
                 Route::get('/categoria', 'CategoriaController@index')->name('categoria.index');
@@ -106,8 +106,8 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/cliente/{cliente}/alterar_status', 'ClienteController@alterar_status')->name('cliente.alterar_status');
 
                 Route::get('/cliente/{cliente}/user_create', 'ClienteController@user_create')->name('cliente.user_create');
-                Route::put('/cliente/{cliente}/user_store', 'ClienteController@user_store')->name('cliente.user_store');    
-                Route::delete('/cliente/{cliente}/user_destroy/{cliente_user}', 'ClienteController@user_destroy')->name('cliente.user_destroy');  
+                Route::put('/cliente/{cliente}/user_store', 'ClienteController@user_store')->name('cliente.user_store');
+                Route::delete('/cliente/{cliente}/user_destroy/{cliente_user}', 'ClienteController@user_destroy')->name('cliente.user_destroy');
             });
 
             Route::group(['namespace' => 'FormaPagamento'], function(){
@@ -156,7 +156,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/googlemap/list', 'GooglemapController@list')->name('googlemap.list');
                 Route::get('/googlemap/{googlemap}', 'GooglemapController@show')->name('googlemap.show');
                 Route::put('/googlemap/{googlemap}/update', 'GooglemapController@update')->name('googlemap.update');
-            });            
+            });
 
             Route::group(['namespace' => 'Notificacao'], function(){
                 Route::get('/notificacao', 'NotificacaoController@index')->name('notificacao.index');
@@ -165,23 +165,25 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
                 Route::get('/notificacao/{notificacao}', 'NotificacaoController@show')->name('notificacao.show');
                 Route::put('/notificacao/{notificacao}/update', 'NotificacaoController@update')->name('notificacao.update');
                 Route::get('/notificacao/{notificacao}/cliente_create', 'NotificacaoController@cliente_create')->name('notificacao.cliente_create');
-                Route::put('/notificacao/{notificacao}/cliente_store', 'NotificacaoController@cliente_store')->name('notificacao.cliente_store');    
-                Route::delete('/notificacao/{notificacao}/cliente_destroy/{cliente_notificacao}', 'NotificacaoController@cliente_destroy')->name('notificacao.cliente_destroy');  
+                Route::put('/notificacao/{notificacao}/cliente_store', 'NotificacaoController@cliente_store')->name('notificacao.cliente_store');
+                Route::delete('/notificacao/{notificacao}/cliente_destroy/{cliente_notificacao}', 'NotificacaoController@cliente_destroy')->name('notificacao.cliente_destroy');
                 Route::delete('/notificacao/{notificacao}/destroy', 'NotificacaoController@destroy')->name('notificacao.destroy');
                 Route::get('/notificacao/{notificacao}/alterar_status', 'NotificacaoController@alterar_status')->name('notificacao.alterar_status');
-            });         
-            
+            });
+
             Route::group(['namespace' => 'Lucro'], function(){
                 Route::get('/lucro', 'LucroController@index')->name('lucro.index');
                 Route::get('/lucro/create', 'LucroController@create')->name('lucro.create');
                 Route::post('/lucro/store', 'LucroController@store')->name('lucro.store');
                 Route::post('/lucro/refreshList', 'LucroController@refreshList')->name('lucro.refreshList');
                 Route::get('/lucro/search', 'LucroController@search')->name('lucro.search');
+                Route::get('/lucro/excell', 'LucroController@excell')->name('lucro.excell');
+                Route::get('/lucro/pdf', 'LucroController@pdf')->name('lucro.pdf');
                 Route::get('/lucro/{lucro}', 'LucroController@show')->name('lucro.show');
                 Route::put('/lucro/{lucro}/update', 'LucroController@update')->name('lucro.update');
                 Route::delete('/lucro/{lucro}/destroy', 'LucroController@destroy')->name('lucro.destroy');
                 Route::get('/lucro/{lucro}/download', 'LucroController@download')->name('lucro.download');
-            });            
+            });
 
         });
 
@@ -233,7 +235,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
 
             Route::delete('/relatorio/efetivo/{efetivo}/destroy_efetivo', 'RelatorioController@destroy_efetivo')->name('relatorio.destroy_efetivo');
             Route::delete('/relatorio/movimentacao/{movimentacao}/destroy_movimentacao', 'RelatorioController@destroy_movimentacao')->name('relatorio.destroy_movimentacao');
-        });        
+        });
 
     });
 
@@ -243,6 +245,7 @@ Route::middleware(['auth', 'assinante.ativo'])->group(function () {
 Route::group(['namespace' => 'Guest'], function(){
 
     Route::get('/download', 'DownloadController@download')->name('download');
+    Route::get('/download_lucro', 'DownloadController@download_lucro')->name('download_lucro');
 
     Route::group(['namespace' => 'ResetPassword'], function(){
         Route::get('/forget-password', 'ForgotPasswordController@getEmail')->name('forgot.password');

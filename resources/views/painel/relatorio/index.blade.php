@@ -30,36 +30,36 @@
                     <!-- <input type="hidden" id="mes_referencia" name="mes_referencia" value="">
                     <input type="hidden" id="status_movimentacao" name="status_movimentacao" value=""> -->
                     <span>
-                    
+
                     <div class="row" style="width: 100%;">
                         <div class="col-md-3"  style="padding-right: 0;">
                             <label for="data_inicio" style="margin: 0 0 0 2px;">Data Inicial</label>
                             <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{$search['data_inicio'] ?? ''}}">
-                        </div>  
-                    
+                        </div>
+
                         <div class="col-md-3"  style="padding-right: 0;">
                             <label for="data_fim" style="margin: 0 0 0 2px;">Data Final</label>
                             <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{$search['data_fim'] ?? ''}}">
-                        </div>                          
+                        </div>
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="item_texto" style="margin: 0 0 0 2px;">Item Fiscal</label>
                             <input type="text" class="form-control" id="item_texto" name="item_texto" value="{{$search['item_texto'] ?? ''}}" placeholder="Item Fiscal">
-                        </div>  
+                        </div>
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="nota" style="margin: 0 0 0 2px;">Nota Fiscal</label>
                             <input type="text" class="form-control" id="nota" name="nota" value="{{$search['nota'] ?? ''}}" placeholder="Nota Fiscal">
-                        </div>                          
+                        </div>
 
                         <div class="col-md-2"  style="padding-right: 0;">
                             <label for="movimentacao" style="margin: 0 0 0 2px;">Movimentação</label>
-                            <select id="movimentacao" name="movimentacao" class="form-control"> 
+                            <select id="movimentacao" name="movimentacao" class="form-control">
                                 <option value="E" {{($search && $search['movimentacao'] == 'E') ? 'selected' : '' }}>Efetiva</option>
                                 <option value="F" {{($search && $search['movimentacao'] == 'F') ? 'selected' : '' }}>Futura</option>
                                 <option value="G" {{($search && $search['movimentacao'] == 'G') ? 'selected' : '' }}>Global</option>
                             </select>
-                        </div>                           
+                        </div>
                     </div>
 
                     <div class="row" style="margin-top: 10px;width: 100%;">
@@ -131,7 +131,7 @@
                     </div>
                     <h4 class="card-title">Listagem da Movimentação registrada para o Cliente</h4>
                     <p class="card-title-desc"></p>
-                </div>    
+                </div>
 
                 <!-- Nav tabs - LISTA lancamento - INI -->
                 <ul class="nav nav-tabs" role="tablist">
@@ -183,7 +183,7 @@
                                         <a href="{{$movimentacao->link_nota}}">{{$movimentacao->nota}}</a>
                                     @else
                                         {{$movimentacao->nota}}
-                                    @endif                                
+                                    @endif
                             </td>
                             <td style="text-align:center;">
 
@@ -205,7 +205,7 @@
                                         data-target="#modal-delete-efetivo"><i class="fa fa-minus-circle" style="color: crimson" title="Excluir o Efetivo Pecuário"></i></a>
                                     @endcan
                                 @endif
-                            @endcan                            
+                            @endcan
                             </td>
                         </tr>
                         @empty
@@ -306,7 +306,7 @@
     <script>
 		$(document).ready(function(){
             $('.select2').select2();
-            $('.valor_mask').trigger('load');  
+            $('.valor_mask').trigger('load');
 		});
 
         const mascaraMoeda = (event) => {
@@ -324,7 +324,7 @@
                 style: 'currency',
                 currency
             }).format(valor)
-        }    
+        }
 	</script>
 
     @if($movimentacaos && $movimentacaos->count() > 0)
@@ -337,7 +337,7 @@
                 "columnDefs": [
                     { targets: [7,8,10], orderable: false },
                     { targets: [0], visible: false },
-                ],                
+                ],
                 "order": [[ 0, "asc" ]],
             });
         </script>
